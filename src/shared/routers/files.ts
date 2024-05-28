@@ -5,14 +5,9 @@ export const filesRouter = router({
   selectFils: publicProcedure.mutation(async ({ ctx }) => {
     const { filePaths, canceled } = await dialog.showOpenDialog({
       buttonLabel: "Add To Send List",
-      title: "Select Files or Folders to Send",
+      title: "Select files or folders to send",
       defaultPath: ctx.app.getPath("documents"),
-      properties: [
-        "multiSelections",
-        "dontAddToRecent",
-        "openFile",
-        "openDirectory",
-      ],
+      properties: ["multiSelections", "dontAddToRecent", "openFile"],
     });
 
     if (canceled) {
@@ -21,6 +16,8 @@ export const filesRouter = router({
         data: null,
       };
     }
+
+    console.log(filePaths);
 
     return {
       cancelled: false,
