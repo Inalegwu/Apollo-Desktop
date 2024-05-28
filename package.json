@@ -1,14 +1,14 @@
 {
-  "name": "electrostatic",
-  "description": "Starter Template for electron apps with trpc , drizzle-orm and sqlite",
+  "name": "Apollo",
+  "description": "File Sharing for everyone",
   "version": "0.0.1",
   "author": {
-    "email": "youremail@provider.com",
-    "name": "your_name"
+    "email": "disgruntleddev@outlook.com",
+    "name": "DisgruntledDev"
   },
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/Inalegwu/ElectroStatic.git"
+    "url": "https://github.com/Inalegwu/Apollo.git"
   },
   "main": "out/main/main.js",
   "scripts": {
@@ -16,8 +16,6 @@
     "dev": "electron-vite dev -w",
     "prebuild": "electron-vite build",
     "build": "pnpm tsx build.ts",
-    "db:generate": "drizzle-kit generate:sqlite",
-    "db:push": "drizzle-kit push:sqlite",
     "postinstall": "electron-rebuild"
   },
   "dependencies": {

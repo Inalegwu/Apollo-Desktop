@@ -1,14 +1,19 @@
 @font-face {
-  font-family: Bricolage;
-  src: url("../assets/fonts/bricolage.ttf");
+  font-family: Nunito;
+  src: url("../assets/fonts/Nunito-VariableFont_wght.ttf");
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Bricolage;
+  font-family: Nunito;
   text-decoration: none;
+}
+
+/* TODO change radix theme defaults */
+.radix-themes{
+
 }
 
 body {
