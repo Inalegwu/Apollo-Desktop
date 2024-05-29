@@ -1,7 +1,7 @@
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig, externalizeDepsPlugin } from "electron-vite";
-import { resolve } from "path";
+import { resolve } from "node:path";
 import UnoCSS from "unocss/vite";
 
 export default defineConfig({

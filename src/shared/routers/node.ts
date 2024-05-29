@@ -5,6 +5,8 @@ export const nodeRouter = router({
   startNode: publicProcedure.mutation(async ({ ctx }) => {
     const proc = utilityProcess.fork("server/index.js");
 
-    proc.postMessage("startServer");
+    proc.postMessage({ state: "start" });
+
+    return proc;
   }),
 });

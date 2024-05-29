@@ -1,4 +1,3 @@
-import { useMountOnce } from "@legendapp/state/react";
 import { Button, Flex, Link } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import { useRouterState } from "@tanstack/react-router";
@@ -12,11 +11,8 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   const { mutate: minimizeWindow } = t.window.minimize.useMutation();
   const { mutate: closeWindow } = t.window.closeWindow.useMutation();
-  const { mutate: startServer } = t.node.startNode.useMutation();
 
   const navState = useRouterState();
-
-  useMountOnce(() => startServer());
 
   const isHome = navState.location.pathname === "/";
 

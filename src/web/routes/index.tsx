@@ -1,7 +1,9 @@
+import { useMount } from "@legendapp/state/react";
 import { Box, ContextMenu, Flex, Text, Tooltip } from "@radix-ui/themes";
 import defaultImage from "@src/assets/images/user_default.jpg";
+import t from "@src/shared/config";
 import { createFileRoute } from "@tanstack/react-router";
-import { Link, Lock, RefreshCw } from "lucide-react";
+import { Lock, RefreshCw } from "lucide-react";
 import { globalState$ } from "../state";
 
 export const Route = createFileRoute("/")({
@@ -10,6 +12,10 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const deviceName = globalState$.deviceName.get();
+
+  const { mutate: startServer } = t.node.startNode.useMutation();
+
+  useMount(() => startServer());
 
   return (
     <ContextMenu.Root>
