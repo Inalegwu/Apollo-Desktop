@@ -1,10 +1,9 @@
-import { useMount, useUnmount } from "@legendapp/state/react";
+import { useMountOnce } from "@legendapp/state/react";
 import { Button, Flex, Link } from "@radix-ui/themes";
 import t from "@src/shared/config";
-import { Plus, Settings } from "lucide-react";
+import { useRouterState } from "@tanstack/react-router";
+import { ArrowLeft, History, Minus, Plus, Settings, X } from "lucide-react";
 import type React from "react";
-import { useEffect } from "react";
-import { globalState$ } from "../state";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -12,25 +11,15 @@ type LayoutProps = {
 
 export default function Layout({ children }: LayoutProps) {
   const { mutate: minimizeWindow } = t.window.minimize.useMutation();
-  const { mutate: maximizeWindow } = t.window.maximize.useMutation();
   const { mutate: closeWindow } = t.window.closeWindow.useMutation();
 
   const { mutate: startNode } = t.node.startNode.useMutation();
-  const { mutate: stopNode } = t.node.stopNode.useMutation();
 
-  useMount(() => startNode());
+  const navState = useRouterState();
 
-  useUnmount(() => stopNode());
+  const isHome = navState.location.pathname === "/";
 
-  const theme = globalState$.colorMode.get();
-
-  useEffect(() => {
-    if (theme === "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }, [theme]);
+  useMountOnce(() => startNode());
 
   const { mutate: selectFiles } = t.files.selectFils.useMutation();
 
@@ -42,11 +31,52 @@ export default function Layout({ children }: LayoutProps) {
       className="transition h-screen p-2"
     >
       <Flex
-        className="absolute z-10 w-full p-4 top-0 left-0 cursor-grab"
-        id="drag-region"
-      />
+        align="center"
+        justify="between"
+        className="absolute z-10 w-full px-4 py-3 top-0 left-0"
+      >
+        {!isHome && (
+          <Button
+            variant="ghost"
+            className="w-2.5 h-4.5 rounded-full cursor-pointer"
+            asChild
+          >
+            <Link href="/">
+              <ArrowLeft size={12} />
+            </Link>
+          </Button>
+        )}
+        <Flex grow="1" id="drag-region" className="p-1" />
+        <Flex align="center" justify="end" gap="5">
+          <Button
+            onClick={() => minimizeWindow()}
+            className="w-2.5 h-4.5 rounded-full cursor-pointer"
+            color="gray"
+            variant="ghost"
+          >
+            <Minus />
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => closeWindow()}
+            className="w-2.5 h-4.5 rounded-full cursor-pointer"
+            color="tomato"
+          >
+            <X />
+          </Button>
+        </Flex>
+      </Flex>
       {children}
-      <Flex className="absolute bottom-2 right-2 space-x-3 bg-transparent backdrop-blur-3xl rounded-lg p-3">
+      <Flex className="absolute bottom-1 right-1 space-x-3 bg-transparent backdrop-blur-3xl rounded-lg p-3">
+        <Button
+          variant="soft"
+          className="w-9 h-9 cursor-pointer rounded-full"
+          asChild
+        >
+          <Link href="/history">
+            <History size={13} />
+          </Link>
+        </Button>
         <Button
           variant="soft"
           onClick={() => selectFiles()}

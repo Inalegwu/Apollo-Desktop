@@ -13,7 +13,7 @@
 
 /* TODO change radix theme defaults */
 .radix-themes{
-
+  --default-font-family:Nunito;
 }
 
 body {

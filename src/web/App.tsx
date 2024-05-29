@@ -14,7 +14,6 @@ import "virtual:uno.css";
 import "./App.css";
 import { routeTree } from "./routeTree.gen";
 import { Route as rootRoute } from "./routes/__root";
-import { globalState$ } from "./state";
 
 enableReactTracking({
   auto: true,
@@ -34,6 +33,7 @@ declare module "@tanstack/react-router" {
 }
 
 const rootElement = document.getElementById("root");
+const isDark = document.body.classList.contains("dark");
 
 if (!rootElement?.innerHTML) {
   const root = ReactDOM.createRoot(rootElement!);
@@ -42,12 +42,7 @@ if (!rootElement?.innerHTML) {
     <StrictMode>
       <t.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Theme
-            appearance={globalState$.colorMode.get()}
-            radius="medium"
-            accentColor="mint"
-            grayColor="olive"
-          >
+          <Theme radius="medium" accentColor="mint" grayColor="sage">
             <RouterProvider router={router} />
           </Theme>
         </QueryClientProvider>
