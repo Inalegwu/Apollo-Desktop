@@ -4,7 +4,7 @@ import t from "@src/shared/config";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { HomeView, ThisDeviceInfo,DeviceInfo } from "../components";
+import { HomeView, ThisDeviceInfo } from "../components";
 import { globalState$ } from "../state";
 
 export const Route = createFileRoute("/")({
@@ -28,7 +28,6 @@ function Index() {
     <HomeView>
       <Flex grow="1" className="items-center justify-center" id="workspace">
         <ThisDeviceInfo />
-        <DeviceInfo/>
       </Flex>
     </HomeView>
   );
