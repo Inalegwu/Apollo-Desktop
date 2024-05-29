@@ -12,14 +12,13 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   const { mutate: minimizeWindow } = t.window.minimize.useMutation();
   const { mutate: closeWindow } = t.window.closeWindow.useMutation();
-
-  const { mutate: startNode } = t.node.startNode.useMutation();
+  const { mutate: startServer } = t.node.startNode.useMutation();
 
   const navState = useRouterState();
 
-  const isHome = navState.location.pathname === "/";
+  useMountOnce(() => startServer());
 
-  useMountOnce(() => startNode());
+  const isHome = navState.location.pathname === "/";
 
   const { mutate: selectFiles } = t.files.selectFils.useMutation();
 
@@ -50,7 +49,7 @@ export default function Layout({ children }: LayoutProps) {
         <Flex align="center" justify="end" gap="5">
           <Button
             onClick={() => minimizeWindow()}
-            className="w-2.5 h-4.5 rounded-full cursor-pointer"
+            className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
             color="gray"
             variant="ghost"
           >
@@ -59,7 +58,7 @@ export default function Layout({ children }: LayoutProps) {
           <Button
             variant="ghost"
             onClick={() => closeWindow()}
-            className="w-2.5 h-4.5 rounded-full cursor-pointer"
+            className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
             color="tomato"
           >
             <X />

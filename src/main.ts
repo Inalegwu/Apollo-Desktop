@@ -16,6 +16,7 @@ const createWindow = () => {
     maxHeight: 600,
     minHeight: 600,
     minWidth: 800,
+    show: false,
     webPreferences: {
       sandbox: false,
       preload: join(__dirname, "../preload/preload.js"),
@@ -29,7 +30,7 @@ const createWindow = () => {
   });
 
   mainWindow.webContents.on("dom-ready", () => {
-    mainWindow.show;
+    mainWindow.show();
   });
 
   if (import.meta.env.DEV) {
@@ -38,7 +39,7 @@ const createWindow = () => {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
-  mainWindow.webContents.openDevTools({ mode: "detach" });
+  // mainWindow.webContents.openDevTools({ mode: "detach" });
 };
 
 app.whenReady().then(() => {

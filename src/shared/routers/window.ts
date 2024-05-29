@@ -15,14 +15,4 @@ export const windowRouter = router({
     if (!ctx.window) return;
     ctx.window.minimize();
   }),
-  maximize: publicProcedure.mutation(({ ctx }) => {
-    if (!ctx.window) return;
-    const isMaximized = ctx.window.isMaximized();
-
-    if (isMaximized) {
-      ctx.window.unmaximize();
-    } else {
-      ctx.window.maximize();
-    }
-  }),
 });

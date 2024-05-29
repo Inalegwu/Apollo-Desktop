@@ -12,6 +12,8 @@ configureObservablePersistence({
 
 export const globalState$ = observable<GlobalState>({
   colorMode: "light",
+  applicationId: null,
+  deviceName: "satisfied-simple-horse",
 });
 
 persistObservable(globalState$, {

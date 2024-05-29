@@ -3,4 +3,6 @@
 // example global state for an application with customization options
 export type GlobalState = {
   colorMode: "dark" | "light";
+  applicationId: string | null;
+  deviceName: string | null;
 };
