@@ -1,5 +1,5 @@
 console.log("Launching transfer server");
 
 process.parentPort.on("message", (e) => {
-  console.log(e);
+  console.log(e.data);
 });

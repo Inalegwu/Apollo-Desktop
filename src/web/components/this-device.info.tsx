@@ -24,7 +24,7 @@ export function ThisDeviceInfo() {
         </Box>
       </Popover.Trigger>
       <Popover.Content size="1">
-        <Flex direction="column" align="start" className="space-y-1.4">
+        <Flex direction="column" align="start" className="space-y-2">
           <Flex align="center" justify="start" gap="1">
             <Info size={10} />
             <Text size="1">Info</Text>
