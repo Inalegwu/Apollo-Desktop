@@ -8,14 +8,14 @@ export const Route = createFileRoute("/history")({
 
 function History() {
   return (
-    <Flex direction="column" className="w-full h-full py-12 px-3 tracking-wide">
+    <Flex direction="column" className="w-full h-full py-12 px-3">
       <Flex className="w-full" align="center" justify="between">
-        <Text size="7" weight="bold">
+        <Text size="7" className="tracking-wide">
           Share History
         </Text>
       </Flex>
       <Flex direction="column" className="py-5" align="start" grow="1">
-        body
+        <Text>body</Text>
       </Flex>
       <Tooltip content="Clear share history">
         <Button

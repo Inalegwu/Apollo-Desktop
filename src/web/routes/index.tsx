@@ -12,6 +12,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const deviceName = globalState$.deviceName.get();
+  const deviceID = globalState$.applicationId.get();
 
   const { mutate: startServer } = t.node.startNode.useMutation();
 
@@ -20,40 +21,39 @@ function Index() {
   return (
     <ContextMenu.Root>
       <ContextMenu.Trigger>
-        <Flex grow="1" className="items-center justify-center">
-          <Flex direction="column" align="center" className="space-y-2">
-            <Popover.Root>
-              <Popover.Trigger>
-                <Box className="w-11 h-11 relative rounded-full overflow-hidden shadow-md cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800">
-                  <img
-                    src={defaultImage}
-                    alt="default_image"
-                    className="object-cover w-full h-full"
-                  />
-                </Box>
-              </Popover.Trigger>
-              <Popover.Content size="1">
-                <Flex direction="column" align="start" className="space-y-1.4">
-                  <Flex align="center" justify="start" gap="1">
-                    <Info size={10} className="text-zinc-400" />
-                    <Text size="1" color="gray">
-                      Info
-                    </Text>
-                  </Flex>
-                  <Flex direction="column" align="start" className="space-y-1">
-                    <Text size="1">
-                      Selected Files: {fileTransferState$.files.get().length}
-                    </Text>
-                    <Text size="1">Device name : {deviceName}</Text>
-                    <Text size="1">
-                      Connection status :{" "}
-                      <span className="text-red-500">Not Connected</span>
-                    </Text>
-                  </Flex>
+        <Flex grow="1" className="items-center  justify-center">
+          {/* body */}
+
+          <Popover.Root>
+            <Popover.Trigger>
+              <Box className="w-11 h-11 rounded-full overflow-hidden shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800">
+                <img
+                  src={defaultImage}
+                  alt="default_image"
+                  className="object-cover w-full h-full"
+                />
+              </Box>
+            </Popover.Trigger>
+            <Popover.Content size="1">
+              <Flex direction="column" align="start" className="space-y-1.4">
+                <Flex align="center" justify="start" gap="1">
+                  <Info size={10} />
+                  <Text size="1">Info</Text>
                 </Flex>
-              </Popover.Content>
-            </Popover.Root>
-          </Flex>
+                <Flex direction="column" align="start" className="space-y-1">
+                  <Text size="1">
+                    {fileTransferState$.files.get().length} selected files
+                  </Text>
+                  <Text size="1">Device name : {deviceName}</Text>
+                  <Text size="1">Device ID : {deviceID}</Text>
+                  <Text size="1">
+                    Connection status :{" "}
+                    <span className="text-red-500">Not Connected</span>
+                  </Text>
+                </Flex>
+              </Flex>
+            </Popover.Content>
+          </Popover.Root>
         </Flex>
       </ContextMenu.Trigger>
       <ContextMenu.Content size="1" variant="soft">
