@@ -1,24 +1,21 @@
-export const NAMES = [
-  "satisfied",
-  "simple",
-  "horse",
-  "defacto",
-  "standard",
-  "rebellios",
-  "statue",
-  "moustache",
-  "disgruntled",
-  "developer",
-  "experienced",
-  "deviant",
-  "animated",
-  "kaiju",
-  "protector",
-  "disciplined",
-];
+import {
+  adjectives,
+  animals,
+  colors,
+  uniqueNamesGenerator,
+} from "unique-names-generator";
+import { v4 } from "uuid";
 
-export function generateNewDeviceName() {
-  return `${NAMES[Math.floor(Math.random() * NAMES.length)]}-${
-    NAMES[Math.floor(Math.random() * NAMES.length)]
-  }-${NAMES[Math.floor(Math.random() * NAMES.length)]}`;
+export function generateRandomName() {
+  const randomName = uniqueNamesGenerator({
+    dictionaries: [adjectives, colors, animals],
+    length: 3,
+    separator: "-",
+  });
+
+  return randomName;
+}
+
+export function generateAppId() {
+  return v4();
 }

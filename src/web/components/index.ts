@@ -1,4 +1,5 @@
-import Layout from "./Layout";
 import ErrorBoundaryFallBack from "./ErrorBoundaryFallBack";
+import Layout from "./Layout";
+import DeviceInfo from "./device-info";
 
-export { ErrorBoundaryFallBack, Layout };
+export { DeviceInfo, ErrorBoundaryFallBack, Layout };

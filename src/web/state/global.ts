@@ -13,7 +13,9 @@ configureObservablePersistence({
 export const globalState$ = observable<GlobalState>({
   colorMode: "light",
   applicationId: null,
-  deviceName: "satisfied-simple-horse",
+  deviceName: null,
+  deviceType: "desktop",
+  firstLaunch: true,
 });
 
 export const fileTransferState$ = observable<FileTransferState>({
