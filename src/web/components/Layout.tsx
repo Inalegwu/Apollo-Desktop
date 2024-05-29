@@ -3,6 +3,7 @@ import t from "@src/shared/config";
 import { useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, History, Minus, Plus, Settings, X } from "lucide-react";
 import type React from "react";
+import { fileTransferState$ } from "../state";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -16,14 +17,20 @@ export default function Layout({ children }: LayoutProps) {
 
   const isHome = navState.location.pathname === "/";
 
-  const { mutate: selectFiles } = t.files.selectFils.useMutation();
+  const { mutate: selectFiles } = t.files.selectFiles.useMutation({
+    onSuccess: (data) => {
+      if (data.cancelled) return;
+
+      fileTransferState$.files.set(data.data);
+    },
+  });
 
   return (
     <Flex
       width="100%"
       grow="1"
       direction="column"
-      className="transition h-screen p-2"
+      className="transition h-screen"
     >
       <Flex
         align="center"

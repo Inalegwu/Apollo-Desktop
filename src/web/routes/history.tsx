@@ -8,9 +8,9 @@ export const Route = createFileRoute("/history")({
 
 function History() {
   return (
-    <Flex direction="column" className="w-full h-full py-12 px-3">
+    <Flex direction="column" className="w-full h-full py-12 px-3 tracking-wide">
       <Flex className="w-full" align="center" justify="between">
-        <Text weight="bold" size="7">
+        <Text size="7" weight="bold">
           Share History
         </Text>
       </Flex>

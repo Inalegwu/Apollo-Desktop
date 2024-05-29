@@ -8,9 +8,7 @@ export const Route = createLazyFileRoute("/settings")({
 function Settings() {
   return (
     <Flex className="w-full h-full py-12 px-3">
-      <Text weight="bold" size="6">
-        Settings
-      </Text>
+      <Text size="6">Settings</Text>
     </Flex>
   );
 }
