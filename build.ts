@@ -2,8 +2,8 @@ import { build } from "electron-builder";
 
 build({
   config: {
-    appId: "com.electrostatic.app",
-    productName: "ElectroStatic",
+    appId: "com.apollo.app",
+    productName: "Apollo",
     artifactName: "${productName}-${version}_${platform}_${arch}.${ext}",
     buildDependenciesFromSource: true,
     files: ["out/**/*"],
@@ -16,7 +16,7 @@ build({
     win: {
       target: [
         {
-          target: "msi",
+          target: "nsis",
           arch: ["x64"],
         },
       ],
@@ -28,7 +28,7 @@ build({
         },
       ],
     },
-    msi: {
+    nsis: {
       oneClick: true,
       perMachine: true,
       runAfterFinish: true,

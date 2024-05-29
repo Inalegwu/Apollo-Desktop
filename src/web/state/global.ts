@@ -4,7 +4,8 @@ import {
   persistObservable,
 } from "@legendapp/state/persist";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
-import type { FileTransferState, GlobalState } from "@shared/types";
+import type { FileTransferState, GlobalState, Node } from "@shared/types";
+import type { Socket } from "node:net";
 
 configureObservablePersistence({
   pluginLocal: ObservablePersistLocalStorage,
@@ -16,6 +17,8 @@ export const globalState$ = observable<GlobalState>({
   deviceName: null,
   deviceType: "desktop",
   firstLaunch: true,
+  neighbors: new Map<string, Node>(),
+  connections: new Map<string, Socket>(),
 });
 
 export const fileTransferState$ = observable<FileTransferState>({

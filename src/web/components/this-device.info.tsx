@@ -34,10 +34,10 @@ export function ThisDeviceInfo() {
               {fileTransferState$.files.get().length} selected files
             </Text>
             <Flex width="100%" align="center" justify="between">
-              <Text size="1">{deviceName.slice(0)}</Text>
+              <Text size="1">{deviceName?.slice(0)}</Text>
             </Flex>
             <Flex width="100%" align="center" justify="between">
-              <Text size="1">Keychain ID : {deviceID.slice(0, 23)}...</Text>
+              <Text size="1">Keychain ID : {deviceID?.slice(0, 23)}...</Text>
               {globalState$.deviceType.get() === "desktop" ? (
                 <Laptop size={9} className="text-zinc-400" />
               ) : (
