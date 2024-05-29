@@ -1,6 +1,6 @@
 import { useObservable } from "@legendapp/state/react";
 import { Box, Button, Flex, Popover, Text, Tooltip } from "@radix-ui/themes";
-import { Heart, HeartOff } from "lucide-react";
+import { Heart, HeartOff, Pen } from "lucide-react";
 
 export default function DeviceInfo() {
   const isSaved = useObservable(true);
@@ -8,8 +8,9 @@ export default function DeviceInfo() {
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <Box className="w-11 h-11 rounded-full overflow-hidden shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800">
+        <Box className="w-11 h-11 absolute top-30 left-40 rounded-full overflow-hidden shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800">
           <img
+            // TODO figure CSP FOR THIS...
             src="https://source.boringavatars.com/"
             alt="default_image"
             className="object-cover w-full h-full"
@@ -18,12 +19,23 @@ export default function DeviceInfo() {
       </Popover.Trigger>
       <Popover.Content size="1" className="max-w-[14rem]">
         <Flex direction="column" className="space-y-2">
-          <Flex align="center" justify="end" gap="4">
+          <Flex align="center" justify="end" gap="3">
+            <Tooltip content="Edit saved device">
+              <Button
+                variant="soft"
+                className="w-7 h-7 rounded-full cursor-pointer transition outline-none"
+                size="1"
+                color="gray"
+                radius="full"
+              >
+                <Pen />
+              </Button>
+            </Tooltip>
             <Tooltip content="Save device">
               <Button
                 variant="soft"
                 onClick={() => isSaved.set(!isSaved.get())}
-                className="w-7 h-7 rounded-full cursor-pointer transition"
+                className="w-7 h-7 rounded-full cursor-pointer transition outline-none"
                 color={isSaved.get() ? "ruby" : "gray"}
                 size="1"
                 radius="full"

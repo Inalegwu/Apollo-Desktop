@@ -69,7 +69,7 @@ export default function Layout({ children }: LayoutProps) {
         </Flex>
       </Flex>
       {children}
-      <Flex className="absolute bottom-1 right-1 space-x-3 bg-transparent backdrop-blur-sm rounded-lg p-3">
+      <Flex className="absolute bottom-1 right-1 space-x-3  rounded-lg p-3">
         <Button
           variant="soft"
           className="w-9 h-9 cursor-pointer rounded-full"
