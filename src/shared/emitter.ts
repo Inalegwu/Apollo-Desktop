@@ -1,6 +1,6 @@
 import EventEmitter from "node:events";
 
-export class TypedEventEmitter<TEvents extends Record<string, any>> {
+export class TypedEventEmitter<TEvents extends Record<string, unknown>> {
   private emitter = new EventEmitter();
 
   emit<TEventName extends keyof TEvents & string>(

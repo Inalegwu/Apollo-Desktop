@@ -25,8 +25,8 @@ type EventTypes = {
     data: Message;
   };
   dm: {
-    nodeId: string;
-    data: Message;
+    origin: string;
+    message: Message;
   };
 };
 
@@ -170,20 +170,43 @@ const handleNewSocket = (socket: Socket) => {
   });
 
   emitter.on("node-message", ({ nodeId, data }) => {
-    // if (!alreadySentMessages.has(data.data.id)) {
-    //   broadcast(data., nodeId, data.id, data.origin, data.ttl - 1);
-    // }
-    // if (data.type === "broadcast") {
-    //   emitter.emit("broadcast");
-    //   broadcast(data.data, nodeId, v4(), data.origin, data.ttl - 1);
-    // }
-    // if (data.type === "dm") {
-    //   if (data.destination === NODE_ID) {
-    //     emitter.emit("dm", { origin: data.origin, message: data.data });
-    //   } else {
-    //     dm(data.data, data.destination, data.id, data.origin, data.ttl - 1);
-    //   }
-    // }
+    if (!alreadySentMessages.has(data.data.id)) {
+      broadcast(
+        data,
+        data.data.destination,
+        data.data.id,
+        data.data.origin,
+        data.data.ttl - 1,
+      );
+    }
+
+    if (data.type === "broadcast") {
+      emitter.emit("broadcast");
+      broadcast(
+        data,
+        nodeId!,
+        data.data.id,
+        data.data.orign,
+        data.data.ttl - 1,
+      );
+    }
+
+    if (data.type === "dm") {
+      if (data.data.destination === NODE_ID) {
+        emitter.emit("dm", {
+          message: data,
+          origin: data.data.origin,
+        });
+      } else {
+        dm(
+          data,
+          data.data.destination,
+          data.data.id,
+          data.data.origin,
+          data.data.ttl - 1,
+        );
+      }
+    }
   });
 
   socket.on("data", (data) => {
@@ -224,7 +247,7 @@ const server = createServer((socket) => handleNewSocket(socket));
 export default function createP2PNode(opts: {
   port: number;
 }) {
-  console.log(`Launching TCP server on ${opts.port}`);
+  console.log(`Spinning up TCP server on ${opts.port}`);
 
   return {
     broadcast,
@@ -236,6 +259,7 @@ export default function createP2PNode(opts: {
       server.listen(opts.port);
     },
     close: (cb: () => void) => {
+      console.log("Spinning down TCP server");
       server.close(cb);
     },
   };
