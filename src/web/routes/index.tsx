@@ -4,7 +4,6 @@ import t from "@src/shared/config";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { v4 } from "uuid";
 import { DeviceInfo, HomeView, ThisDeviceInfo } from "../components";
 import { globalState$, peerState$ } from "../state";
 
@@ -35,13 +34,6 @@ function Index() {
         {neighborsData.map((v) => (
           <DeviceInfo key={v[0]} node={v[1]} />
         ))}
-        <DeviceInfo
-          node={{
-            connectionId: v4(),
-            nodeName: "something-is-fishy",
-            deviceType: "desktop",
-          }}
-        />
         <ThisDeviceInfo />
       </Flex>
     </HomeView>

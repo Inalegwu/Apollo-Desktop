@@ -16,8 +16,6 @@ export function ThisDeviceInfo() {
         <Box className="w-11 h-11 rounded-full overflow-hidden shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800">
           <img
             src={defaultImage}
-            // TODO avatars
-            // src="https://source.boringavatars.com/"
             alt="default_image"
             className="object-cover w-full h-full"
           />

@@ -29,7 +29,6 @@ export default function DeviceInfo({ node }: Props) {
           }}
         >
           <img
-            // TODO figure CSP FOR THIS...
             src="https://source.boringavatars.com/"
             alt="default_image"
             className="object-cover w-full h-full"
