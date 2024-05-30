@@ -23,9 +23,7 @@ export default function HomeView({ children }: Props) {
 
   return (
     <ContextMenu.Root>
-      <ContextMenu.Trigger>
-        {children}
-      </ContextMenu.Trigger>
+      <ContextMenu.Trigger>{children}</ContextMenu.Trigger>
       <ContextMenu.Content size="1" variant="soft">
         <ContextMenu.Item onClick={changeDeviceName} className="cursor-pointer">
           <Flex align="center" justify="start" gap="1">

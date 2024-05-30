@@ -27,17 +27,23 @@ export function ThisDeviceInfo() {
         <Flex direction="column" align="start" className="space-y-2">
           <Flex align="center" justify="start" gap="1">
             <Info size={10} />
-            <Text size="1">Info</Text>
+            <Text size="1" className="font-bold">
+              Info
+            </Text>
           </Flex>
           <Flex direction="column" align="start" className="space-y-1">
-            <Text size="1">
+            <Text size="1" className="font-bold">
               {fileTransferState$.files.get().length} selected files
             </Text>
             <Flex width="100%" align="center" justify="between">
-              <Text size="1">{deviceName?.slice(0)}</Text>
+              <Text size="1" className="font-bold">
+                {deviceName?.slice(0)}
+              </Text>
             </Flex>
             <Flex width="100%" align="center" justify="between">
-              <Text size="1">Keychain ID : {deviceID?.slice(0, 23)}...</Text>
+              <Text size="1" className="font-bold">
+                Keychain ID : {deviceID?.slice(0, 23)}...
+              </Text>
               {globalState$.deviceType.get() === "desktop" ? (
                 <Laptop size={9} className="text-zinc-400" />
               ) : (
@@ -45,8 +51,8 @@ export function ThisDeviceInfo() {
               )}
             </Flex>
             <Flex width="100%" align="center" justify="between">
-              <Text size="1">
-                Online status :{" "}
+              <Text size="1" className="font-bold">
+                You are{" "}
                 <span
                   className={`${
                     onlineStatus.get() ? "text-green-500" : "text-red-500"

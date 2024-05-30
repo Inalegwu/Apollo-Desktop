@@ -1,12 +1,15 @@
-import { globalState$ } from "@src/web/state";
+import { globalState$, peerState$ } from "@src/web/state";
 import EventEmitter from "node:events";
 import { Socket, createServer } from "node:net";
 import { v4 } from "uuid";
 
 const emitter = new EventEmitter();
-const connections = globalState$.connections.get();
-const neighbors = globalState$.neighbors.get();
+const connections = peerState$.connections.get();
+const neighbors = peerState$.neighbors.get();
 const NODE_ID = globalState$.applicationId.get();
+const NODE_NAME = globalState$.deviceName.get();
+const DEVICE_TYPE = globalState$.deviceType.get();
+
 const alreadySentMessages = new Set();
 
 type Message = {
@@ -26,7 +29,10 @@ const p2pSend = (data: P2PMessage) => {
   }
 
   for (const $nodeId of neighbors.keys()) {
-    nodeSend($nodeId, data);
+    nodeSend($nodeId, {
+      data: data.data,
+      type: data.type,
+    });
     alreadySentMessages.add(data.id);
   }
 };
@@ -82,7 +88,10 @@ const handleNewSocket = (socket: Socket) => {
   });
 
   emitter.on("connect", (connectionId) => {
-    send(connectionId, { type: "handshake", data: { nodeId: NODE_ID } });
+    send(connectionId, {
+      type: "handshake",
+      data: { nodeId: NODE_ID, nodeName: NODE_NAME, deviceType: DEVICE_TYPE },
+    });
   });
 
   emitter.on("disconnect", (connectionId) => {
@@ -97,15 +106,16 @@ const handleNewSocket = (socket: Socket) => {
     emitter.emit("node-disconnect", { node });
   });
 
-  emitter.on("message", ({ connectionId, nodeName, message }) => {
+  emitter.on("message", ({ connectionId, message }) => {
     const { type, data } = message;
 
     if (type === "handshake") {
-      const { nodeId } = data;
+      const { nodeId, nodeName, deviceType } = data;
 
       neighbors.set(nodeId, {
         connectionId,
         nodeName,
+        deviceType,
       });
 
       emitter.emit("node-connect", { nodeId });
@@ -115,6 +125,7 @@ const handleNewSocket = (socket: Socket) => {
       const nodeId = findNodeId(connectionId);
 
       if (!nodeId) {
+        console.log(`unknown node-id ${nodeId}`);
       }
 
       emitter.emit("node-message", { nodeId, data });
@@ -134,7 +145,7 @@ const handleNewSocket = (socket: Socket) => {
         message: JSON.parse(data.toString()),
       });
     } catch (e) {
-      // console.error(`Cannot parse message from peer`, data.toString())
+      console.error(`Cannot parse message from peer ${e}`);
     }
   });
 };

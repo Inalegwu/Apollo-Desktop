@@ -1,19 +1,19 @@
-/* @font-face {
+@font-face {
   font-family: Nunito;
   src: url("../assets/fonts/Nunito-VariableFont_wght.ttf");
-} */
+}
 
 
-@font-face {
+/* @font-face {
   font-family: Stout;
   src: url("../assets/fonts/StoutDeco.ttf");
-}
+} */
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Stout;
+  font-family: Nunito;
   text-decoration: none;
 }
 

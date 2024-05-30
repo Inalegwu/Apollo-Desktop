@@ -4,8 +4,9 @@ import t from "@src/shared/config";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { HomeView, ThisDeviceInfo } from "../components";
-import { globalState$ } from "../state";
+import { v4 } from "uuid";
+import { DeviceInfo, HomeView, ThisDeviceInfo } from "../components";
+import { globalState$, peerState$ } from "../state";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -13,6 +14,10 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { mutate: startServer } = t.node.startNode.useMutation();
+
+  const neighbors = peerState$.neighbors.get();
+
+  const neighborsData = Array.from(neighbors);
 
   useMount(() => {
     startServer();
@@ -27,6 +32,16 @@ function Index() {
   return (
     <HomeView>
       <Flex grow="1" className="items-center justify-center" id="workspace">
+        {neighborsData.map((v) => (
+          <DeviceInfo key={v[0]} node={v[1]} />
+        ))}
+        <DeviceInfo
+          node={{
+            connectionId: v4(),
+            nodeName: "something-is-fishy",
+            deviceType: "desktop",
+          }}
+        />
         <ThisDeviceInfo />
       </Flex>
     </HomeView>

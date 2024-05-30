@@ -4,7 +4,12 @@ import {
   persistObservable,
 } from "@legendapp/state/persist";
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
-import type { FileTransferState, GlobalState, Node } from "@shared/types";
+import type {
+  FileTransferState,
+  GlobalState,
+  Node,
+  PeerState,
+} from "@shared/types";
 import type { Socket } from "node:net";
 
 configureObservablePersistence({
@@ -17,6 +22,9 @@ export const globalState$ = observable<GlobalState>({
   deviceName: null,
   deviceType: "desktop",
   firstLaunch: true,
+});
+
+export const peerState$ = observable<PeerState>({
   neighbors: new Map<string, Node>(),
   connections: new Map<string, Socket>(),
 });

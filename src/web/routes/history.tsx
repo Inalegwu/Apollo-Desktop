@@ -10,7 +10,7 @@ function History() {
   return (
     <Flex direction="column" className="w-full h-full py-12 px-3">
       <Flex className="w-full" align="center" justify="between">
-        <Text size="7" className="tracking-wide">
+        <Text size="7" className="font-bold">
           Share History
         </Text>
       </Flex>
