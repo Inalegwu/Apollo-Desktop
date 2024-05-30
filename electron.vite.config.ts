@@ -13,36 +13,30 @@ export default defineConfig({
       },
     },
     resolve: {
-      // path aliases
       alias: {
         "@src": resolve(__dirname, "src/"),
         "@shared": resolve(__dirname, "src/shared/"),
         "@components": resolve(__dirname, "src/web/components/"),
         "@assets": resolve(__dirname, "src/assets/"),
-        "@pages": resolve(__dirname, "src/web/pages"),
       },
     },
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
     build: {
-      // tell electron-vite where to look for your preload file
       lib: {
         entry: "src/preload.ts",
       },
     },
   },
   renderer: {
-    // tell electron-vite where your web entry point is
     root: "src/web/",
     resolve: {
-      // path aliases
       alias: {
         "@src": resolve(__dirname, "src/"),
         "@shared": resolve(__dirname, "src/shared/"),
         "@components": resolve(__dirname, "src/web/components/"),
         "@assets": resolve(__dirname, "src/assets/"),
-        "@pages": resolve(__dirname, "src/web/pages"),
       },
     },
     plugins: [
@@ -53,7 +47,6 @@ export default defineConfig({
         generatedRouteTree: "./src/web/routeTree.gen.ts",
       }),
     ],
-    // where to output your web files
     build: {
       outDir: "out/renderer",
       rollupOptions: {

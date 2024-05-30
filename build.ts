@@ -12,6 +12,7 @@ build({
     },
     mac: {
       target: ["dmg"],
+      icon: "build/osx.icns",
     },
     win: {
       target: [
@@ -20,6 +21,7 @@ build({
           arch: ["x64"],
         },
       ],
+      icon: "build/win.ico",
     },
     linux: {
       target: [
@@ -27,11 +29,14 @@ build({
           target: "AppImage",
         },
       ],
+      icon: "build/unix.png",
     },
     nsis: {
       oneClick: true,
       perMachine: true,
       runAfterFinish: true,
+      installerIcon: "build/win.ico",
+      uninstallerIcon: "build/win.ico",
     },
   },
 });

@@ -12,6 +12,7 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "virtual:uno.css";
 import "./App.css";
+import { NotFoundPage } from "./components";
 import { routeTree } from "./routeTree.gen";
 import { Route as rootRoute } from "./routes/__root";
 
@@ -21,7 +22,7 @@ enableReactTracking({
 
 const notFoundRoute = new NotFoundRoute({
   getParentRoute: () => rootRoute,
-  component: () => "404 not found",
+  component: () => <NotFoundPage />,
 });
 
 const router = createRouter({ routeTree, notFoundRoute });
@@ -33,7 +34,6 @@ declare module "@tanstack/react-router" {
 }
 
 const rootElement = document.getElementById("root");
-const isDark = document.body.classList.contains("dark");
 
 if (!rootElement?.innerHTML) {
   const root = ReactDOM.createRoot(rootElement!);

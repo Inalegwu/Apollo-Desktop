@@ -1,6 +1,6 @@
-import { Button, Flex, Link } from "@radix-ui/themes";
+import { Button, Flex } from "@radix-ui/themes";
 import t from "@src/shared/config";
-import { useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, History, Minus, Plus, Settings, X } from "lucide-react";
 import type React from "react";
 import { fileTransferState$ } from "../state";

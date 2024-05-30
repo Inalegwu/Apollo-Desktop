@@ -4,7 +4,7 @@ import { Folder, Info, Key, Laptop, Phone, Wifi, WifiOff } from "lucide-react";
 import defaultImage from "../../assets/images/user_default.jpg";
 import { fileTransferState$, globalState$ } from "../state";
 
-export function ThisDeviceInfo() {
+export default function ThisDeviceInfo() {
   const deviceName = globalState$.deviceName.get();
   const deviceID = globalState$.applicationId.get();
 

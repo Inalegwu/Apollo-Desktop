@@ -15,7 +15,7 @@ function History() {
         </Text>
       </Flex>
       <Flex direction="column" className="py-5" align="start" grow="1">
-        <Text>body</Text>
+        placeholder
       </Flex>
       <Tooltip content="Clear share history">
         <Button
