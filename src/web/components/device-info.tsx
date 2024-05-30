@@ -1,7 +1,7 @@
 import { useObservable } from "@legendapp/state/react";
 import { Box, Button, Flex, Popover, Text } from "@radix-ui/themes";
 import type { Node } from "@src/shared/types";
-import { Heart, Info, Laptop, Pen, Phone, Wifi } from "lucide-react";
+import { Heart, Info, Key, Laptop, Pen, Phone, Wifi } from "lucide-react";
 
 type Props = {
   node: Node;
@@ -38,11 +38,11 @@ export default function DeviceInfo({ node }: Props) {
       <Popover.Content size="1">
         <Flex direction="column" className="space-y-2">
           <Flex align="center" justify="between">
-            <Flex width="100%" align="center" justify="start" gap="1">
-              <Info size={10} />
+            <Flex width="100%" align="center" justify="between" gap="2">
               <Text size="1" className="font-bold">
                 Info
               </Text>
+              <Info size={10} className="text-zinc-400" />
             </Flex>
             <Flex align="center" justify="end" gap="3">
               {isSaved.get() && (
@@ -69,14 +69,9 @@ export default function DeviceInfo({ node }: Props) {
             </Flex>
           </Flex>
           <Flex className="space-y-1" direction="column" align="start">
-            <Flex width="100%" align="center" justify="between">
+            <Flex width="100%" align="center" justify="between" gap="2">
               <Text size="1" className="font-bold">
                 {node.nodeName?.slice(0)}
-              </Text>
-            </Flex>
-            <Flex width="100%" align="center" justify="between">
-              <Text size="1" className="font-bold">
-                Keychain ID : {node.connectionId?.slice(0, 23)}...
               </Text>
               {node.deviceType === "desktop" ? (
                 <Laptop size={9} className="text-zinc-400" />
@@ -84,7 +79,13 @@ export default function DeviceInfo({ node }: Props) {
                 <Phone size={9} className="text-zinc-400" />
               )}
             </Flex>
-            <Flex width="100%" align="center" justify="between">
+            <Flex width="100%" align="center" justify="between" gap="2">
+              <Text size="1" className="font-bold">
+                {node.connectionId?.slice(0, node.connectionId?.length)}...
+              </Text>
+              <Key/>
+            </Flex>
+            <Flex width="100%" align="center" justify="between" gap="2">
               <Text size="1" className="font-bold">
                 This device is <span className="text-green-500">Online</span>
               </Text>

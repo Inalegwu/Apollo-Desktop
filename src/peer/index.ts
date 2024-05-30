@@ -1,4 +1,5 @@
 import { TypedEventEmitter } from "@src/shared/emitter";
+import type { Message, P2PMessage } from "@src/shared/types";
 import { globalState$, peerState$ } from "@src/web/state";
 import { Socket, createServer } from "node:net";
 import { v4 } from "uuid";
@@ -36,20 +37,8 @@ const neighbors = peerState$.neighbors.get();
 const NODE_ID = globalState$.applicationId.get();
 const NODE_NAME = globalState$.deviceName.get();
 const DEVICE_TYPE = globalState$.deviceType.get();
-
-const alreadySentMessages = new Set();
-
-type Message = {
-  type: "message" | "handshake" | "broadcast" | "dm";
-  data: Record<string, any>;
-};
-
-type P2PMessage = Message & {
-  ttl: number;
-  id: string;
-  origin: string;
-  destination: string;
-};
+const alreadySentMessages = peerState$.alreadySent.get();
+const alreadySeenMessages = new Set();
 
 const p2pSend = (data: P2PMessage) => {
   if (data.ttl < 1) {
@@ -68,7 +57,7 @@ const p2pSend = (data: P2PMessage) => {
       data: data.data,
       type: data.type,
     });
-    alreadySentMessages.add(data.id);
+    alreadySentMessages.add(data);
   }
 };
 
@@ -170,7 +159,7 @@ const handleNewSocket = (socket: Socket) => {
   });
 
   emitter.on("node-message", ({ nodeId, data }) => {
-    if (!alreadySentMessages.has(data.data.id)) {
+    if (!alreadySentMessages.has(data)) {
       broadcast(
         data,
         data.data.destination,
@@ -181,6 +170,16 @@ const handleNewSocket = (socket: Socket) => {
     }
 
     if (data.type === "broadcast") {
+      // I've seen this before, so I've already passed it
+      // on
+      if (alreadySeenMessages.has(data.data.id)) {
+        return;
+      }
+
+      // add this message to my already seen
+      // so I wont have to broadcast it again
+      alreadySeenMessages.add(data.data.id);
+
       emitter.emit("broadcast");
       broadcast(
         data,

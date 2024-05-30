@@ -7,6 +7,7 @@ import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/
 import type {
   FileTransferState,
   GlobalState,
+  Message,
   Node,
   PeerState,
 } from "@shared/types";
@@ -27,6 +28,7 @@ export const globalState$ = observable<GlobalState>({
 export const peerState$ = observable<PeerState>({
   neighbors: new Map<string, Node>(),
   connections: new Map<string, Socket>(),
+  alreadySent: new Set<Message>(),
 });
 
 export const fileTransferState$ = observable<FileTransferState>({

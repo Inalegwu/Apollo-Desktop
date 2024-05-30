@@ -8,6 +8,18 @@ export type Node = {
   deviceType: DeviceType;
 };
 
+export type Message = {
+  type: "message" | "handshake" | "broadcast" | "dm";
+  data: Record<string, any>;
+};
+
+export type P2PMessage = Message & {
+  ttl: number;
+  id: string;
+  origin: string;
+  destination: string;
+};
+
 export type GlobalState = {
   colorMode: "dark" | "light";
   applicationId: string | null;
@@ -19,6 +31,7 @@ export type GlobalState = {
 export type PeerState = {
   neighbors: Map<string, Node>;
   connections: Map<string, Socket>;
+  alreadySent: Set<Message>;
 };
 
 export type FileTransferState = {
