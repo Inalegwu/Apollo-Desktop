@@ -35,6 +35,7 @@ export default function Layout({ children }: LayoutProps) {
       <Flex
         align="center"
         justify="between"
+        gap="4"
         className="absolute z-10 w-full px-4 py-3 top-0 left-0"
       >
         {!isHome && (
@@ -48,7 +49,7 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
           </Button>
         )}
-        <Flex grow="1" id="drag-region" className="p-1" />
+        <Flex grow="1" id="drag-region" className="p-2" />
         <Flex align="center" justify="end" gap="5">
           <Button
             onClick={() => minimizeWindow()}
