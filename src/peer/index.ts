@@ -1,9 +1,36 @@
+import { TypedEventEmitter } from "@src/shared/emitter";
 import { globalState$, peerState$ } from "@src/web/state";
-import EventEmitter from "node:events";
 import { Socket, createServer } from "node:net";
 import { v4 } from "uuid";
 
-const emitter = new EventEmitter();
+type EventTypes = {
+  connect: string;
+  disconnect: string;
+  "node-connect": {
+    nodeId: string;
+  };
+  "node-disconnect": {
+    nodeId: string;
+  };
+  message: {
+    connectionId: string;
+    message: Message;
+  };
+  "node-message": {
+    nodeId: string | undefined;
+    data: Message;
+  };
+  broadcast: {
+    nodeId: string;
+    data: Message;
+  };
+  dm: {
+    nodeId: string;
+    data: Message;
+  };
+};
+
+const emitter = new TypedEventEmitter<EventTypes>();
 const connections = peerState$.connections.get();
 const neighbors = peerState$.neighbors.get();
 const NODE_ID = globalState$.applicationId.get();
@@ -14,18 +41,26 @@ const alreadySentMessages = new Set();
 
 type Message = {
   type: "message" | "handshake" | "broadcast" | "dm";
-  data: unknown;
+  data: Record<string, any>;
 };
 
 type P2PMessage = Message & {
   ttl: number;
   id: string;
   origin: string;
+  destination: string;
 };
 
 const p2pSend = (data: P2PMessage) => {
   if (data.ttl < 1) {
     return;
+  }
+
+  if (data.type === "dm") {
+    nodeSend(data.destination, {
+      data: data.data,
+      type: data.type,
+    });
   }
 
   for (const $nodeId of neighbors.keys()) {
@@ -39,20 +74,22 @@ const p2pSend = (data: P2PMessage) => {
 
 const broadcast = (
   message: Message,
+  destination: string,
   id: string = v4(),
   origin: string = NODE_ID,
   ttl = 1000,
 ) => {
-  p2pSend({ id, ttl, origin, ...message, type: "broadcast" });
+  p2pSend({ id, ttl, origin, ...message, type: "broadcast", destination });
 };
 
 const dm = (
   message: Message,
+  destination: string,
   id: string = v4(),
   origin: string = NODE_ID,
   ttl = 1000,
 ) => {
-  p2pSend({ id, ttl, ...message, origin, type: "dm" });
+  p2pSend({ id, ttl, ...message, origin, type: "dm", destination });
 };
 
 const findNodeId = (connectionId: string) => {
@@ -95,15 +132,15 @@ const handleNewSocket = (socket: Socket) => {
   });
 
   emitter.on("disconnect", (connectionId) => {
-    const node = findNodeId(connectionId);
+    const nodeId = findNodeId(connectionId);
 
-    if (!node) {
+    if (!nodeId) {
       return;
     }
 
-    neighbors.delete(node);
+    neighbors.delete(nodeId);
 
-    emitter.emit("node-disconnect", { node });
+    emitter.emit("node-disconnect", { nodeId });
   });
 
   emitter.on("message", ({ connectionId, message }) => {
@@ -128,14 +165,25 @@ const handleNewSocket = (socket: Socket) => {
         console.log(`unknown node-id ${nodeId}`);
       }
 
-      emitter.emit("node-message", { nodeId, data });
+      emitter.emit("node-message", { nodeId, data: message });
     }
   });
 
   emitter.on("node-message", ({ nodeId, data }) => {
-    if (!alreadySentMessages.has(data.id)) {
-      broadcast(data.message, data.id, data.origin, data.ttl - 1);
-    }
+    // if (!alreadySentMessages.has(data.data.id)) {
+    //   broadcast(data., nodeId, data.id, data.origin, data.ttl - 1);
+    // }
+    // if (data.type === "broadcast") {
+    //   emitter.emit("broadcast");
+    //   broadcast(data.data, nodeId, v4(), data.origin, data.ttl - 1);
+    // }
+    // if (data.type === "dm") {
+    //   if (data.destination === NODE_ID) {
+    //     emitter.emit("dm", { origin: data.origin, message: data.data });
+    //   } else {
+    //     dm(data.data, data.destination, data.id, data.origin, data.ttl - 1);
+    //   }
+    // }
   });
 
   socket.on("data", (data) => {
@@ -181,7 +229,8 @@ export default function createP2PNode(opts: {
   return {
     broadcast,
     dm,
-    on: emitter.on,
+    on: emitter.on.bind(emitter),
+    off: emitter.off.bind(emitter),
     connnect,
     start: () => {
       server.listen(opts.port);
