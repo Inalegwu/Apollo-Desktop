@@ -45,7 +45,7 @@ if (!rootElement?.innerHTML) {
         <QueryClientProvider client={queryClient}>
           <Theme
             radius="medium"
-            accentColor="bronze"
+            accentColor="violet"
             appearance={globalState$.colorMode.get()}
             grayColor="gray"
           >
