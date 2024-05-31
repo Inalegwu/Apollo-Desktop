@@ -1,8 +1,8 @@
 import { ContextMenu, Flex, Text } from "@radix-ui/themes";
+import { globalState$ } from "@shared/state";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
 import { Lock, RefreshCw } from "lucide-react";
 import { useCallback } from "react";
-import { globalState$ } from "../../shared/state";
 
 type Props = {
   children: React.ReactNode;

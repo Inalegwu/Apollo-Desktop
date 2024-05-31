@@ -1,10 +1,10 @@
 import { useObserveEffect } from "@legendapp/state/react";
 import { Button, Flex } from "@radix-ui/themes";
+import { fileTransferState$, globalState$ } from "@shared/state";
 import t from "@src/shared/config";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, History, Minus, Plus, Settings, X } from "lucide-react";
 import type React from "react";
-import { fileTransferState$, globalState$ } from "../../shared/state";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -53,7 +53,7 @@ export default function Layout({ children }: LayoutProps) {
             className="w-2.5 h-4.5 rounded-full cursor-pointer"
             asChild
           >
-            <Link href="/">
+            <Link to="/">
               <ArrowLeft size={12} />
             </Link>
           </Button>
@@ -85,7 +85,7 @@ export default function Layout({ children }: LayoutProps) {
           className="w-9 h-9 cursor-pointer rounded-full"
           asChild
         >
-          <Link href="/history">
+          <Link to="/history">
             <History size={13} />
           </Link>
         </Button>
@@ -103,7 +103,7 @@ export default function Layout({ children }: LayoutProps) {
           asChild
           className=" w-9 h-9 cursor-pointer rounded-full"
         >
-          <Link href="/settings">
+          <Link to="/settings">
             <Settings size={13} />
           </Link>
         </Button>

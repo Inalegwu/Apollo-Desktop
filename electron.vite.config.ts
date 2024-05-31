@@ -43,8 +43,8 @@ export default defineConfig({
       react(),
       UnoCSS(),
       TanStackRouterVite({
-        routesDirectory: "./src/web/routes/",
-        generatedRouteTree: "./src/web/routeTree.gen.ts",
+        routesDirectory: "src/web/routes",
+        generatedRouteTree: "src/web/routeTree.gen.ts",
       }),
     ],
     build: {

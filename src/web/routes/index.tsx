@@ -1,9 +1,9 @@
 import { useMount } from "@legendapp/state/react";
 import { Flex } from "@radix-ui/themes";
+import { globalState$, peerState$ } from "@shared/state";
 import t from "@src/shared/config";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { globalState$, peerState$ } from "../../shared/state";
 import { DeviceInfo, HomeView, ThisDeviceInfo } from "../components";
 
 export const Route = createFileRoute("/")({

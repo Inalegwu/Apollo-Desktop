@@ -1,6 +1,6 @@
 import { computed } from "@legendapp/state";
 import { Box, Flex, Switch, Tabs, Text } from "@radix-ui/themes";
-import { globalState$ } from "@src/shared/state";
+import { globalState$ } from "@shared/state";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
 
@@ -24,14 +24,11 @@ function Settings() {
   }, []);
 
   return (
-    <Flex className="w-full h-full py-12 px-2">
+    <Flex className="w-full h-full py-10 px-2">
       <Tabs.Root className="w-full flex-1 px-1">
         <Tabs.List defaultValue="appearance" size="2">
           <Tabs.Trigger className="cursor-pointer" value="appearance">
             Appearance
-          </Tabs.Trigger>
-          <Tabs.Trigger className="cursor-pointer" value="network">
-            Network
           </Tabs.Trigger>
         </Tabs.List>
         <Box className="pt-5">

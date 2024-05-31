@@ -3,12 +3,6 @@
   src: url("../assets/fonts/Nunito-VariableFont_wght.ttf");
 }
 
-
-/* @font-face {
-  font-family: Stout;
-  src: url("../assets/fonts/StoutDeco.ttf");
-} */
-
 * {
   margin: 0;
   padding: 0;
@@ -17,11 +11,14 @@
   text-decoration: none;
 }
 
-/* TODO change radix theme defaults */
-.radix-themes{
+.radix-themes {
   --default-font-family:Nunito;
+  --heading-font-family:Nunito;
+  --code-font-family:   Nunito;
+  --strong-font-family: Nunito;
+  --em-font-family:     Nunito;
+  --quote-font-family:  Nunito;
 }
-
 body {
    -webkit-user-select: none;
   -ms-user-select: none;
