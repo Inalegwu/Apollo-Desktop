@@ -1,35 +1,8 @@
 import { TypedEventEmitter } from "@src/shared/emitter";
-import type { Message, P2PMessage } from "@src/shared/types";
+import type { EventTypes, Message, P2PMessage } from "@src/shared/types";
 import { globalState$, peerState$ } from "@src/web/state";
 import { Socket, createServer } from "node:net";
 import { v4 } from "uuid";
-
-type EventTypes = {
-  connect: string;
-  disconnect: string;
-  "node-connect": {
-    nodeId: string;
-  };
-  "node-disconnect": {
-    nodeId: string;
-  };
-  message: {
-    connectionId: string;
-    message: Message;
-  };
-  "node-message": {
-    nodeId: string | undefined;
-    data: Message;
-  };
-  broadcast: {
-    nodeId: string;
-    data: Message;
-  };
-  dm: {
-    origin: string;
-    message: Message;
-  };
-};
 
 const emitter = new TypedEventEmitter<EventTypes>();
 const connections = peerState$.connections.get();
@@ -140,18 +113,28 @@ emitter.on("node-message", ({ nodeId, data }) => {
   }
 
   if (data.type === "broadcast") {
-    // I've seen this before, so I've already passed it
-    // on
     if (alreadySeenMessages.has(data.data.id)) {
       return;
     }
 
-    // add this message to my already seen
-    // so I wont have to broadcast it again
     alreadySeenMessages.add(data.data.id);
 
-    emitter.emit("broadcast");
-    broadcast(data, nodeId!, data.data.id, data.data.orign, data.data.ttl - 1);
+    // this broadcast is for me
+    if (data.data.destination === NODE_ID) {
+      emitter.emit("broadcast", {
+        data: data,
+        nodeId: nodeId!,
+      });
+    } else {
+      alreadySentMessages.add(data);
+      broadcast(
+        data,
+        data.data.destination,
+        v4(),
+        data.data.origin,
+        data.data.ttl - 1,
+      );
+    }
   }
 
   if (data.type === "dm") {
@@ -175,6 +158,11 @@ emitter.on("node-message", ({ nodeId, data }) => {
 emitter.on("dm", ({ origin, message }) => {
   // TODO notify the user of the incoming
   // file so they can accept an then stream in
+  console.log(origin, message);
+});
+
+emitter.on("broadcast", ({ data, nodeId }) => {
+  console.log(data, nodeId);
 });
 
 const handleNewSocket = (socket: Socket) => {
@@ -189,6 +177,7 @@ const handleNewSocket = (socket: Socket) => {
   });
 
   emitter.on("connect", (connectionId) => {
+    console.log(`attempting to handshake ${connectionId}`);
     send(connectionId, {
       type: "handshake",
       data: { nodeId: NODE_ID, nodeName: NODE_NAME, deviceType: DEVICE_TYPE },
@@ -203,6 +192,7 @@ const handleNewSocket = (socket: Socket) => {
     }
 
     neighbors.delete(nodeId);
+    console.log(`disconnecting from ${nodeId}`);
 
     emitter.emit("node-disconnect", { nodeId });
   });
@@ -227,6 +217,8 @@ const send = (connectionId: string, message: Message) => {
       `Attempting to send data to connection that doesn't exist ${connectionId}`,
     );
   }
+
+  console.log(message);
 
   socket.write(JSON.stringify(message));
 };

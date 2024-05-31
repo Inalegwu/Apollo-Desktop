@@ -1,9 +1,8 @@
-import { useMount } from "@legendapp/state/react";
+import { useMount, useUnmount } from "@legendapp/state/react";
 import { Flex } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { v4 } from "uuid";
 import { DeviceInfo, HomeView, ThisDeviceInfo } from "../components";
 import { globalState$, peerState$ } from "../state";
 
@@ -13,6 +12,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { mutate: startServer } = t.node.startNode.useMutation();
+  const { mutate: stopServer } = t.node.stopNode.useMutation();
 
   const neighbors = peerState$.neighbors.get();
 
@@ -26,6 +26,10 @@ function Index() {
       globalState$.deviceName.set(generateRandomName());
       globalState$.firstLaunch.set(false);
     }
+  });
+
+  useUnmount(() => {
+    stopServer();
   });
 
   return (
@@ -42,13 +46,6 @@ function Index() {
         {neighborsData.map((v) => (
           <DeviceInfo key={v.connectionId} node={v} />
         ))}
-        <DeviceInfo
-          node={{
-            connectionId: v4(),
-            deviceType: "mobile",
-            nodeName: "insane-slimy-mongoose",
-          }}
-        />
         <ThisDeviceInfo />
       </Flex>
     </HomeView>

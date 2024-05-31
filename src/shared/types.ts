@@ -37,3 +37,30 @@ export type PeerState = {
 export type FileTransferState = {
   files: string[];
 };
+
+export type EventTypes = {
+  connect: string;
+  disconnect: string;
+  "node-connect": {
+    nodeId: string;
+  };
+  "node-disconnect": {
+    nodeId: string;
+  };
+  message: {
+    connectionId: string;
+    message: Message;
+  };
+  "node-message": {
+    nodeId: string | undefined;
+    data: Message;
+  };
+  broadcast: {
+    nodeId: string;
+    data: Message;
+  };
+  dm: {
+    origin: string;
+    message: Message;
+  };
+};
