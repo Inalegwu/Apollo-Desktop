@@ -1,4 +1,4 @@
-import node from "@src/node";
+import node from "@src/peer/node";
 import type { inferAsyncReturnType } from "@trpc/server";
 import { BrowserWindow, app } from "electron";
 import { store } from "./storage";
