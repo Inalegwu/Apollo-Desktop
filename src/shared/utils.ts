@@ -19,3 +19,5 @@ export function generateRandomName() {
 export function generateAppId() {
   return v4();
 }
+
+export const randomNumber = () => Math.floor(Math.random() * 250);

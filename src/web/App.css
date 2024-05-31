@@ -49,3 +49,12 @@ body {
   background-size: 16px 16px;
   background-color: rgb(255, 255, 255);
 }
+
+#workspace_dark {
+  background-image: 
+    radial-gradient(rgb(31, 28, 28) 10%, transparent 10%),
+    radial-gradient(rgb(31, 28, 28) 10%, transparent 10%);
+  background-position: 0px 0px, 8px 8px;
+  background-size: 16px 16px;
+  background-color: rgb(17, 17, 17);
+}

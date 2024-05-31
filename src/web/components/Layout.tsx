@@ -1,9 +1,10 @@
+import { useObserveEffect } from "@legendapp/state/react";
 import { Button, Flex } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, History, Minus, Plus, Settings, X } from "lucide-react";
 import type React from "react";
-import { fileTransferState$ } from "../state";
+import { fileTransferState$, globalState$ } from "../state";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -16,6 +17,14 @@ export default function Layout({ children }: LayoutProps) {
   const navState = useRouterState();
 
   const isHome = navState.location.pathname === "/";
+
+  useObserveEffect(() => {
+    if (globalState$.colorMode.get() === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  });
 
   const { mutate: selectFiles } = t.files.selectFiles.useMutation({
     onSuccess: (data) => {

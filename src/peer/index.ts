@@ -102,6 +102,76 @@ const nodeSend = (nodeId: string, data: Message) => {
   });
 };
 
+emitter.on("message", ({ connectionId, message }) => {
+  const { type, data } = message;
+
+  if (type === "handshake") {
+    const { nodeId, nodeName, deviceType } = data;
+
+    neighbors.set(nodeId, {
+      connectionId,
+      nodeName,
+      deviceType,
+    });
+
+    emitter.emit("node-connect", { nodeId });
+  }
+
+  if (type === "message") {
+    const nodeId = findNodeId(connectionId);
+
+    if (!nodeId) {
+      console.log(`unknown node-id ${nodeId}`);
+    }
+
+    emitter.emit("node-message", { nodeId, data: message });
+  }
+});
+
+emitter.on("node-message", ({ nodeId, data }) => {
+  if (!alreadySentMessages.has(data)) {
+    broadcast(
+      data,
+      data.data.destination,
+      data.data.id,
+      data.data.origin,
+      data.data.ttl - 1,
+    );
+  }
+
+  if (data.type === "broadcast") {
+    // I've seen this before, so I've already passed it
+    // on
+    if (alreadySeenMessages.has(data.data.id)) {
+      return;
+    }
+
+    // add this message to my already seen
+    // so I wont have to broadcast it again
+    alreadySeenMessages.add(data.data.id);
+
+    emitter.emit("broadcast");
+    broadcast(data, nodeId!, data.data.id, data.data.orign, data.data.ttl - 1);
+  }
+
+  if (data.type === "dm") {
+    if (data.data.destination === NODE_ID) {
+      emitter.emit("dm", {
+        message: data,
+        origin: data.data.origin,
+      });
+    } else {
+      dm(
+        data,
+        data.data.destination,
+        data.data.id,
+        data.data.origin,
+        data.data.ttl - 1,
+      );
+    }
+  }
+});
+
 const handleNewSocket = (socket: Socket) => {
   const connectionId = v4();
 
@@ -130,82 +200,6 @@ const handleNewSocket = (socket: Socket) => {
     neighbors.delete(nodeId);
 
     emitter.emit("node-disconnect", { nodeId });
-  });
-
-  emitter.on("message", ({ connectionId, message }) => {
-    const { type, data } = message;
-
-    if (type === "handshake") {
-      const { nodeId, nodeName, deviceType } = data;
-
-      neighbors.set(nodeId, {
-        connectionId,
-        nodeName,
-        deviceType,
-      });
-
-      emitter.emit("node-connect", { nodeId });
-    }
-
-    if (type === "message") {
-      const nodeId = findNodeId(connectionId);
-
-      if (!nodeId) {
-        console.log(`unknown node-id ${nodeId}`);
-      }
-
-      emitter.emit("node-message", { nodeId, data: message });
-    }
-  });
-
-  emitter.on("node-message", ({ nodeId, data }) => {
-    if (!alreadySentMessages.has(data)) {
-      broadcast(
-        data,
-        data.data.destination,
-        data.data.id,
-        data.data.origin,
-        data.data.ttl - 1,
-      );
-    }
-
-    if (data.type === "broadcast") {
-      // I've seen this before, so I've already passed it
-      // on
-      if (alreadySeenMessages.has(data.data.id)) {
-        return;
-      }
-
-      // add this message to my already seen
-      // so I wont have to broadcast it again
-      alreadySeenMessages.add(data.data.id);
-
-      emitter.emit("broadcast");
-      broadcast(
-        data,
-        nodeId!,
-        data.data.id,
-        data.data.orign,
-        data.data.ttl - 1,
-      );
-    }
-
-    if (data.type === "dm") {
-      if (data.data.destination === NODE_ID) {
-        emitter.emit("dm", {
-          message: data,
-          origin: data.data.origin,
-        });
-      } else {
-        dm(
-          data,
-          data.data.destination,
-          data.data.id,
-          data.data.origin,
-          data.data.ttl - 1,
-        );
-      }
-    }
   });
 
   socket.on("data", (data) => {

@@ -3,6 +3,7 @@ import { Flex } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
+import { v4 } from "uuid";
 import { DeviceInfo, HomeView, ThisDeviceInfo } from "../components";
 import { globalState$, peerState$ } from "../state";
 
@@ -15,7 +16,7 @@ function Index() {
 
   const neighbors = peerState$.neighbors.get();
 
-  const neighborsData = Array.from(neighbors);
+  const neighborsData = Array.from(neighbors.values());
 
   useMount(() => {
     startServer();
@@ -29,10 +30,25 @@ function Index() {
 
   return (
     <HomeView>
-      <Flex grow="1" className="items-center justify-center" id="workspace">
+      <Flex
+        grow="1"
+        className="items-center justify-center"
+        id={
+          globalState$.colorMode.get() === "dark"
+            ? "workspace_dark"
+            : "workspace"
+        }
+      >
         {neighborsData.map((v) => (
-          <DeviceInfo key={v[0]} node={v[1]} />
+          <DeviceInfo key={v.connectionId} node={v} />
         ))}
+        <DeviceInfo
+          node={{
+            connectionId: v4(),
+            deviceType: "mobile",
+            nodeName: "insane-slimy-mongoose",
+          }}
+        />
         <ThisDeviceInfo />
       </Flex>
     </HomeView>

@@ -1,7 +1,11 @@
 import { useObservable } from "@legendapp/state/react";
 import { Box, Button, Flex, Popover, Text } from "@radix-ui/themes";
+import t from "@src/shared/config";
 import type { Node } from "@src/shared/types";
-import { Heart, Info, Key, Laptop, Pen, Phone, Wifi } from "lucide-react";
+import { randomNumber } from "@src/shared/utils";
+import { Heart, Key, Laptop, Pen, Phone, Send, Wifi } from "lucide-react";
+import { useCallback } from "react";
+import { fileTransferState$ } from "../state";
 
 type Props = {
   node: Node;
@@ -10,13 +14,20 @@ type Props = {
 // x axis: 5-180
 // y axis: 5-130
 
+const top = randomNumber();
+const left = randomNumber();
+
 export default function DeviceInfo({ node }: Props) {
   const isSaved = useObservable(true);
 
-  const randomTop = Math.floor(Math.random() * 130);
-  const randomLeft = Math.floor(Math.random() * 150);
+  const { mutate: sendFiles } = t.node.sendFile.useMutation();
 
-  console.log(randomTop, randomLeft);
+  const send = useCallback(() => {
+    sendFiles({
+      files: fileTransferState$.files.get(),
+      destinationId: node.connectionId,
+    });
+  }, [sendFiles, node]);
 
   return (
     <Popover.Root>
@@ -24,8 +35,8 @@ export default function DeviceInfo({ node }: Props) {
         <Box
           className="w-11 h-11 absolute rounded-full overflow-hidden shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800"
           style={{
-            top: `${randomTop}px`,
-            left: `${randomLeft}px`,
+            top: `${top}px`,
+            left: `${left}px`,
           }}
         >
           <img
@@ -38,11 +49,10 @@ export default function DeviceInfo({ node }: Props) {
       <Popover.Content size="1">
         <Flex direction="column" className="space-y-2">
           <Flex align="center" justify="between">
-            <Flex width="100%" align="center" justify="between" gap="2">
+            <Flex align="center" justify="between" gap="2">
               <Text size="1" className="font-bold">
                 Info
               </Text>
-              <Info size={10} className="text-zinc-400" />
             </Flex>
             <Flex align="center" justify="end" gap="3">
               {isSaved.get() && (
@@ -83,7 +93,7 @@ export default function DeviceInfo({ node }: Props) {
               <Text size="1" className="font-bold">
                 {node.connectionId?.slice(0, node.connectionId?.length)}...
               </Text>
-              <Key/>
+              <Key size={9} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
               <Text size="1" className="font-bold">
@@ -92,6 +102,21 @@ export default function DeviceInfo({ node }: Props) {
               <Wifi size={9} className="text-zinc-400" />
             </Flex>
           </Flex>
+          {fileTransferState$.files.get().length > 0 && (
+            <Button
+              onClick={send}
+              variant="soft"
+              className="cursor-pointer"
+              size="1"
+            >
+              <Flex align="center" justify="center" gap="1">
+                <Text size="1" className="font-bold">
+                  Send
+                </Text>
+                <Send size={10} />
+              </Flex>
+            </Button>
+          )}
         </Flex>
       </Popover.Content>
     </Popover.Root>

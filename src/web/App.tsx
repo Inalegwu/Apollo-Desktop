@@ -15,6 +15,7 @@ import "./App.css";
 import { NotFoundPage } from "./components";
 import { routeTree } from "./routeTree.gen";
 import { Route as rootRoute } from "./routes/__root";
+import { globalState$ } from "./state";
 
 enableReactTracking({
   auto: true,
@@ -42,7 +43,12 @@ if (!rootElement?.innerHTML) {
     <StrictMode>
       <t.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Theme radius="medium" accentColor="mint" grayColor="sage">
+          <Theme
+            radius="medium"
+            accentColor="bronze"
+            appearance={globalState$.colorMode.get()}
+            grayColor="gray"
+          >
             <RouterProvider router={router} />
           </Theme>
         </QueryClientProvider>
