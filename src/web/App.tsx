@@ -12,11 +12,11 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "react-toastify/dist/ReactToastify.css";
 import "virtual:uno.css";
+import { globalState$ } from "../shared/state";
 import "./App.css";
 import { NotFoundPage } from "./components";
 import { routeTree } from "./routeTree.gen";
 import { Route as rootRoute } from "./routes/__root";
-import { globalState$ } from "./state";
 
 enableReactTracking({
   auto: true,

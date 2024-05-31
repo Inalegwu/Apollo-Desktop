@@ -5,7 +5,7 @@ import type { Node } from "@src/shared/types";
 import { randomNumber } from "@src/shared/utils";
 import { Heart, Key, Laptop, Pen, Phone, Send, Wifi } from "lucide-react";
 import { useCallback } from "react";
-import { fileTransferState$ } from "../state";
+import { fileTransferState$ } from "../../shared/state";
 
 type Props = {
   node: Node;

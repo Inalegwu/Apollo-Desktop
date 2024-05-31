@@ -1,6 +1,6 @@
 import { computed } from "@legendapp/state";
 import { Box, Flex, Switch, Tabs, Text } from "@radix-ui/themes";
-import { globalState$ } from "@src/web/state";
+import { globalState$ } from "@src/shared/state";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
 

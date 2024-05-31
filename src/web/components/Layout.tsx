@@ -4,7 +4,7 @@ import t from "@src/shared/config";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, History, Minus, Plus, Settings, X } from "lucide-react";
 import type React from "react";
-import { fileTransferState$, globalState$ } from "../state";
+import { fileTransferState$, globalState$ } from "../../shared/state";
 
 type LayoutProps = {
   children?: React.ReactNode;

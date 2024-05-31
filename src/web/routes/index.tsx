@@ -3,8 +3,8 @@ import { Flex } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
+import { globalState$, peerState$ } from "../../shared/state";
 import { DeviceInfo, HomeView, ThisDeviceInfo } from "../components";
-import { globalState$, peerState$ } from "../state";
 
 export const Route = createFileRoute("/")({
   component: Index,

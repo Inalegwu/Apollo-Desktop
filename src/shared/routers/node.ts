@@ -1,5 +1,5 @@
+import { globalState$ } from "@src/shared/state";
 import { publicProcedure, router } from "@src/trpc";
-import { globalState$ } from "@src/web/state";
 import * as fs from "node:fs";
 import { v4 } from "uuid";
 import z from "zod";

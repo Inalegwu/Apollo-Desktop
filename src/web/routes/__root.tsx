@@ -1,7 +1,7 @@
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { Bounce, ToastContainer } from "react-toastify";
+import { globalState$ } from "../../shared/state";
 import { Layout } from "../components";
-import { globalState$ } from "../state";
 
 export const Route = createRootRoute({
   component: () => (

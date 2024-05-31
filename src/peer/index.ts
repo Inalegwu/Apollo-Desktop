@@ -1,16 +1,14 @@
 import { TypedEventEmitter } from "@src/shared/emitter";
+import { globalState$, peerState$ } from "@src/shared/state";
 import type { EventTypes, Message, P2PMessage } from "@src/shared/types";
 import { generateRandomName } from "@src/shared/utils";
-import { globalState$, peerState$ } from "@src/web/state";
 import { Socket, createServer } from "node:net";
 import { v4 } from "uuid";
 
 const emitter = new TypedEventEmitter<EventTypes>();
 const connections = peerState$.connections.get();
 const neighbors = peerState$.neighbors.get();
-// const NODE_ID = globalState$.applicationId.get();
 const NODE_ID = v4();
-// const NODE_NAME = globalState$.deviceName.get();
 const NODE_NAME = generateRandomName();
 const DEVICE_TYPE = globalState$.deviceType.get();
 const alreadySentMessages = peerState$.alreadySent.get();
@@ -187,7 +185,7 @@ const handleNewSocket = (socket: Socket) => {
 
   emitter.on("connect", (connectionId) => {
     console.log(`attempting to handshake ${connectionId}`);
-    console.log(NODE_ID, NODE_NAME);
+    console.log(socket.localAddress, socket.localPort);
     send(connectionId, {
       type: "handshake",
       data: {

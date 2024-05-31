@@ -2,7 +2,7 @@ import { useObservable } from "@legendapp/state/react";
 import { Box, Flex, Popover, Text } from "@radix-ui/themes";
 import { Folder, Info, Key, Laptop, Phone, Wifi, WifiOff } from "lucide-react";
 import defaultImage from "../../assets/images/user_default.jpg";
-import { fileTransferState$, globalState$ } from "../state";
+import { fileTransferState$, globalState$ } from "../../shared/state";
 
 export default function ThisDeviceInfo() {
   const deviceName = globalState$.deviceName.get();

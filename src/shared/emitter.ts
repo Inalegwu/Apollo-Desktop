@@ -1,7 +1,7 @@
 import EventEmitter from "node:events";
 
 export class TypedEventEmitter<TEvents extends Record<string, unknown>> {
-  private emitter = new EventEmitter();
+  private emitter = new EventEmitter().setMaxListeners(15);
 
   emit<TEventName extends keyof TEvents & string>(
     eventName: TEventName,
