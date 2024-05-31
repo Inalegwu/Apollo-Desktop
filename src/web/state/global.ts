@@ -18,7 +18,7 @@ configureObservablePersistence({
 });
 
 export const globalState$ = observable<GlobalState>({
-  colorMode: "light",
+  colorMode: "dark",
   applicationId: null,
   deviceName: null,
   deviceType: "desktop",

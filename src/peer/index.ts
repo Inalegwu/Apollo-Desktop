@@ -172,6 +172,11 @@ emitter.on("node-message", ({ nodeId, data }) => {
   }
 });
 
+emitter.on("dm", ({ origin, message }) => {
+  // TODO notify the user of the incoming
+  // file so they can accept an then stream in
+});
+
 const handleNewSocket = (socket: Socket) => {
   const connectionId = v4();
 

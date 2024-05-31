@@ -11,9 +11,6 @@ type Props = {
   node: Node;
 };
 
-// x axis: 5-180
-// y axis: 5-130
-
 const top = randomNumber();
 const left = randomNumber();
 
