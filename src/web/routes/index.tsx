@@ -1,4 +1,4 @@
-import { useMount, useUnmount } from "@legendapp/state/react";
+import { useMount } from "@legendapp/state/react";
 import { Flex } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import { generateAppId, generateRandomName } from "@src/shared/utils";
@@ -12,7 +12,6 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { mutate: startServer } = t.node.startNode.useMutation();
-  const { mutate: stopServer } = t.node.stopNode.useMutation();
 
   const neighbors = peerState$.neighbors.get();
 
@@ -26,10 +25,6 @@ function Index() {
       globalState$.deviceName.set(generateRandomName());
       globalState$.firstLaunch.set(false);
     }
-  });
-
-  useUnmount(() => {
-    stopServer();
   });
 
   return (

@@ -43,6 +43,8 @@ export type EventTypes = {
   disconnect: string;
   "node-connect": {
     nodeId: string;
+    ip: string;
+    port: string;
   };
   "node-disconnect": {
     nodeId: string;

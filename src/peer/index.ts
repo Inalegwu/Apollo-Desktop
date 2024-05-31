@@ -79,7 +79,7 @@ emitter.on("message", ({ connectionId, message }) => {
   const { type, data } = message;
 
   if (type === "handshake") {
-    const { nodeId, nodeName, deviceType } = data;
+    const { nodeId, nodeName, deviceType, ip, port } = data;
 
     neighbors.set(nodeId, {
       connectionId,
@@ -87,7 +87,7 @@ emitter.on("message", ({ connectionId, message }) => {
       deviceType,
     });
 
-    emitter.emit("node-connect", { nodeId });
+    emitter.emit("node-connect", { nodeId, ip, port });
   }
 
   if (type === "message") {
@@ -99,6 +99,12 @@ emitter.on("message", ({ connectionId, message }) => {
 
     emitter.emit("node-message", { nodeId, data: message });
   }
+});
+
+emitter.on("node-connect", ({ nodeId, ip, port }) => {
+  connnect(ip, Number(port), () => {
+    console.log("connection established");
+  });
 });
 
 emitter.on("node-message", ({ nodeId, data }) => {
@@ -180,7 +186,13 @@ const handleNewSocket = (socket: Socket) => {
     console.log(`attempting to handshake ${connectionId}`);
     send(connectionId, {
       type: "handshake",
-      data: { nodeId: NODE_ID, nodeName: NODE_NAME, deviceType: DEVICE_TYPE },
+      data: {
+        nodeId: NODE_ID,
+        nodeName: NODE_NAME,
+        deviceType: DEVICE_TYPE,
+        port: socket.localPort,
+        ip: socket.localAddress,
+      },
     });
   });
 
