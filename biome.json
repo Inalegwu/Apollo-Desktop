@@ -15,13 +15,30 @@
         "noExplicitAny": "warn"
       }
     },
-    "ignore": ["./kuma.config.ts"]
+    "ignore": [
+      "./tsconfig.json",
+      "./pnpm-lock.yaml",
+      "./package.json",
+      "./node_modules/",
+      "./out/",
+      "./release",
+      "./README.md"
+    ]
   },
   "formatter": {
     "enabled": true,
     "formatWithErrors": true,
     "lineEnding": "crlf",
     "indentStyle": "space",
-    "indentWidth": 2
+    "indentWidth": 2,
+    "ignore": [
+      "./tsconfig.json",
+      "./pnpm-lock.yaml",
+      "./package.json",
+      "./node_modules/",
+      "./out/",
+      "./release",
+      "./README.md"
+    ]
   }
 }
