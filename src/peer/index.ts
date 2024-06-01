@@ -108,6 +108,10 @@ emitter.on("node-connect", ({ nodeId, ip, port }) => {
   });
 });
 
+emitter.on("node-disconnect", ({ nodeId }) => {
+  console.log(`Disconnected from ${nodeId}`);
+});
+
 emitter.on("node-message", ({ nodeId, data }) => {
   if (!alreadySentMessages.has(data)) {
     broadcast(
@@ -185,7 +189,7 @@ const handleNewSocket = (socket: Socket) => {
 
   emitter.on("connect", (connectionId) => {
     console.log(`attempting to handshake ${connectionId}`);
-    console.log(socket.localAddress, socket.localPort);
+
     send(connectionId, {
       type: "handshake",
       data: {
