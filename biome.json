@@ -22,7 +22,8 @@
       "./node_modules/",
       "./out/",
       "./release",
-      "./README.md"
+      "./README.md",
+      "./biome.json"
     ]
   },
   "formatter": {
@@ -38,7 +39,8 @@
       "./node_modules/",
       "./out/",
       "./release",
-      "./README.md"
+      "./README.md",
+      "./biome.json"
     ]
   }
 }
