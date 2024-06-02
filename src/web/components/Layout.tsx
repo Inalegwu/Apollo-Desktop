@@ -79,35 +79,37 @@ export default function Layout({ children }: LayoutProps) {
         </Flex>
       </Flex>
       {children}
-      <Flex className="absolute bottom-1 right-1 space-x-3  rounded-lg p-3">
-        <Button
-          variant="soft"
-          className="w-9 h-9 cursor-pointer rounded-full"
-          asChild
-        >
-          <Link to="/history">
-            <History size={13} />
-          </Link>
-        </Button>
-        <Button
-          variant="soft"
-          onClick={() => selectFiles()}
-          radius="full"
-          className=" w-9 h-9 cursor-pointer"
-        >
-          <Plus size={13} />
-        </Button>
-        <Button
-          variant="soft"
-          radius="full"
-          asChild
-          className=" w-9 h-9 cursor-pointer rounded-full"
-        >
-          <Link to="/settings">
-            <Settings size={13} />
-          </Link>
-        </Button>
-      </Flex>
+      {isHome && (
+        <Flex className="absolute bottom-1 right-1 space-x-3  rounded-lg p-3">
+          <Button
+            variant="soft"
+            className="w-9 h-9 cursor-pointer rounded-full"
+            asChild
+          >
+            <Link to="/history">
+              <History size={13} />
+            </Link>
+          </Button>
+          <Button
+            variant="soft"
+            onClick={() => selectFiles()}
+            radius="full"
+            className=" w-9 h-9 cursor-pointer"
+          >
+            <Plus size={13} />
+          </Button>
+          <Button
+            variant="soft"
+            asChild
+            radius="full"
+            className="w-9 h-9 cursor-pointer"
+          >
+            <Link to="/settings">
+              <Settings />
+            </Link>
+          </Button>
+        </Flex>
+      )}
     </Flex>
   );
 }

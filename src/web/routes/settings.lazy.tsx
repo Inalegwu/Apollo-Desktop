@@ -1,5 +1,5 @@
 import { computed } from "@legendapp/state";
-import { Box, Flex, Switch, Tabs, Text } from "@radix-ui/themes";
+import { Flex, Heading, Switch, Text } from "@radix-ui/themes";
 import { globalState$ } from "@shared/state";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
@@ -24,32 +24,17 @@ function Settings() {
   }, []);
 
   return (
-    <Flex className="w-full h-full py-10 px-2">
-      <Tabs.Root className="w-full flex-1 px-1">
-        <Tabs.List defaultValue="appearance" size="2">
-          <Tabs.Trigger className="cursor-pointer" value="appearance">
-            Appearance
-          </Tabs.Trigger>
-        </Tabs.List>
-        <Box className="pt-5">
-          <Tabs.Content value="appearance">
-            <Flex align="center" justify="between">
-              <Flex direction="column" align="start">
-                <Text size="2">Dark Theme</Text>
-                <Text size="1" className="text-zinc-400">
-                  Light or dark mode, the choice is yours, we definitely don't
-                  judge
-                </Text>
-              </Flex>
-              <Switch
-                onClick={toggleColorMode}
-                size="2"
-                checked={isDarkMode.get()}
-              />
-            </Flex>
-          </Tabs.Content>
-        </Box>
-      </Tabs.Root>
+    <Flex direction="column" className="w-full h-full py-12 px-3" gap="3">
+      <Heading size="7">Settings</Heading>
+      <Flex align="center" justify="between">
+        <Flex direction="column" align="start">
+          <Text size="2">Dark Mode</Text>
+          <Text size="1" color="gray">
+            Light or Dark mode, your choice, we don't judge
+          </Text>
+        </Flex>
+        <Switch onClick={toggleColorMode} checked={isDarkMode.get()} />
+      </Flex>
     </Flex>
   );
 }

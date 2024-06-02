@@ -42,7 +42,6 @@ export type EventTypes = {
   connect: string;
   disconnect: string;
   "node-connect": {
-    nodeId: string;
     ip: string;
     port: string;
   };
@@ -55,11 +54,11 @@ export type EventTypes = {
   };
   "node-message": {
     nodeId: string | undefined;
-    data: Message;
+    packet: Message;
   };
   broadcast: {
     nodeId: string;
-    data: Message;
+    packet: Message;
   };
   dm: {
     origin: string;

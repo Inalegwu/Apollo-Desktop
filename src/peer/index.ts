@@ -1,15 +1,14 @@
 import { TypedEventEmitter } from "@src/shared/emitter";
 import { globalState$, peerState$ } from "@src/shared/state";
 import type { EventTypes, Message, P2PMessage } from "@src/shared/types";
-import { generateRandomName } from "@src/shared/utils";
 import { Socket, createServer } from "node:net";
 import { v4 } from "uuid";
 
 const emitter = new TypedEventEmitter<EventTypes>();
 const connections = peerState$.connections.get();
 const neighbors = peerState$.neighbors.get();
-const NODE_ID = v4();
-const NODE_NAME = generateRandomName();
+const NODE_ID = globalState$.applicationId.get();
+const NODE_NAME = globalState$.deviceName.get();
 const DEVICE_TYPE = globalState$.deviceType.get();
 const alreadySentMessages = peerState$.alreadySent.get();
 const alreadySeenMessages = new Set();
@@ -26,12 +25,14 @@ const p2pSend = (data: P2PMessage) => {
     });
   }
 
-  for (const $nodeId of neighbors.keys()) {
-    nodeSend($nodeId, {
-      data: data.data,
-      type: data.type,
-    });
-    alreadySentMessages.add(data);
+  if (data.type === "broadcast") {
+    for (const $nodeId of neighbors.keys()) {
+      nodeSend($nodeId, {
+        data: data.data,
+        type: data.type,
+      });
+      alreadySentMessages.add(data);
+    }
   }
 };
 
@@ -88,7 +89,7 @@ emitter.on("message", ({ connectionId, message }) => {
       deviceType,
     });
 
-    emitter.emit("node-connect", { nodeId, ip, port });
+    emitter.emit("node-connect", { ip, port });
   }
 
   if (type === "message") {
@@ -98,82 +99,94 @@ emitter.on("message", ({ connectionId, message }) => {
       console.log(`unknown node-id ${nodeId}`);
     }
 
-    emitter.emit("node-message", { nodeId, data: message });
+    emitter.emit("node-message", { nodeId, packet: message });
   }
 });
 
-emitter.on("node-connect", ({ nodeId, ip, port }) => {
+emitter.on("node-connect", ({ ip, port }) => {
   connnect(ip, Number(port), () => {
     console.log("connection established");
   });
 });
 
 emitter.on("node-disconnect", ({ nodeId }) => {
+  connections.delete(nodeId);
   console.log(`Disconnected from ${nodeId}`);
 });
 
-emitter.on("node-message", ({ nodeId, data }) => {
-  if (!alreadySentMessages.has(data)) {
+emitter.on("node-message", ({ nodeId, packet }) => {
+  if (!alreadySentMessages.has(packet)) {
     broadcast(
-      data,
-      data.data.destination,
-      data.data.id,
-      data.data.origin,
-      data.data.ttl - 1,
+      packet,
+      packet.data.destination,
+      packet.data.id,
+      packet.data.origin,
+      packet.data.ttl - 1,
     );
   }
 
-  if (data.type === "broadcast") {
-    if (alreadySeenMessages.has(data.data.id)) {
+  if (packet.type === "broadcast") {
+    if (alreadySeenMessages.has(packet.data.id)) {
       return;
     }
 
-    alreadySeenMessages.add(data.data.id);
+    alreadySeenMessages.add(packet.data.id);
 
-    // this broadcast is for me
-    if (data.data.destination === NODE_ID) {
+    if (packet.data.destination === NODE_ID) {
       emitter.emit("broadcast", {
-        data: data,
+        packet: packet,
         nodeId: nodeId!,
       });
     } else {
-      alreadySentMessages.add(data);
+      alreadySentMessages.add(packet);
       broadcast(
-        data,
-        data.data.destination,
+        packet,
+        packet.data.destination,
         v4(),
-        data.data.origin,
-        data.data.ttl - 1,
+        packet.data.origin,
+        packet.data.ttl - 1,
       );
     }
   }
 
-  if (data.type === "dm") {
-    if (data.data.destination === NODE_ID) {
+  if (packet.type === "dm") {
+    if (packet.data.destination === NODE_ID) {
       emitter.emit("dm", {
-        message: data,
-        origin: data.data.origin,
+        message: packet,
+        origin: packet.data.origin,
       });
     } else {
       dm(
-        data,
-        data.data.destination,
-        data.data.id,
-        data.data.origin,
-        data.data.ttl - 1,
+        packet,
+        packet.data.destination,
+        packet.data.id,
+        packet.data.origin,
+        packet.data.ttl - 1,
       );
     }
   }
 });
 
 emitter.on("dm", ({ origin, message }) => {
-  // TODO notify the user of the incoming
-  // file so they can accept an then stream in
   console.log(origin, message);
 });
 
-emitter.on("broadcast", ({ data, nodeId }) => {
-  console.log(data, nodeId);
+emitter.on("broadcast", ({ packet, nodeId }) => {
+  console.log(`Recieved a broadcast from ${nodeId} with data ${packet.data}`);
+});
+
+emitter.on("disconnect", (connectionId) => {
+  const nodeId = findNodeId(connectionId);
+
+  if (!nodeId) {
+    return;
+  }
+
+  console.log(`disconnecting from ${nodeId}`);
+
+  neighbors.delete(nodeId);
+
+  emitter.emit("node-disconnect", { nodeId });
 });
 
 const handleNewSocket = (socket: Socket) => {
@@ -200,19 +213,6 @@ const handleNewSocket = (socket: Socket) => {
         ip: socket.remoteAddress,
       },
     });
-  });
-
-  emitter.on("disconnect", (connectionId) => {
-    const nodeId = findNodeId(connectionId);
-
-    if (!nodeId) {
-      return;
-    }
-
-    neighbors.delete(nodeId);
-    console.log(`disconnecting from ${nodeId}`);
-
-    emitter.emit("node-disconnect", { nodeId });
   });
 
   socket.on("data", (data) => {
@@ -250,12 +250,10 @@ const connnect = (ip: string, port: number, cb: () => void) => {
   });
 };
 
-const server = createServer((socket) => handleNewSocket(socket));
-
 export default function createP2PNode(opts: {
   port: number;
 }) {
-  console.log(`Spinning up TCP server on ${opts.port}`);
+  const server = createServer((socket) => handleNewSocket(socket));
 
   return {
     broadcast,
@@ -264,6 +262,7 @@ export default function createP2PNode(opts: {
     off: emitter.off.bind(emitter),
     connnect,
     start: () => {
+      console.log(`Spinning up TCP server on ${opts.port}`);
       server.listen(opts.port);
     },
     close: (cb: () => void) => {

@@ -8,7 +8,6 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "react-toastify/dist/ReactToastify.css";
 import "virtual:uno.css";
-import { globalState$ } from "../shared/state";
 import "./App.css";
 import { routeTree } from "./routeTree.gen";
 
@@ -33,12 +32,7 @@ if (!rootElement?.innerHTML) {
     <StrictMode>
       <t.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Theme
-            radius="medium"
-            accentColor="violet"
-            appearance={globalState$.colorMode.get()}
-            grayColor="gray"
-          >
+          <Theme radius="medium" accentColor="violet" grayColor="gray">
             <RouterProvider router={router} />
           </Theme>
         </QueryClientProvider>
