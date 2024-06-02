@@ -12,6 +12,8 @@ import type {
   PeerState,
 } from "@shared/types";
 import type { Socket } from "node:net";
+import { v4 } from "uuid";
+import { generateRandomName } from "../utils";
 
 configureObservablePersistence({
   pluginLocal: ObservablePersistLocalStorage,
@@ -19,10 +21,9 @@ configureObservablePersistence({
 
 export const globalState$ = observable<GlobalState>({
   colorMode: "light",
-  applicationId: null,
-  deviceName: null,
+  applicationId: v4(),
+  deviceName: generateRandomName(),
   deviceType: "desktop",
-  firstLaunch: true,
 });
 
 export const peerState$ = observable<PeerState>({

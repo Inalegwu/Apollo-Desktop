@@ -25,7 +25,6 @@ export type GlobalState = {
   applicationId: string | null;
   deviceName: string | null;
   deviceType: DeviceType;
-  firstLaunch: boolean;
 };
 
 export type PeerState = {

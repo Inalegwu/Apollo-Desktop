@@ -3,7 +3,7 @@ import { Button, Flex } from "@radix-ui/themes";
 import { fileTransferState$, globalState$ } from "@shared/state";
 import t from "@src/shared/config";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, History, Minus, Plus, Settings, X } from "lucide-react";
+import { ArrowLeft, Minus, Plus, Settings, X } from "lucide-react";
 import type React from "react";
 
 type LayoutProps = {
@@ -81,7 +81,7 @@ export default function Layout({ children }: LayoutProps) {
       {children}
       {isHome && (
         <Flex className="absolute bottom-1 right-1 space-x-3  rounded-lg p-3">
-          <Button
+          {/* <Button
             variant="soft"
             className="w-9 h-9 cursor-pointer rounded-full"
             asChild
@@ -89,7 +89,7 @@ export default function Layout({ children }: LayoutProps) {
             <Link to="/history">
               <History size={13} />
             </Link>
-          </Button>
+          </Button> */}
           <Button
             variant="soft"
             onClick={() => selectFiles()}

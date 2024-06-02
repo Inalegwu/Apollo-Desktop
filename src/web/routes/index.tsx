@@ -1,10 +1,9 @@
-import { useMount } from "@legendapp/state/react";
+import { useMount, useUnmount } from "@legendapp/state/react";
 import { Flex } from "@radix-ui/themes";
 import { globalState$, peerState$ } from "@shared/state";
+import node from "@src/peer/node";
 import t from "@src/shared/config";
-import { generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { v4 } from "uuid";
 import { DeviceInfo, HomeView, ThisDeviceInfo } from "../components";
 
 export const Route = createFileRoute("/")({
@@ -20,12 +19,12 @@ function Index() {
 
   useMount(() => {
     startServer();
+  });
 
-    if (globalState$.firstLaunch.get()) {
-      globalState$.applicationId.set(v4());
-      globalState$.deviceName.set(generateRandomName());
-      globalState$.firstLaunch.set(false);
-    }
+  useUnmount(() => {
+    node.close(() => {
+      console.log("spinning down node");
+    });
   });
 
   return (
