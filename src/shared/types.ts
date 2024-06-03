@@ -61,6 +61,6 @@ export type EventTypes = {
   };
   dm: {
     origin: string;
-    message: Message;
+    packet: Message;
   };
 };

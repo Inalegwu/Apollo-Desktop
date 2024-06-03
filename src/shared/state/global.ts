@@ -12,8 +12,7 @@ import type {
   PeerState,
 } from "@shared/types";
 import type { Socket } from "node:net";
-import { v4 } from "uuid";
-import { generateRandomName } from "../utils";
+import { generateAppId, generateRandomName } from "../utils";
 
 configureObservablePersistence({
   pluginLocal: ObservablePersistLocalStorage,
@@ -21,7 +20,7 @@ configureObservablePersistence({
 
 export const globalState$ = observable<GlobalState>({
   colorMode: "light",
-  applicationId: v4(),
+  applicationId: generateAppId(),
   deviceName: generateRandomName(),
   deviceType: "desktop",
 });

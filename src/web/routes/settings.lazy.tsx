@@ -1,8 +1,7 @@
 import { computed } from "@legendapp/state";
-import { Flex, Heading, Switch, Text, TextField } from "@radix-ui/themes";
+import { Flex, Heading, Switch, Text } from "@radix-ui/themes";
 import { globalState$ } from "@shared/state";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Search } from "lucide-react";
 import { useCallback } from "react";
 
 export const Route = createLazyFileRoute("/settings")({
@@ -43,7 +42,8 @@ function Settings() {
           <Switch onClick={toggleColorMode} checked={isDarkMode.get()} />
         </Flex>
       </Flex>
-      <Flex direction="column" gap="4" align="start" width="100%">
+      {/* network settings */}
+      {/* <Flex direction="column" gap="4" align="start" width="100%">
         <Text weight="bold" size="2" color="gray">
           Network
         </Text>
@@ -63,7 +63,7 @@ function Settings() {
             <TextField.Input value={42069} />
           </TextField.Root>
         </Flex>
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 }

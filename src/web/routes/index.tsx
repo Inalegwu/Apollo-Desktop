@@ -1,7 +1,6 @@
-import { useMount, useUnmount } from "@legendapp/state/react";
+import { useMountOnce } from "@legendapp/state/react";
 import { Flex } from "@radix-ui/themes";
 import { globalState$, peerState$ } from "@shared/state";
-import node from "@src/peer/node";
 import t from "@src/shared/config";
 import { createFileRoute } from "@tanstack/react-router";
 import { DeviceInfo, HomeView, ThisDeviceInfo } from "../components";
@@ -17,14 +16,8 @@ function Index() {
 
   const neighborsData = Array.from(neighbors.values());
 
-  useMount(() => {
+  useMountOnce(() => {
     startServer();
-  });
-
-  useUnmount(() => {
-    node.close(() => {
-      console.log("spinning down node");
-    });
   });
 
   return (

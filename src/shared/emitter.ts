@@ -21,6 +21,6 @@ export class TypedEventEmitter<TEvents extends Record<string, unknown>> {
     eventName: TEventName,
     handler: (...eventArgs: TEvents[TEventName][]) => void,
   ) {
-    this.emitter.on(eventName, handler);
+    this.emitter.off(eventName, handler);
   }
 }

@@ -13,25 +13,25 @@ const DEVICE_TYPE = globalState$.deviceType.get();
 const alreadySentMessages = peerState$.alreadySent.get();
 const alreadySeenMessages = new Set();
 
-const p2pSend = (data: P2PMessage) => {
-  if (data.ttl < 1) {
+const p2pSend = (packet: P2PMessage) => {
+  if (packet.ttl < 1) {
     return;
   }
 
-  if (data.type === "dm") {
-    nodeSend(data.destination, {
-      data: data.data,
-      type: data.type,
+  if (packet.type === "dm") {
+    nodeSend(packet.destination, {
+      data: packet.data,
+      type: packet.type,
     });
   }
 
-  if (data.type === "broadcast") {
+  if (packet.type === "broadcast") {
     for (const $nodeId of neighbors.keys()) {
       nodeSend($nodeId, {
-        data: data.data,
-        type: data.type,
+        data: packet.data,
+        type: packet.type,
       });
-      alreadySentMessages.add(data);
+      alreadySentMessages.add(packet);
     }
   }
 };
@@ -130,15 +130,13 @@ emitter.on("node-message", ({ nodeId, packet }) => {
       return;
     }
 
-    alreadySeenMessages.add(packet.data.id);
-
     if (packet.data.destination === NODE_ID) {
+      alreadySeenMessages.add(packet.data.id);
       emitter.emit("broadcast", {
         packet: packet,
         nodeId: nodeId!,
       });
     } else {
-      alreadySentMessages.add(packet);
       broadcast(
         packet,
         packet.data.destination,
@@ -152,7 +150,7 @@ emitter.on("node-message", ({ nodeId, packet }) => {
   if (packet.type === "dm") {
     if (packet.data.destination === NODE_ID) {
       emitter.emit("dm", {
-        message: packet,
+        packet,
         origin: packet.data.origin,
       });
     } else {
@@ -167,8 +165,9 @@ emitter.on("node-message", ({ nodeId, packet }) => {
   }
 });
 
-emitter.on("dm", ({ origin, message }) => {
-  console.log(origin, message);
+emitter.on("dm", ({ origin, packet }) => {
+  alreadySentMessages.add(packet);
+  console.log(`Recieved a DM from ${origin} with data ${packet.data}`);
 });
 
 emitter.on("broadcast", ({ packet, nodeId }) => {
