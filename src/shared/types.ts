@@ -22,15 +22,15 @@ export type P2PMessage = Message & {
 
 export type GlobalState = {
   colorMode: "dark" | "light";
-  applicationId: string | null;
-  deviceName: string | null;
-  deviceType: DeviceType;
 };
 
 export type PeerState = {
   neighbors: Map<string, Node>;
   connections: Map<string, Socket>;
   alreadySent: Set<Message>;
+  applicationId: string | null;
+  deviceName: string | null;
+  deviceType: DeviceType;
 };
 
 export type FileTransferState = {
@@ -49,7 +49,7 @@ export type EventTypes = {
   };
   message: {
     connectionId: string;
-    message: Message;
+    packet: Message;
   };
   "node-message": {
     nodeId: string | undefined;

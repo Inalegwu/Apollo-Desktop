@@ -1,38 +1,39 @@
 import { TypedEventEmitter } from "@src/shared/emitter";
-import { globalState$, peerState$ } from "@src/shared/state";
+import { peerState$ } from "@src/shared/state";
 import type { EventTypes, Message, P2PMessage } from "@src/shared/types";
 import { Socket, createServer } from "node:net";
 import { v4 } from "uuid";
+import { generateAppId, generateRandomName } from "../utils";
 
 const emitter = new TypedEventEmitter<EventTypes>();
 const connections = peerState$.connections.get();
 const neighbors = peerState$.neighbors.get();
-const NODE_ID = globalState$.applicationId.get();
-const NODE_NAME = globalState$.deviceName.get();
-const DEVICE_TYPE = globalState$.deviceType.get();
+const NODE_ID = generateAppId();
+const NODE_NAME = generateRandomName();
+const DEVICE_TYPE = peerState$.deviceType.get();
 const alreadySentMessages = peerState$.alreadySent.get();
 const alreadySeenMessages = new Set();
+
+console.log(
+  NODE_ID,
+  NODE_NAME,
+  DEVICE_TYPE,
+  alreadySentMessages,
+  connections,
+  neighbors,
+);
 
 const p2pSend = (packet: P2PMessage) => {
   if (packet.ttl < 1) {
     return;
   }
 
-  if (packet.type === "dm") {
-    nodeSend(packet.destination, {
+  for (const $nodeId of neighbors.keys()) {
+    nodeSend($nodeId, {
       data: packet.data,
       type: packet.type,
     });
-  }
-
-  if (packet.type === "broadcast") {
-    for (const $nodeId of neighbors.keys()) {
-      nodeSend($nodeId, {
-        data: packet.data,
-        type: packet.type,
-      });
-      alreadySentMessages.add(packet);
-    }
+    alreadySentMessages.add(packet);
   }
 };
 
@@ -77,8 +78,8 @@ const nodeSend = (nodeId: string, data: Message) => {
   });
 };
 
-emitter.on("message", ({ connectionId, message }) => {
-  const { type, data } = message;
+emitter.on("message", ({ connectionId, packet }) => {
+  const { type, data } = packet;
 
   if (type === "handshake") {
     const { nodeId, nodeName, deviceType, ip, port } = data;
@@ -99,7 +100,7 @@ emitter.on("message", ({ connectionId, message }) => {
       console.log(`unknown node-id ${nodeId}`);
     }
 
-    emitter.emit("node-message", { nodeId, packet: message });
+    emitter.emit("node-message", { nodeId, packet });
   }
 });
 
@@ -166,7 +167,6 @@ emitter.on("node-message", ({ nodeId, packet }) => {
 });
 
 emitter.on("dm", ({ origin, packet }) => {
-  alreadySentMessages.add(packet);
   console.log(`Recieved a DM from ${origin} with data ${packet.data}`);
 });
 
@@ -218,7 +218,7 @@ const handleNewSocket = (socket: Socket) => {
     try {
       emitter.emit("message", {
         connectionId,
-        message: JSON.parse(data.toString()),
+        packet: JSON.parse(data.toString()),
       });
     } catch (e) {
       console.error(`Cannot parse message from peer ${e}`);
@@ -260,6 +260,8 @@ export default function createP2PNode(opts: {
     on: emitter.on.bind(emitter),
     off: emitter.off.bind(emitter),
     connnect,
+    NODE_ID,
+    NODE_NAME,
     start: () => {
       console.log(`Spinning up TCP server on ${opts.port}`);
       server.listen(opts.port);

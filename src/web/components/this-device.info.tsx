@@ -1,12 +1,12 @@
 import { useObservable } from "@legendapp/state/react";
 import { Box, Flex, Popover, Text } from "@radix-ui/themes";
-import { fileTransferState$, globalState$ } from "@shared/state";
+import { fileTransferState$, peerState$ } from "@shared/state";
 import defaultImage from "@src/assets/images/user_default.jpg";
 import { Folder, Info, Key, Laptop, Phone, Wifi, WifiOff } from "lucide-react";
 
 export default function ThisDeviceInfo() {
-  const deviceName = globalState$.deviceName.get();
-  const deviceID = globalState$.applicationId.get();
+  const deviceName = peerState$.deviceName.get();
+  const deviceID = peerState$.applicationId.get();
 
   const onlineStatus = useObservable(navigator.onLine);
 
@@ -40,7 +40,7 @@ export default function ThisDeviceInfo() {
               <Text size="1" className="font-bold">
                 {deviceName?.slice(0)}
               </Text>
-              {globalState$.deviceType.get() === "desktop" ? (
+              {peerState$.deviceType.get() === "desktop" ? (
                 <Laptop size={9} className="text-zinc-400" />
               ) : (
                 <Phone size={9} className="text-zinc-400" />

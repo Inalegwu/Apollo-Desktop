@@ -1,10 +1,12 @@
+import { computed } from "@legendapp/state";
 import { useObserveEffect } from "@legendapp/state/react";
 import { Button, Flex } from "@radix-ui/themes";
 import { fileTransferState$, globalState$ } from "@shared/state";
 import t from "@src/shared/config";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowLeft, Minus, Plus, Settings, X } from "lucide-react";
+import { ChevronLeft, Minus, Moon, Plus, Sun, X } from "lucide-react";
 import type React from "react";
+import { useCallback } from "react";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -18,6 +20,8 @@ export default function Layout({ children }: LayoutProps) {
 
   const isHome = navState.location.pathname === "/";
 
+  const isDarkMode = computed(() => globalState$.colorMode.get() === "dark");
+
   useObserveEffect(() => {
     if (globalState$.colorMode.get() === "dark") {
       document.body.classList.add("dark");
@@ -25,6 +29,14 @@ export default function Layout({ children }: LayoutProps) {
       document.body.classList.remove("dark");
     }
   });
+
+  const toggleColorMode = useCallback(() => {
+    if (isDarkMode.get()) {
+      document.body.classList.remove("dark");
+    } else {
+      document.body.classList.add("dark");
+    }
+  }, [isDarkMode]);
 
   const { mutate: selectFiles } = t.files.selectFiles.useMutation({
     onSuccess: (data) => {
@@ -54,12 +66,19 @@ export default function Layout({ children }: LayoutProps) {
             asChild
           >
             <Link to="/">
-              <ArrowLeft size={12} />
+              <ChevronLeft size={12} />
             </Link>
           </Button>
         )}
         <Flex grow="1" id="drag-region" className="p-2" />
         <Flex align="center" justify="end" gap="5">
+          <Button
+            onClick={toggleColorMode}
+            variant="ghost"
+            className="w-2/5 h-4.5 rounded-full cursor-pointer outline-none"
+          >
+            {isDarkMode.get() ? <Sun /> : <Moon />}
+          </Button>
           <Button
             onClick={() => minimizeWindow()}
             className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
@@ -81,15 +100,6 @@ export default function Layout({ children }: LayoutProps) {
       {children}
       {isHome && (
         <Flex className="absolute bottom-1 right-1 space-x-3  rounded-lg p-3">
-          {/* <Button
-            variant="soft"
-            className="w-9 h-9 cursor-pointer rounded-full"
-            asChild
-          >
-            <Link to="/history">
-              <History size={13} />
-            </Link>
-          </Button> */}
           <Button
             variant="soft"
             onClick={() => selectFiles()}
@@ -97,16 +107,6 @@ export default function Layout({ children }: LayoutProps) {
             className=" w-9 h-9 cursor-pointer"
           >
             <Plus size={13} />
-          </Button>
-          <Button
-            variant="soft"
-            asChild
-            radius="full"
-            className="w-9 h-9 cursor-pointer"
-          >
-            <Link to="/settings">
-              <Settings />
-            </Link>
           </Button>
         </Flex>
       )}

@@ -1,10 +1,14 @@
 import type { inferAsyncReturnType } from "@trpc/server";
 import { BrowserWindow, app } from "electron";
-import node from "./peer/node";
+import createP2PNode from "./peer";
 import { store } from "./storage";
 
 export async function createContext() {
   const browserWindow = BrowserWindow.getFocusedWindow();
+
+  const node = createP2PNode({
+    port: 42069,
+  });
 
   return {
     window: browserWindow,
