@@ -19,6 +19,7 @@ export const Route = createRootRoute({
         theme={globalState$.colorMode.get()}
         transition={Bounce}
       />
+      {/* <Notifier /> */}
       {isDev && <TanStackRouterDevtools />}
     </Layout>
   ),

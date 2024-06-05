@@ -21,3 +21,11 @@ export function generateAppId() {
 }
 
 export const randomNumber = () => Math.floor(Math.random() * 250);
+
+export function parseFilePath(path: string) {
+  return {
+    fileName: "",
+    fileType: "",
+    buffer: "",
+  };
+}

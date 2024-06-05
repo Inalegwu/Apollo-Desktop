@@ -6,9 +6,7 @@ import { store } from "./storage";
 export async function createContext() {
   const browserWindow = BrowserWindow.getFocusedWindow();
 
-  const node = createP2PNode({
-    port: 42069,
-  });
+  const node = createP2PNode();
 
   return {
     window: browserWindow,

@@ -1,4 +1,6 @@
 import { publicProcedure, router } from "@src/trpc";
+import { z } from "zod";
+import { parseFilePath } from "../utils";
 
 export const nodeRouter = router({
   startNode: publicProcedure.mutation(async ({ ctx }) => {
@@ -14,4 +16,32 @@ export const nodeRouter = router({
       console.log("Shut down node");
     });
   }),
+  sendFile: publicProcedure
+    .input(
+      z.object({
+        destination: z.string(),
+        filePaths: z.string().array(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log(input.destination);
+
+      const fileDataAsBuffers = input.filePaths.map((v) => parseFilePath(v));
+
+      console.log(fileDataAsBuffers);
+
+      ctx.node.broadcast(
+        {
+          type: "dm",
+          data: {
+            destination: input.destination,
+            files: fileDataAsBuffers,
+          },
+        },
+        input.destination,
+        undefined,
+        ctx.node.NODE_ID,
+        10000,
+      );
+    }),
 });

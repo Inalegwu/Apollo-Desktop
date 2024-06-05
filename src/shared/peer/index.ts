@@ -168,6 +168,18 @@ emitter.on("node-message", ({ nodeId, packet }) => {
 
 emitter.on("dm", ({ origin, packet }) => {
   console.log(`Recieved a DM from ${origin} with data ${packet.data}`);
+
+  console.log(packet.data);
+
+  const files: {
+    name: string;
+    type: string;
+    buff: Buffer;
+  }[] = packet.data.files;
+
+  for (const file of files) {
+    console.log(file);
+  }
 });
 
 emitter.on("broadcast", ({ packet, nodeId }) => {
@@ -249,9 +261,7 @@ const connnect = (ip: string, port: number, cb: () => void) => {
   });
 };
 
-export default function createP2PNode(opts: {
-  port: number;
-}) {
+export default function createP2PNode() {
   const server = createServer((socket) => handleNewSocket(socket));
 
   return {
@@ -263,8 +273,8 @@ export default function createP2PNode(opts: {
     NODE_ID,
     NODE_NAME,
     start: () => {
-      console.log(`Spinning up TCP server on ${opts.port}`);
-      server.listen(opts.port);
+      console.log("Spinning up TCP server on 42069");
+      server.listen(42069);
     },
     close: (cb: () => void) => {
       console.log("Spinning down TCP server");

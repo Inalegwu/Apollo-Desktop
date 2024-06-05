@@ -17,8 +17,6 @@ export const filesRouter = router({
       };
     }
 
-    console.log(filePaths);
-
     return {
       cancelled: false,
       data: filePaths,

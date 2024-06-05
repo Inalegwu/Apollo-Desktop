@@ -21,8 +21,8 @@ export default function DeviceInfo({ node }: Props) {
 
   const send = useCallback(() => {
     sendFiles({
-      files: fileTransferState$.files.get(),
-      destinationId: node.connectionId,
+      destination: node.connectionId,
+      filePaths: fileTransferState$.files.get(),
     });
   }, [sendFiles, node]);
 
