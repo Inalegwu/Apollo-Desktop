@@ -1,8 +1,8 @@
 import { TypedEventEmitter } from "@src/shared/emitter";
 import {
-  acceptDirect,
-  directMessageEvent,
+  acceptDirectMessage,
   peerState$,
+  receiveDirectMessage,
 } from "@src/shared/state";
 import type { EventTypes, Message, P2PMessage } from "@src/shared/types";
 import { Socket, createServer } from "node:net";
@@ -171,10 +171,10 @@ emitter.on("node-message", ({ nodeId, packet }) => {
 });
 
 emitter.on("dm", ({ origin, packet }) => {
-  directMessageEvent.fire();
+  receiveDirectMessage.fire();
   console.log(`Recieved a DM from ${origin} with data ${packet.data}`);
 
-  acceptDirect.on(() => {
+  acceptDirectMessage.on(() => {
     console.log(packet.data);
 
     const files: {
