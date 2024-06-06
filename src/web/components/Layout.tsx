@@ -48,7 +48,7 @@ export default function Layout({ children }: LayoutProps) {
       width="100%"
       grow="1"
       direction="column"
-      className="transition h-screen"
+      className="transition h-screen transition"
     >
       <Flex
         align="center"

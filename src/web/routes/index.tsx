@@ -43,6 +43,13 @@ function Index() {
           nodeName: generateRandomName(),
         }}
       />
+      <DeviceInfo
+        node={{
+          connectionId: v4(),
+          deviceType: "desktop",
+          nodeName: generateRandomName(),
+        }}
+      />
       <ThisDeviceInfo />
     </Flex>
   );

@@ -64,3 +64,9 @@ export type EventTypes = {
     packet: Message;
   };
 };
+
+export enum FileTypes {
+  MD = "md",
+  TXT = "txt",
+  DOCX = "docx",
+}

@@ -1,11 +1,18 @@
 import { publicProcedure, router } from "@src/trpc";
 import { createWriteStream, readFileSync } from "node:fs";
 import { z } from "zod";
+import { matchFileType } from "../utils";
 
 function parseFilePath(path: string) {
+  const fileExt = path.match(/\.[^/.]+$/)?.[0].split(".")[1];
+
+  const matchedFileType = matchFileType(fileExt || "");
+
+  console.log(fileExt);
+
   return {
     fileName: "",
-    fileType: "",
+    fileType: matchedFileType,
     buffer: readFileSync(path),
   };
 }

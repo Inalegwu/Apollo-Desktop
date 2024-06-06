@@ -1,23 +1,20 @@
-import { useObservable } from "@legendapp/state/react";
-import { Box, Button, Flex, Popover, Text } from "@radix-ui/themes";
+import { Avatar, Button, Flex, Popover, Text } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import type { Node } from "@src/shared/types";
 import { randomNumber } from "@src/shared/utils";
-import { Heart, Key, Pen, Send, Wifi } from "lucide-react";
-import { useCallback } from "react";
+import { Key, UserRound, Wifi } from "lucide-react";
+import { useCallback, useMemo } from "react";
 import { fileTransferState$ } from "../../shared/state";
 
 type Props = {
   node: Node;
 };
 
-const top = randomNumber();
-const left = randomNumber();
-
 export default function DeviceInfo({ node }: Props) {
-  const isSaved = useObservable(false);
-
   const { mutate: sendFiles } = t.node.sendFile.useMutation();
+
+  const top = useMemo(() => randomNumber(), []);
+  const left = useMemo(() => randomNumber(), []);
 
   const send = useCallback(() => {
     sendFiles({
@@ -29,19 +26,17 @@ export default function DeviceInfo({ node }: Props) {
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <Box
-          className="w-11 h-11 absolute rounded-full overflow-hidden shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800"
+        <Avatar
+          fallback={<UserRound size={9} />}
+          src="https://source.boringavatars.com/"
+          variant="soft"
+          className="absolute shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800"
+          radius="full"
           style={{
             top: `${top}px`,
             left: `${left}px`,
           }}
-        >
-          <img
-            src="https://source.boringavatars.com/"
-            alt="default_image"
-            className="object-cover w-full h-full"
-          />
-        </Box>
+        />
       </Popover.Trigger>
       <Popover.Content size="1">
         <Flex direction="column" className="space-y-2">
@@ -52,12 +47,12 @@ export default function DeviceInfo({ node }: Props) {
               width="100%"
               justify="between"
             >
-              <Text color="gray" className="text-[12px]">
+              <Text className="text-[10px] text-zinc-400 tracking-wide">
                 Device Name
               </Text>
-              <Text className="text-[12.5px]">{node.nodeName}</Text>
+              <Text className="text-[12.5px] font-medium">{node.nodeName}</Text>
             </Flex>
-            <Flex align="center" justify="end" gap="3">
+            {/* <Flex align="center" justify="end" gap="3">
               {isSaved.get() && (
                 <Button
                   variant="soft"
@@ -79,7 +74,7 @@ export default function DeviceInfo({ node }: Props) {
               >
                 <Heart size={11} />
               </Button>
-            </Flex>
+            </Flex> */}
           </Flex>
           <Flex className="space-y-1" direction="column" align="start">
             <Flex width="100%" align="center" justify="between" gap="3">
@@ -102,7 +97,6 @@ export default function DeviceInfo({ node }: Props) {
             >
               <Flex align="center" justify="center" gap="5">
                 <Text className="text-[11px]">Send</Text>
-                <Send size={10} />
               </Flex>
             </Button>
           )}
