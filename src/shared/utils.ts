@@ -27,16 +27,16 @@ export const randomNumber = () =>
 export const randomNumberfromInterval = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
-export const matchFileType = (fileExt: string) => {
-  if (fileExt === FileTypes.MD) {
+export const matchFileType = (ext: string) => {
+  if (ext === FileTypes.MD) {
     return FileTypes.MD;
   }
 
-  if (fileExt === FileTypes.DOCX) {
+  if (ext === FileTypes.DOCX) {
     return FileTypes.DOCX;
   }
 
-  if (fileExt === FileTypes.TXT) {
+  if (ext === FileTypes.TXT) {
     return FileTypes.TXT;
   }
 

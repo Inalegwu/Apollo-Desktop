@@ -4,11 +4,11 @@ import { z } from "zod";
 import { matchFileType } from "../utils";
 
 function parseFilePath(path: string) {
-  const fileExt = path.match(/\.[^/.]+$/)?.[0].split(".")[1];
+  const matchedFileType = matchFileType(
+    path.match(/\.[^/.]+$/)?.[0].split(".")[1] || "",
+  );
 
-  const matchedFileType = matchFileType(fileExt || "");
-
-  console.log(fileExt);
+  console.log(matchedFileType);
 
   return {
     fileName: "",
