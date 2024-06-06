@@ -24,22 +24,18 @@ export default function ThisDeviceInfo() {
       <Popover.Content size="1">
         <Flex direction="column" align="start" className="space-y-2">
           <Flex align="center" width="100%" justify="between" gap="2">
-            <Text size="1" className="font-bold">
-              This Device
-            </Text>
+            <Text className="text-[11px]">This Device</Text>
             <Info size={10} className="text-zinc-400" />
           </Flex>
           <Flex direction="column" align="start" className="space-y-1">
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text size="1" className="font-bold">
+              <Text className="text-[11px]">
                 {fileTransferState$.files.get().length} selected files
               </Text>
               <Folder size={10} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text size="1" className="font-bold">
-                {deviceName?.slice(0)}
-              </Text>
+              <Text className="text-[11px]">{deviceName}</Text>
               {peerState$.deviceType.get() === "desktop" ? (
                 <Laptop size={9} className="text-zinc-400" />
               ) : (
@@ -47,13 +43,13 @@ export default function ThisDeviceInfo() {
               )}
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text size="1" className="font-bold">
+              <Text className="text-[11px]">
                 {deviceID?.slice(0, deviceID.length)}
               </Text>
               <Key size={10} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text size="1" className="font-bold">
+              <Text className="text-[11px]">
                 You are{" "}
                 <span
                   className={`${

@@ -1,12 +1,12 @@
 import { publicProcedure, router } from "@src/trpc";
-import { readFileSync } from "node:fs";
+import { createWriteStream, readFileSync } from "node:fs";
 import { z } from "zod";
 
 function parseFilePath(path: string) {
   return {
     fileName: "",
     fileType: "",
-    buffer: readFileSync(path).toString("base64"),
+    buffer: readFileSync(path),
   };
 }
 
@@ -37,6 +37,8 @@ export const nodeRouter = router({
       const fileDataAsBuffers = input.filePaths.map((v) => parseFilePath(v));
 
       console.log(fileDataAsBuffers);
+
+      createWriteStream("../../../file.md").write(fileDataAsBuffers[0].buffer);
 
       ctx.node.broadcast(
         {

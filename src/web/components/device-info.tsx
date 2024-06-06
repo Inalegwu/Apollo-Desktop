@@ -15,7 +15,7 @@ const top = randomNumber();
 const left = randomNumber();
 
 export default function DeviceInfo({ node }: Props) {
-  const isSaved = useObservable(true);
+  const isSaved = useObservable(false);
 
   const { mutate: sendFiles } = t.node.sendFile.useMutation();
 
@@ -52,12 +52,10 @@ export default function DeviceInfo({ node }: Props) {
               width="100%"
               justify="between"
             >
-              <Text color="gray" size="1">
+              <Text color="gray" className="text-[12px]">
                 Device Name
               </Text>
-              <Text size="3" className="font-bold">
-                {node.nodeName}
-              </Text>
+              <Text className="text-[12.5px]">{node.nodeName}</Text>
             </Flex>
             <Flex align="center" justify="end" gap="3">
               {isSaved.get() && (
@@ -84,14 +82,12 @@ export default function DeviceInfo({ node }: Props) {
             </Flex>
           </Flex>
           <Flex className="space-y-1" direction="column" align="start">
-            <Flex width="100%" align="center" justify="between" gap="2">
-              <Text size="1" className="font-bold">
-                {node.connectionId?.slice(0, node.connectionId?.length)}...
-              </Text>
+            <Flex width="100%" align="center" justify="between" gap="3">
+              <Text className="text-[11px]">{node.connectionId}</Text>
               <Key size={9} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text size="1" className="font-bold">
+              <Text className="text-[11px]">
                 This device is <span className="text-green-500">Online</span>
               </Text>
               <Wifi size={9} className="text-zinc-400" />
@@ -105,9 +101,7 @@ export default function DeviceInfo({ node }: Props) {
               size="2"
             >
               <Flex align="center" justify="center" gap="5">
-                <Text size="1" className="font-bold">
-                  Send
-                </Text>
+                <Text className="text-[11px]">Send</Text>
                 <Send size={10} />
               </Flex>
             </Button>
