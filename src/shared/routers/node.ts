@@ -1,6 +1,14 @@
 import { publicProcedure, router } from "@src/trpc";
+import { readFileSync } from "node:fs";
 import { z } from "zod";
-import { parseFilePath } from "../utils";
+
+function parseFilePath(path: string) {
+  return {
+    fileName: "",
+    fileType: "",
+    buffer: readFileSync(path).toString("base64"),
+  };
+}
 
 export const nodeRouter = router({
   startNode: publicProcedure.mutation(async ({ ctx }) => {

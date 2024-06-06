@@ -4,8 +4,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import React, { useCallback, useImperativeHandle } from "react";
 
+type Variants = "success" | "error" | "info";
+
 type ToastProps = {
-  variant: "success" | "error";
+  variant: Variants;
   message: string;
   duration?: number;
 };
@@ -17,7 +19,7 @@ type NotifierRef = {
 const Notifier = React.forwardRef<NotifierRef>((_, ref) => {
   const isVisible = useObservable(true);
   const duration = useObservable(3000);
-  const variant = useObservable<"success" | "error">();
+  const variant = useObservable<Variants>();
   const message = useObservable("default message");
 
   useImperativeHandle(ref, () => ({
@@ -32,6 +34,18 @@ const Notifier = React.forwardRef<NotifierRef>((_, ref) => {
   const hide = useCallback(() => {
     isVisible.set(false);
   }, [isVisible]);
+
+  if (variant.get() === "error") {
+    return <></>;
+  }
+
+  if (variant.get() === "info") {
+    return <></>;
+  }
+
+  if (variant.get() === "success") {
+    return <></>;
+  }
 
   return (
     <AnimatePresence>

@@ -3,7 +3,7 @@ import { Box, Button, Flex, Popover, Text } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import type { Node } from "@src/shared/types";
 import { randomNumber } from "@src/shared/utils";
-import { Heart, Key, Laptop, Pen, Phone, Send, Wifi } from "lucide-react";
+import { Heart, Key, Pen, Send, Wifi } from "lucide-react";
 import { useCallback } from "react";
 import { fileTransferState$ } from "../../shared/state";
 
@@ -46,9 +46,17 @@ export default function DeviceInfo({ node }: Props) {
       <Popover.Content size="1">
         <Flex direction="column" className="space-y-2">
           <Flex align="center" justify="between">
-            <Flex align="center" justify="between" gap="2">
-              <Text size="1" className="font-bold">
-                Info
+            <Flex
+              direction="column"
+              align="start"
+              width="100%"
+              justify="between"
+            >
+              <Text color="gray" size="1">
+                Device Name
+              </Text>
+              <Text size="3" className="font-bold">
+                {node.nodeName}
               </Text>
             </Flex>
             <Flex align="center" justify="end" gap="3">
@@ -78,16 +86,6 @@ export default function DeviceInfo({ node }: Props) {
           <Flex className="space-y-1" direction="column" align="start">
             <Flex width="100%" align="center" justify="between" gap="2">
               <Text size="1" className="font-bold">
-                {node.nodeName?.slice(0)}
-              </Text>
-              {node.deviceType === "desktop" ? (
-                <Laptop size={9} className="text-zinc-400" />
-              ) : (
-                <Phone size={9} className="text-zinc-400" />
-              )}
-            </Flex>
-            <Flex width="100%" align="center" justify="between" gap="2">
-              <Text size="1" className="font-bold">
                 {node.connectionId?.slice(0, node.connectionId?.length)}...
               </Text>
               <Key size={9} className="text-zinc-400" />
@@ -104,9 +102,9 @@ export default function DeviceInfo({ node }: Props) {
               onClick={send}
               variant="soft"
               className="cursor-pointer"
-              size="1"
+              size="2"
             >
-              <Flex align="center" justify="center" gap="1">
+              <Flex align="center" justify="center" gap="5">
                 <Text size="1" className="font-bold">
                   Send
                 </Text>

@@ -1,19 +1,27 @@
 import { createStore } from "tinybase/cjs";
 import { createIndexedDbPersister } from "tinybase/cjs/persisters/persister-indexed-db";
 
-// your store/database
 export const store = createStore().setTablesSchema({
-  contact: {
-    name: {
+  sent: {
+    fileName: {
       type: "string",
     },
-    phoneNumber: {
-      type: "number",
+    time: {
+      type: "string",
+    },
+    size: {
+      type: "string",
+    },
+    sender: {
+      type: "string",
+    },
+    reciever: {
+      type: "string",
     },
   },
 });
 
-const persister = createIndexedDbPersister(store, "electrostatic_db", 5);
+const persister = createIndexedDbPersister(store, "apollo_db", 5);
 
 persister.save();
 persister.startAutoSave();

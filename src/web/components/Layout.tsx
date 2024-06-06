@@ -3,7 +3,6 @@ import { useObserveEffect } from "@legendapp/state/react";
 import { Button, Flex } from "@radix-ui/themes";
 import { fileTransferState$, globalState$ } from "@shared/state";
 import t from "@src/shared/config";
-import { useRouterState } from "@tanstack/react-router";
 import { Minus, Moon, Plus, Sun, X } from "lucide-react";
 import type React from "react";
 import { useCallback } from "react";
@@ -15,8 +14,6 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   const { mutate: minimizeWindow } = t.window.minimize.useMutation();
   const { mutate: closeWindow } = t.window.closeWindow.useMutation();
-
-  const navState = useRouterState();
 
   const isDarkMode = computed(() => globalState$.colorMode.get() === "dark");
 
