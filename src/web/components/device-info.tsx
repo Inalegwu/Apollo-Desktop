@@ -3,7 +3,7 @@ import { Avatar, Button, Flex, Popover, Text } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import type { Node } from "@src/shared/types";
 import { randomNumber } from "@src/shared/utils";
-import { Heart, Key, UserRound, Wifi } from "lucide-react";
+import { Heart, Key, UserRound, Wifi, WifiOff } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { fileTransferState$, globalState$ } from "../../shared/state";
 
@@ -18,7 +18,7 @@ export default function DeviceInfo({ node }: Props) {
   const top = useMemo(() => randomNumber(), []);
   const left = useMemo(() => randomNumber(), []);
 
-  const isSaved = computed(() => globalState$.favouriteDevices.has(node));
+  const isSaved = globalState$.favouriteDevices.has(node);
   const isOnline = computed(() => navigator.onLine);
 
   const send = useCallback(() => {
@@ -29,7 +29,7 @@ export default function DeviceInfo({ node }: Props) {
   }, [sendFiles, node]);
 
   const addToFavourites = useCallback(() => {
-    if (isSaved.get()) {
+    if (isSaved) {
       favDevices.delete(node);
     } else {
       favDevices.add(node);
@@ -60,17 +60,17 @@ export default function DeviceInfo({ node }: Props) {
               width="100%"
               justify="between"
             >
-              <Text className="text-[10px] text-zinc-400 tracking-wide">
+              <Text className="text-[11.5px] text-zinc-400 tracking-wide">
                 Device Name
               </Text>
-              <Text className="text-[12.5px] font-medium">{node.nodeName}</Text>
+              <Text className="text-[12px] font-bold">{node.nodeName}</Text>
             </Flex>
             <Flex align="center" justify="end" gap="3">
               <Button
                 variant="soft"
                 onClick={addToFavourites}
                 className="w-7 h-7 rounded-full cursor-pointer transition outline-none"
-                color={isSaved.get() ? "ruby" : "gray"}
+                color={isSaved ? "ruby" : "gray"}
                 size="1"
                 radius="full"
               >
@@ -80,14 +80,27 @@ export default function DeviceInfo({ node }: Props) {
           </Flex>
           <Flex className="space-y-1" direction="column" align="start">
             <Flex width="100%" align="center" justify="between" gap="3">
-              <Text className="text-[11px]">{node.connectionId}</Text>
+              <Text className="text-[11px] font-medium">
+                {node.connectionId}
+              </Text>
               <Key size={9} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[11px]">
-                This device is <span className="text-green-500">Online</span>
+              <Text className="text-[11px] font-medium">
+                This device is{" "}
+                <span
+                  className={`${
+                    isOnline.get() ? "text-green-500" : "text-red-500"
+                  } font-medium`}
+                >
+                  {isOnline.get() ? "Online" : "Offline"}
+                </span>
               </Text>
-              <Wifi size={9} className="text-zinc-400" />
+              {isOnline.get() ? (
+                <Wifi size={9} className="text-zinc-400" />
+              ) : (
+                <WifiOff size={9} className="text-zinc-400" />
+              )}
             </Flex>
           </Flex>
           {fileTransferState$.files.get().length > 0 && (
@@ -98,7 +111,7 @@ export default function DeviceInfo({ node }: Props) {
               size="2"
             >
               <Flex align="center" justify="center" gap="5">
-                <Text className="text-[11px]">Send</Text>
+                <Text className="text-[11px] font-medium">Send</Text>
               </Flex>
             </Button>
           )}

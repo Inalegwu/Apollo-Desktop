@@ -1,23 +1,23 @@
 @font-face {
-  font-family: Spline;
-  src: url("../assets/fonts/SplineSansMono[wght].ttf");
+  font-family: Nunito;
+  src: url("../assets/fonts/Nunito-VariableFont_wght.ttf");
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Spline;
+  font-family: Nunito;
   text-decoration: none;
 }
 
 .radix-themes {
-  --default-font-family:Spline;
-  --heading-font-family:Spline;
-  --code-font-family:   Spline;
-  --strong-font-family: Spline;
-  --em-font-family:     Spline;
-  --quote-font-family:  Spline;
+  --default-font-family:Nunito;
+  --heading-font-family:Nunito;
+  --code-font-family:   Nunito;
+  --strong-font-family: Nunito;
+  --em-font-family:     Nunito;
+  --quote-font-family:  Nunito;
 }
 body {
    -webkit-user-select: none;

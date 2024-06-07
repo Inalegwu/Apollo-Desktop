@@ -24,26 +24,26 @@ export default function ThisDeviceInfo() {
       <Popover.Content size="1">
         <Flex direction="column" align="start" className="space-y-1">
           <Flex align="start" direction="column" width="100%">
-            <Text className="text-[10px] font-light text-zinc-400 tracking-wider">
+            <Text className="text-[10px] font-light text-zinc-400">
               This Device
             </Text>
-            <Text className="text-[12.5px] font-medium">{deviceName}</Text>
+            <Text className="text-[12.5px] font-bold">{deviceName}</Text>
           </Flex>
           <Flex direction="column" align="start" className="space-y-1">
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[11px]">
+              <Text className="text-[12px] font-medium">
                 {fileTransferState$.files.get().length} selected files
               </Text>
               <Folder size={10} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[11px]">
+              <Text className="text-[12px] font-medium">
                 {deviceID?.slice(0, deviceID.length)}
               </Text>
               <Key size={10} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[11px]">
+              <Text className="text-[12px] font-medium">
                 You are{" "}
                 <span
                   className={`${

@@ -21,9 +21,13 @@ export type P2PMessage = Message & {
   destination: string;
 };
 
+export type Transfer = {};
+
 export type GlobalState = {
   colorMode: "dark" | "light";
   favouriteDevices: Set<Node>;
+  transfers: Set<Transfer>;
+  transferHistory: boolean;
 };
 
 export type PeerState = {

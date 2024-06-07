@@ -10,6 +10,7 @@ import type {
   Message,
   Node,
   PeerState,
+  Transfer,
 } from "@shared/types";
 import type { Socket } from "node:net";
 
@@ -20,6 +21,8 @@ configureObservablePersistence({
 export const globalState$ = observable<GlobalState>({
   colorMode: "light",
   favouriteDevices: new Set<Node>(),
+  transfers: new Set<Transfer>(),
+  transferHistory: false,
 });
 
 export const peerState$ = observable<PeerState>({

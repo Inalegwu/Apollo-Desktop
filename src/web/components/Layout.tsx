@@ -1,11 +1,13 @@
 import { computed } from "@legendapp/state";
-import { useObserveEffect } from "@legendapp/state/react";
+import { useObservable, useObserveEffect } from "@legendapp/state/react";
 import { Button, Flex } from "@radix-ui/themes";
 import { fileTransferState$, globalState$ } from "@shared/state";
 import t from "@src/shared/config";
-import { Minus, Moon, Plus, Sun, X } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import { Minus, Moon, Plus, Settings, Sun, X } from "lucide-react";
 import type React from "react";
 import { useCallback } from "react";
+import { Settings as SettingsView } from "../components";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -14,6 +16,8 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   const { mutate: minimizeWindow } = t.window.minimize.useMutation();
   const { mutate: closeWindow } = t.window.closeWindow.useMutation();
+
+  const settings = useObservable(false);
 
   const isDarkMode = computed(() => globalState$.colorMode.get() === "dark");
 
@@ -48,7 +52,7 @@ export default function Layout({ children }: LayoutProps) {
       width="100%"
       grow="1"
       direction="column"
-      className="transition h-screen transition"
+      className="transition h-screen"
     >
       <Flex
         align="center"
@@ -56,14 +60,24 @@ export default function Layout({ children }: LayoutProps) {
         gap="4"
         className="absolute z-10 w-full px-4 py-3 top-0 left-0"
       >
-        <Button
-          variant="ghost"
-          color="gray"
-          onClick={toggleColorMode}
-          className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
-        >
-          {isDarkMode.get() ? <Sun /> : <Moon />}
-        </Button>
+        <Flex align="center" gap="5">
+          <Button
+            variant="ghost"
+            color="gray"
+            onClick={toggleColorMode}
+            className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
+          >
+            {isDarkMode.get() ? <Sun /> : <Moon />}
+          </Button>
+          <Button
+            variant="ghost"
+            asChild
+            className="w-2.5 h-4.5 rounded-full cursor-pointer"
+            onClick={() => settings.set(true)}
+          >
+            <Settings />
+          </Button>
+        </Flex>
         <Flex grow="1" id="drag-region" className="p-2" />
         <Flex align="center" justify="end" gap="5">
           <Button
@@ -95,6 +109,9 @@ export default function Layout({ children }: LayoutProps) {
           <Plus size={13} />
         </Button>
       </Flex>
+      <AnimatePresence>
+        {settings.get() && <SettingsView settings={settings} />}
+      </AnimatePresence>
     </Flex>
   );
 }
