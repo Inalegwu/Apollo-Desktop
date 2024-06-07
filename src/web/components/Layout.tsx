@@ -63,19 +63,19 @@ export default function Layout({ children }: LayoutProps) {
         <Flex align="center" gap="5">
           <Button
             variant="ghost"
-            color="gray"
-            onClick={toggleColorMode}
-            className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
-          >
-            {isDarkMode.get() ? <Sun /> : <Moon />}
-          </Button>
-          <Button
-            variant="ghost"
             asChild
             className="w-2.5 h-4.5 rounded-full cursor-pointer"
             onClick={() => settings.set(true)}
           >
             <Settings />
+          </Button>
+          <Button
+            variant="ghost"
+            color="gray"
+            onClick={toggleColorMode}
+            className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
+          >
+            {isDarkMode.get() ? <Sun /> : <Moon />}
           </Button>
         </Flex>
         <Flex grow="1" id="drag-region" className="p-2" />
