@@ -3,7 +3,6 @@ import Flatlist from "./flatlist";
 import HistoryItem from "./history-item";
 import Layout from "./layout";
 import NotFoundPage from "./not-found-page";
-import Notifier from "./notification";
 import ThisDeviceInfo from "./this-device.info";
 
 export {
@@ -12,6 +11,5 @@ export {
   HistoryItem,
   Layout,
   NotFoundPage,
-  Notifier,
   ThisDeviceInfo,
 };
