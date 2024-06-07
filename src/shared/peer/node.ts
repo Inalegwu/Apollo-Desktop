@@ -1,9 +1,5 @@
 import { TypedEventEmitter } from "@src/shared/emitter";
-import {
-  acceptDirectMessage,
-  peerState$,
-  receiveDirectMessage,
-} from "@src/shared/state";
+import { peerState$ } from "@src/shared/state";
 import type { EventTypes, Message, P2PMessage } from "@src/shared/types";
 import { Socket, createServer } from "node:net";
 import { v4 } from "uuid";
@@ -102,6 +98,7 @@ emitter.on("message", ({ connectionId, packet }) => {
 
     if (!nodeId) {
       console.log(`unknown node-id ${nodeId}`);
+      return;
     }
 
     emitter.emit("node-message", { nodeId, packet });
@@ -139,7 +136,7 @@ emitter.on("node-message", ({ nodeId, packet }) => {
       alreadySeenMessages.add(packet.data.id);
       emitter.emit("broadcast", {
         packet: packet,
-        nodeId: nodeId!,
+        nodeId: nodeId,
       });
     } else {
       broadcast(
@@ -171,20 +168,7 @@ emitter.on("node-message", ({ nodeId, packet }) => {
 });
 
 emitter.on("dm", ({ origin, packet }) => {
-  receiveDirectMessage.fire();
-  console.log(`Recieved a DM from ${origin} with data ${packet.data}`);
-
-  acceptDirectMessage.on(() => {
-    console.log(packet.data);
-
-    const files: {
-      name: string;
-      type: string;
-      buff: Buffer;
-    }[] = packet.data.files;
-
-    console.log(files);
-  });
+  console.log("recieved DM");
 });
 
 emitter.on("broadcast", ({ packet, nodeId }) => {

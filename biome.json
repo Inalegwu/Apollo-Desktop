@@ -23,7 +23,8 @@
       "./out/",
       "./release",
       "./README.md",
-      "./biome.json"
+      "./biome.json",
+      "./src/web/routeTree.gen.ts"
     ]
   },
   "formatter": {

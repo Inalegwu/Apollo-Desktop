@@ -1,5 +1,5 @@
 import { publicProcedure, router } from "@src/trpc";
-import { createWriteStream, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { z } from "zod";
 import { matchFileType } from "../utils";
 
@@ -39,26 +39,6 @@ export const nodeRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(input.destination);
-
-      const fileDataAsBuffers = input.filePaths.map((v) => parseFilePath(v));
-
-      console.log(fileDataAsBuffers);
-
-      createWriteStream("../../../file.md").write(fileDataAsBuffers[0].buffer);
-
-      ctx.node.broadcast(
-        {
-          type: "dm",
-          data: {
-            destination: input.destination,
-            files: fileDataAsBuffers,
-          },
-        },
-        input.destination,
-        undefined,
-        ctx.node.NODE_ID,
-        10000,
-      );
+      console.log(input);
     }),
 });

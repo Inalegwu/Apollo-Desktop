@@ -19,6 +19,7 @@ configureObservablePersistence({
 
 export const globalState$ = observable<GlobalState>({
   colorMode: "light",
+  favouriteDevices: new Set<Node>(),
 });
 
 export const peerState$ = observable<PeerState>({

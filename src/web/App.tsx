@@ -23,16 +23,17 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const rootElement = document.getElementById("app");
+const rootElement = document.getElementById("root");
 
 if (!rootElement?.innerHTML) {
+  // biome-ignore lint/style/noNonNullAssertion: no real way to verify this
   const root = ReactDOM.createRoot(rootElement!);
 
   root.render(
     <StrictMode>
       <t.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Theme radius="medium" accentColor="violet" grayColor="gray">
+          <Theme radius="medium" accentColor="gray" grayColor="gray">
             <RouterProvider router={router} />
           </Theme>
         </QueryClientProvider>

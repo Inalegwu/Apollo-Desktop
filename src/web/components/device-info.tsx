@@ -1,10 +1,11 @@
+import { computed } from "@legendapp/state";
 import { Avatar, Button, Flex, Popover, Text } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import type { Node } from "@src/shared/types";
 import { randomNumber } from "@src/shared/utils";
-import { Key, UserRound, Wifi } from "lucide-react";
+import { Heart, Key, UserRound, Wifi } from "lucide-react";
 import { useCallback, useMemo } from "react";
-import { fileTransferState$ } from "../../shared/state";
+import { fileTransferState$, globalState$ } from "../../shared/state";
 
 type Props = {
   node: Node;
@@ -12,9 +13,13 @@ type Props = {
 
 export default function DeviceInfo({ node }: Props) {
   const { mutate: sendFiles } = t.node.sendFile.useMutation();
+  const favDevices = globalState$.favouriteDevices.get();
 
   const top = useMemo(() => randomNumber(), []);
   const left = useMemo(() => randomNumber(), []);
+
+  const isSaved = computed(() => globalState$.favouriteDevices.has(node));
+  const isOnline = computed(() => navigator.onLine);
 
   const send = useCallback(() => {
     sendFiles({
@@ -23,24 +28,32 @@ export default function DeviceInfo({ node }: Props) {
     });
   }, [sendFiles, node]);
 
+  const addToFavourites = useCallback(() => {
+    if (isSaved.get()) {
+      favDevices.delete(node);
+    } else {
+      favDevices.add(node);
+    }
+  }, [node, isSaved, favDevices]);
+
   return (
     <Popover.Root>
       <Popover.Trigger>
         <Avatar
-          fallback={<UserRound size={9} />}
+          asChild
           src="https://source.boringavatars.com/"
           variant="soft"
-          className="absolute shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800"
-          radius="full"
+          fallback={<UserRound size={15} />}
           style={{
-            top: `${top}px`,
             left: `${left}px`,
+            top: `${top}px`,
           }}
+          className="absolute shadow-xl w-11 h-11 rounded-full cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800"
         />
       </Popover.Trigger>
       <Popover.Content size="1">
         <Flex direction="column" className="space-y-2">
-          <Flex align="center" justify="between">
+          <Flex align="center" justify="between" gap="3">
             <Flex
               direction="column"
               align="start"
@@ -52,29 +65,18 @@ export default function DeviceInfo({ node }: Props) {
               </Text>
               <Text className="text-[12.5px] font-medium">{node.nodeName}</Text>
             </Flex>
-            {/* <Flex align="center" justify="end" gap="3">
-              {isSaved.get() && (
-                <Button
-                  variant="soft"
-                  className="w-7 h-7 rounded-full cursor-pointer transition outline-none"
-                  size="1"
-                  color="gray"
-                  radius="full"
-                >
-                  <Pen />
-                </Button>
-              )}
+            <Flex align="center" justify="end" gap="3">
               <Button
                 variant="soft"
-                onClick={() => isSaved.set(!isSaved.get())}
+                onClick={addToFavourites}
                 className="w-7 h-7 rounded-full cursor-pointer transition outline-none"
                 color={isSaved.get() ? "ruby" : "gray"}
                 size="1"
                 radius="full"
               >
-                <Heart size={11} />
+                <Heart size={10} />
               </Button>
-            </Flex> */}
+            </Flex>
           </Flex>
           <Flex className="space-y-1" direction="column" align="start">
             <Flex width="100%" align="center" justify="between" gap="3">

@@ -1,6 +1,11 @@
 import { useMountOnce } from "@legendapp/state/react";
 import { Flex } from "@radix-ui/themes";
-import { globalState$, peerState$ } from "@shared/state";
+import {
+  acceptDirectMessage,
+  globalState$,
+  peerState$,
+  receiveDirectMessage,
+} from "@shared/state";
 import t from "@src/shared/config";
 import { generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
@@ -19,7 +24,16 @@ function Index() {
     },
   });
 
+  receiveDirectMessage.on(() => {
+    console.log("direct message recieved");
+  });
+
+  acceptDirectMessage.fire();
+
   const neighborsData = Array.from(peerState$.neighbors.get().values());
+  const favouriteDevices = Array.from(
+    globalState$.favouriteDevices.get().values(),
+  );
 
   useMountOnce(() => {
     startServer();
@@ -36,13 +50,9 @@ function Index() {
       {neighborsData.map((v) => (
         <DeviceInfo key={v.connectionId} node={v} />
       ))}
-      <DeviceInfo
-        node={{
-          connectionId: v4(),
-          deviceType: "desktop",
-          nodeName: generateRandomName(),
-        }}
-      />
+      {favouriteDevices.map((v) => (
+        <DeviceInfo key={v.connectionId} node={v} />
+      ))}
       <DeviceInfo
         node={{
           connectionId: v4(),

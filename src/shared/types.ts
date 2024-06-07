@@ -10,6 +10,7 @@ export type Node = {
 
 export type Message = {
   type: "message" | "handshake" | "broadcast" | "dm";
+  // biome-ignore lint/suspicious/noExplicitAny: any form of data can be passed here...
   data: Record<string, any>;
 };
 
@@ -22,6 +23,7 @@ export type P2PMessage = Message & {
 
 export type GlobalState = {
   colorMode: "dark" | "light";
+  favouriteDevices: Set<Node>;
 };
 
 export type PeerState = {
@@ -52,7 +54,7 @@ export type EventTypes = {
     packet: Message;
   };
   "node-message": {
-    nodeId: string | undefined;
+    nodeId: string;
     packet: Message;
   };
   broadcast: {
@@ -70,3 +72,16 @@ export enum FileTypes {
   TXT = "txt",
   DOCX = "docx",
 }
+
+export type FileTransfer = {
+  destination: string;
+  sender: {
+    name: string;
+    keychainID: string;
+  };
+  files: {
+    fileName: string;
+    fileType: FileTypes | null;
+    buffer: Buffer;
+  }[];
+};
