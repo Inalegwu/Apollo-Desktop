@@ -23,6 +23,7 @@ export const globalState$ = observable<GlobalState>({
   favouriteDevices: new Set<Node>(),
   transfers: new Set<Transfer>(),
   transferHistory: false,
+  destinationPath: "",
 });
 
 export const peerState$ = observable<PeerState>({

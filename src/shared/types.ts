@@ -28,6 +28,7 @@ export type GlobalState = {
   favouriteDevices: Set<Node>;
   transfers: Set<Transfer>;
   transferHistory: boolean;
+  destinationPath: string;
 };
 
 export type PeerState = {

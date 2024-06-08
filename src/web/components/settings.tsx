@@ -1,8 +1,10 @@
-import type {
-  ObservablePrimitiveBaseFns,
-  ObservablePrimitiveBooleanFns,
+import {
+  observable,
+  type ObservablePrimitiveBaseFns,
+  type ObservablePrimitiveBooleanFns,
 } from "@legendapp/state";
-import { Switch, useObservable } from "@legendapp/state/react";
+import { persistObservable } from "@legendapp/state/persist";
+import { Switch } from "@legendapp/state/react";
 import {
   Button,
   Flex,
@@ -12,16 +14,20 @@ import {
 } from "@radix-ui/themes";
 import { globalState$ } from "@src/shared/state";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { Folder, X } from "lucide-react";
 
 type SettingsProps = {
   settings: ObservablePrimitiveBaseFns<boolean> &
     ObservablePrimitiveBooleanFns<boolean>;
 };
 
-export default function Settings({ settings }: SettingsProps) {
-  const view = useObservable<"advanced" | "transfers">("transfers");
+const view = observable<"advanced" | "transfers">("transfers");
 
+persistObservable(view, {
+  local: "settings_view",
+});
+
+export default function Settings({ settings }: SettingsProps) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
@@ -94,7 +100,34 @@ export default function Settings({ settings }: SettingsProps) {
 }
 
 function Advanced() {
-  return <>advanced</>;
+  return (
+    <Flex className="w-full h-full" direction="column" align="start" gap="5">
+      <Flex className="w-full" direction="column" gap="2">
+        <Flex className="w-full" align="center" justify="between">
+          <Flex direction="column" align="start">
+            <Text className="font-bold text-[12px]">Destination directory</Text>
+            <Text className="text-zinc-400 text-[11.5px]">
+              Change what folder recieved files are saved to
+            </Text>
+          </Flex>
+          <Button
+            variant="outline"
+            color="gray"
+            size="1"
+            className="cursor-pointer"
+          >
+            <Flex align="center" justify="start" gap="1">
+              <Folder size={10} />
+              <Text size="1">Select Folder</Text>
+            </Flex>
+          </Button>
+        </Flex>
+        <Text size="1" color="gray">
+          Current Directory: {}
+        </Text>
+      </Flex>
+    </Flex>
+  );
 }
 
 function Transfers() {
@@ -123,7 +156,7 @@ function Transfers() {
             How long should transfer history be available
           </Text>
         </Flex>
-        <Select.Root size="1">
+        <Select.Root size="1" defaultValue="3D">
           <Select.Trigger
             radius="large"
             disabled={!globalState$.transferHistory.get()}
