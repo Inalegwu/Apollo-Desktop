@@ -1,10 +1,8 @@
-import {
-  observable,
-  type ObservablePrimitiveBaseFns,
-  type ObservablePrimitiveBooleanFns,
+import type {
+  ObservablePrimitiveBaseFns,
+  ObservablePrimitiveBooleanFns,
 } from "@legendapp/state";
-import { persistObservable } from "@legendapp/state/persist";
-import { Switch } from "@legendapp/state/react";
+import { Switch, useObservable } from "@legendapp/state/react";
 import {
   Button,
   Flex,
@@ -14,20 +12,16 @@ import {
 } from "@radix-ui/themes";
 import { globalState$ } from "@src/shared/state";
 import { motion } from "framer-motion";
-import { Folder, X } from "lucide-react";
+import { Folder, Heading, X } from "lucide-react";
 
 type SettingsProps = {
   settings: ObservablePrimitiveBaseFns<boolean> &
     ObservablePrimitiveBooleanFns<boolean>;
 };
 
-const view = observable<"advanced" | "transfers">("transfers");
-
-persistObservable(view, {
-  local: "settings_view",
-});
-
 export default function Settings({ settings }: SettingsProps) {
+  const view = useObservable<"advanced" | "files" | "transfers">("transfers");
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
@@ -72,6 +66,18 @@ export default function Settings({ settings }: SettingsProps) {
               </Text>
             </Flex>
             <Flex
+              onClick={() => view.set("files")}
+              className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
+            >
+              <Text
+                color={view.get() === "files" ? "iris" : "gray"}
+                weight={view.get() === "files" ? "bold" : "regular"}
+                className="font-medium text-[12.5px]"
+              >
+                Files & Folders
+              </Text>
+            </Flex>
+            <Flex
               onClick={() => view.set("advanced")}
               className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
             >
@@ -91,6 +97,7 @@ export default function Settings({ settings }: SettingsProps) {
             {{
               advanced: () => <Advanced />,
               transfers: () => <Transfers />,
+              files: () => <Files />,
             }}
           </Switch>
         </Flex>
@@ -99,9 +106,9 @@ export default function Settings({ settings }: SettingsProps) {
   );
 }
 
-function Advanced() {
+function Files() {
   return (
-    <Flex className="w-full h-full" direction="column" align="start" gap="5">
+    <Flex className="w-full h-full" direction="column" gap="5" align="start">
       <Flex className="w-full" direction="column" gap="2">
         <Flex className="w-full" align="center" justify="between">
           <Flex direction="column" align="start">
@@ -126,6 +133,14 @@ function Advanced() {
           Current Directory: {}
         </Text>
       </Flex>
+    </Flex>
+  );
+}
+
+function Advanced() {
+  return (
+    <Flex className="w-full h-full" direction="column" align="start" gap="5">
+      advanced
     </Flex>
   );
 }
