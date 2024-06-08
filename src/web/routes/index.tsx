@@ -2,9 +2,7 @@ import { useMountOnce } from "@legendapp/state/react";
 import { Flex } from "@radix-ui/themes";
 import { globalState$, peerState$, receiveDirectMessage } from "@shared/state";
 import t from "@src/shared/config";
-import { generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { v4 } from "uuid";
 import { DeviceInfo, ThisDeviceInfo } from "../components";
 
 export const Route = createFileRoute("/")({
@@ -46,13 +44,6 @@ function Index() {
       {favouriteDevices.map((v) => (
         <DeviceInfo key={v.connectionId} node={v} />
       ))}
-      <DeviceInfo
-        node={{
-          connectionId: v4(),
-          deviceType: "desktop",
-          nodeName: generateRandomName(),
-        }}
-      />
       <ThisDeviceInfo />
     </Flex>
   );
