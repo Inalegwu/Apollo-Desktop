@@ -5,14 +5,16 @@ import type {
 import { Switch, useObservable } from "@legendapp/state/react";
 import {
   Button,
+  Dialog,
   Flex,
+  Heading,
   Select,
   Switch as SwitchButton,
   Text,
 } from "@radix-ui/themes";
 import { globalState$ } from "@src/shared/state";
 import { motion } from "framer-motion";
-import { Folder, Heading, X } from "lucide-react";
+import { Folder, Info, X } from "lucide-react";
 
 type SettingsProps = {
   settings: ObservablePrimitiveBaseFns<boolean> &
@@ -35,61 +37,122 @@ export default function Settings({ settings }: SettingsProps) {
         <Flex
           direction="column"
           align="start"
-          className="w-2/6 h-full bg-white dark:bg-dark-7 border-r-1 border-r-solid border-r-zinc-100 dark:border-r-zinc-800"
+          justify="between"
+          className="w-2/6 h-full dark:bg-dark-7 border-r-1 border-r-solid border-r-zinc-100 dark:border-r-zinc-800"
         >
-          <Flex align="center" justify="start" className="px-3 py-2">
-            <Button
-              onClick={() => settings.set(false)}
-              variant="ghost"
-              color="tomato"
-              className="w-2.5 h-4.5 rounded-full cursor-pointer"
+          <Flex direction="column" align="start" className="w-full">
+            <Flex align="center" justify="start" className="px-3 py-2">
+              <Button
+                onClick={() => settings.set(false)}
+                variant="ghost"
+                color="tomato"
+                className="w-2.5 h-4.5 rounded-full cursor-pointer"
+              >
+                <X />
+              </Button>
+            </Flex>
+            <Flex
+              direction="column"
+              align="start"
+              className="w-full px-2"
+              grow="1"
             >
-              <X />
-            </Button>
+              <Flex
+                onClick={() => view.set("transfers")}
+                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
+              >
+                <Text
+                  color={view.get() === "transfers" ? "iris" : "gray"}
+                  weight={view.get() === "transfers" ? "bold" : "regular"}
+                  className="font-medium text-[12.5px]"
+                >
+                  Transfers
+                </Text>
+              </Flex>
+              <Flex
+                onClick={() => view.set("files")}
+                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
+              >
+                <Text
+                  color={view.get() === "files" ? "iris" : "gray"}
+                  weight={view.get() === "files" ? "bold" : "regular"}
+                  className="font-medium text-[12.5px]"
+                >
+                  Files & Folders
+                </Text>
+              </Flex>
+              <Flex
+                onClick={() => view.set("advanced")}
+                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
+              >
+                <Text
+                  weight={view.get() === "advanced" ? "bold" : "regular"}
+                  color={view.get() === "advanced" ? "iris" : "gray"}
+                  size="2"
+                  className="font-medium text-[12.5px]"
+                >
+                  Advanced
+                </Text>
+              </Flex>
+            </Flex>
           </Flex>
-          <Flex
-            direction="column"
-            align="start"
-            className="w-full px-2"
-            grow="1"
-          >
-            <Flex
-              onClick={() => view.set("transfers")}
-              className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
-            >
-              <Text
-                color={view.get() === "transfers" ? "iris" : "gray"}
-                weight={view.get() === "transfers" ? "bold" : "regular"}
-                className="font-medium text-[12.5px]"
-              >
-                Transfers
-              </Text>
-            </Flex>
-            <Flex
-              onClick={() => view.set("files")}
-              className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
-            >
-              <Text
-                color={view.get() === "files" ? "iris" : "gray"}
-                weight={view.get() === "files" ? "bold" : "regular"}
-                className="font-medium text-[12.5px]"
-              >
-                Files & Folders
-              </Text>
-            </Flex>
-            <Flex
-              onClick={() => view.set("advanced")}
-              className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
-            >
-              <Text
-                weight={view.get() === "advanced" ? "bold" : "regular"}
-                color={view.get() === "advanced" ? "iris" : "gray"}
-                size="2"
-                className="font-medium text-[12.5px]"
-              >
-                Advanced
-              </Text>
-            </Flex>
+          <Flex className="px-3 py-2" align="center" justify="start" gap="2">
+            <Dialog.Root>
+              <Dialog.Trigger>
+                <Button
+                  variant="ghost"
+                  className="w-2.5 h-4.5 rounded-full cursor-pointer"
+                >
+                  <Info />
+                </Button>
+              </Dialog.Trigger>
+              <Dialog.Content size="2">
+                <Flex direction="column" align="start" gap="2">
+                  <Flex align="center" className="w-full" justify="end">
+                    <Dialog.Close>
+                      <Button
+                        variant="ghost"
+                        color="gray"
+                        className="w-3 h-5 rounded-full cursor-pointer"
+                      >
+                        <X />
+                      </Button>
+                    </Dialog.Close>
+                  </Flex>
+                  <Flex direction="column" gap="1" align="start">
+                    <Heading size="5" color="gray">
+                      About
+                    </Heading>
+                    <Text size="2" className="font-medium" color="gray">
+                      Apollo is a product of{" "}
+                      <Text
+                        size="2"
+                        className="font-bold cursor-pointer"
+                        color="iris"
+                      >
+                        DisgruntledDevs &copy; 2024
+                      </Text>{" "}
+                      as a part of the apps from the future suite, designed to
+                      provide productivity and lifestyle tools for all users,
+                      Securely and Localy on all devices.
+                    </Text>
+                    <Text size="2" className="font-medium" color="gray">
+                      Apollo is a completely private and local-first
+                      application, meaning none of your information ever leaves
+                      your devices and user accounts aren't necessary.
+                    </Text>
+                    <Flex align="start" direction="column">
+                      <Text size="2" color="gray">
+                        For more information, visit us{" "}
+                        <span className="text-indigo-700 cursor-pointer">
+                          @apollo.share
+                        </span>
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Dialog.Content>
+            </Dialog.Root>
           </Flex>
         </Flex>
         <Flex className="w-4/6 h-full px-3 py-3">
