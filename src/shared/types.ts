@@ -21,7 +21,18 @@ export type P2PMessage = Message & {
   destination: string;
 };
 
-export type Transfer = {};
+export type Transfer = {
+  from: {
+    nodeId: string;
+    deviceName: string;
+  };
+  destination: {
+    nodeId: string;
+    deviceName: string;
+  };
+  fileName: string;
+  fileType: FileTypes;
+};
 
 export type GlobalState = {
   colorMode: "dark" | "light";
@@ -29,6 +40,7 @@ export type GlobalState = {
   transfers: Set<Transfer>;
   transferHistory: boolean;
   destinationPath: string;
+  port: number;
 };
 
 export type PeerState = {

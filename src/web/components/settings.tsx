@@ -5,16 +5,16 @@ import type {
 import { Switch, useObservable } from "@legendapp/state/react";
 import {
   Button,
-  Dialog,
   Flex,
-  Heading,
   Select,
   Switch as SwitchButton,
   Text,
+  TextField,
 } from "@radix-ui/themes";
-import { globalState$ } from "@src/shared/state";
+import { globalState$, peerState$ } from "@src/shared/state";
 import { motion } from "framer-motion";
-import { Folder, Info, X } from "lucide-react";
+import { Folder, Laptop, Phone, X } from "lucide-react";
+import About from "./about";
 
 type SettingsProps = {
   settings: ObservablePrimitiveBaseFns<boolean> &
@@ -23,6 +23,7 @@ type SettingsProps = {
 
 export default function Settings({ settings }: SettingsProps) {
   const view = useObservable<"advanced" | "files" | "transfers">("transfers");
+  const isAdvancedMode = useObservable(false);
 
   return (
     <motion.div
@@ -38,7 +39,7 @@ export default function Settings({ settings }: SettingsProps) {
           direction="column"
           align="start"
           justify="between"
-          className="w-2/6 h-full dark:bg-dark-7 border-r-1 border-r-solid border-r-zinc-100 dark:border-r-zinc-800"
+          className="w-2/6 h-full bg-white dark:bg-dark-7 border-r-1 border-r-solid border-r-zinc-200 dark:border-r-zinc-800"
         >
           <Flex direction="column" align="start" className="w-full">
             <Flex align="center" justify="start" className="px-3 py-2">
@@ -51,108 +52,59 @@ export default function Settings({ settings }: SettingsProps) {
                 <X />
               </Button>
             </Flex>
-            <Flex
-              direction="column"
-              align="start"
-              className="w-full px-2"
-              grow="1"
-            >
+            <Flex direction="column" align="start" className="w-full" grow="1">
               <Flex
                 onClick={() => view.set("transfers")}
-                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
+                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
               >
                 <Text
                   color={view.get() === "transfers" ? "iris" : "gray"}
                   weight={view.get() === "transfers" ? "bold" : "regular"}
-                  className="font-medium text-[12.5px]"
+                  className="text-[12.5px]"
                 >
                   Transfers
                 </Text>
               </Flex>
               <Flex
                 onClick={() => view.set("files")}
-                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
+                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
               >
                 <Text
                   color={view.get() === "files" ? "iris" : "gray"}
                   weight={view.get() === "files" ? "bold" : "regular"}
-                  className="font-medium text-[12.5px]"
+                  className="text-[12.5px]"
                 >
                   Files & Folders
                 </Text>
               </Flex>
+              {/* TODO show and hide with advanced mode status */}
               <Flex
                 onClick={() => view.set("advanced")}
-                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
+                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
               >
                 <Text
                   weight={view.get() === "advanced" ? "bold" : "regular"}
                   color={view.get() === "advanced" ? "iris" : "gray"}
                   size="2"
-                  className="font-medium text-[12.5px]"
+                  className="text-[12.5px]"
                 >
                   Advanced
                 </Text>
               </Flex>
             </Flex>
           </Flex>
-          <Flex className="px-3 py-2" align="center" justify="start" gap="2">
-            <Dialog.Root>
-              <Dialog.Trigger>
-                <Button
-                  variant="ghost"
-                  className="w-2.5 h-4.5 rounded-full cursor-pointer"
-                >
-                  <Info />
-                </Button>
-              </Dialog.Trigger>
-              <Dialog.Content size="2">
-                <Flex direction="column" align="start" gap="2">
-                  <Flex align="center" className="w-full" justify="end">
-                    <Dialog.Close>
-                      <Button
-                        variant="ghost"
-                        color="gray"
-                        className="w-3 h-5 rounded-full cursor-pointer"
-                      >
-                        <X />
-                      </Button>
-                    </Dialog.Close>
-                  </Flex>
-                  <Flex direction="column" gap="1" align="start">
-                    <Heading size="5" color="gray">
-                      About
-                    </Heading>
-                    <Text size="2" className="font-medium" color="gray">
-                      Apollo is a product of{" "}
-                      <Text
-                        size="2"
-                        className="font-bold cursor-pointer"
-                        color="iris"
-                      >
-                        DisgruntledDevs &copy; 2024
-                      </Text>{" "}
-                      as a part of the apps from the future suite, designed to
-                      provide productivity and lifestyle tools for all users,
-                      Securely and Localy on all devices.
-                    </Text>
-                    <Text size="2" className="font-medium" color="gray">
-                      Apollo is a completely private and local-first
-                      application, meaning none of your information ever leaves
-                      your devices and user accounts aren't necessary.
-                    </Text>
-                    <Flex align="start" direction="column">
-                      <Text size="2" color="gray">
-                        For more information, visit us{" "}
-                        <Text size="2" color="iris" className="cursor-pointer">
-                          @apollo.share
-                        </Text>
-                      </Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-              </Dialog.Content>
-            </Dialog.Root>
+          <Flex className="px-3 py-2 w-full" align="center" justify="between">
+            <About />
+            <Flex align="end" gap="2">
+              <Text className="text-[10px] font-medium" color="gray">
+                Advanced Mode
+              </Text>
+              <SwitchButton
+                size="1"
+                onClick={() => isAdvancedMode.set(!isAdvancedMode.get())}
+                checked={isAdvancedMode.get()}
+              />
+            </Flex>
           </Flex>
         </Flex>
         <Flex className="w-4/6 h-full px-3 py-3">
@@ -181,7 +133,7 @@ function Files() {
             </Text>
           </Flex>
           <Button
-            variant="outline"
+            variant="surface"
             color="gray"
             size="1"
             className="cursor-pointer"
@@ -193,7 +145,7 @@ function Files() {
           </Button>
         </Flex>
         <Text size="1" color="gray">
-          Current Directory: {}
+          Current Directory: {globalState$.destinationPath.get()}
         </Text>
       </Flex>
     </Flex>
@@ -203,7 +155,29 @@ function Files() {
 function Advanced() {
   return (
     <Flex className="w-full h-full" direction="column" align="start" gap="5">
-      advanced
+      <Flex align="center" className="w-full" justify="between">
+        <Flex direction="column" align="start">
+          <Text className="text-[12px] font-bold">Server Port</Text>
+          <Text className="text-[11px] text-zinc-400">
+            Port for apollo server.Make sure destination device port is the
+            same.
+          </Text>
+        </Flex>
+        <TextField.Root className="max-w-[4.5rem]">
+          <TextField.Slot>
+            {peerState$.deviceType.get() === "desktop" ? (
+              <Laptop size={9} />
+            ) : (
+              <Phone />
+            )}
+          </TextField.Slot>
+          <TextField.Input
+            size="1"
+            defaultValue={globalState$.port.get()}
+            onChange={(e) => console.log(e.currentTarget.value)}
+          />
+        </TextField.Root>
+      </Flex>
     </Flex>
   );
 }
@@ -219,6 +193,7 @@ function Transfers() {
           </Text>
         </Flex>
         <SwitchButton
+          size="1"
           onClick={() =>
             globalState$.transferHistory.set(
               !globalState$.transferHistory.get(),

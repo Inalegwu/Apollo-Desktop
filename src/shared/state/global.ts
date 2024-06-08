@@ -24,6 +24,7 @@ export const globalState$ = observable<GlobalState>({
   transfers: new Set<Transfer>(),
   transferHistory: false,
   destinationPath: "",
+  port: 42069,
 });
 
 export const peerState$ = observable<PeerState>({
