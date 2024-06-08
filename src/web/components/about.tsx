@@ -12,7 +12,7 @@ export default function About() {
           <Info />
         </Button>
       </Dialog.Trigger>
-      <Dialog.Content size="1">
+      <Dialog.Content size="2">
         <Flex direction="column" align="start" gap="2">
           <Flex align="center" className="w-full" justify="end">
             <Dialog.Close>
@@ -46,7 +46,7 @@ export default function About() {
             <Flex align="start" direction="column">
               <Text size="3" color="gray">
                 For more information, visit us{" "}
-                <Text size="2" color="iris" className="cursor-pointer">
+                <Text size="3" color="iris" className="cursor-pointer">
                   @apollo.share
                 </Text>
               </Text>
