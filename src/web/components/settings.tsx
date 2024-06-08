@@ -20,7 +20,7 @@ type SettingsProps = {
 };
 
 export default function Settings({ settings }: SettingsProps) {
-  const view = useObservable<"advance" | "transfers">("transfers");
+  const view = useObservable<"advanced" | "transfers">("transfers");
 
   return (
     <motion.div
@@ -28,14 +28,14 @@ export default function Settings({ settings }: SettingsProps) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ scale: 0, opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="absolute z-20 w-full h-screen flex items-center justify-center"
+      className="absolute z-20 w-full h-screen flex items-center justify-center shadow-xl"
     >
       <Flex className="w-5/6 h-4/6 bg-light-1 dark:bg-dark-8 rounded-lg overflow-hidden border-1 border-solid border-zinc-200 dark:border-zinc-800">
         {/* sidebar */}
         <Flex
           direction="column"
           align="start"
-          className="w-2/6 h-full bg-white dark:bg-dark-7"
+          className="w-2/6 h-full bg-white dark:bg-dark-7 border-r-1 border-r-solid border-r-zinc-100 dark:border-r-zinc-800"
         >
           <Flex align="center" justify="start" className="px-3 py-2">
             <Button
@@ -55,15 +55,26 @@ export default function Settings({ settings }: SettingsProps) {
           >
             <Flex
               onClick={() => view.set("transfers")}
-              className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-sm"
+              className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
             >
-              <Text className="font-medium text-[13px]">Transfers</Text>
+              <Text
+                color={view.get() === "transfers" ? "iris" : "gray"}
+                weight={view.get() === "transfers" ? "bold" : "regular"}
+                className="font-medium text-[12.5px]"
+              >
+                Transfers
+              </Text>
             </Flex>
             <Flex
-              onClick={() => view.set("advance")}
-              className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-sm"
+              onClick={() => view.set("advanced")}
+              className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40 rounded-lg"
             >
-              <Text size="2" className="font-medium text-[13px]">
+              <Text
+                weight={view.get() === "advanced" ? "bold" : "regular"}
+                color={view.get() === "advanced" ? "iris" : "gray"}
+                size="2"
+                className="font-medium text-[12.5px]"
+              >
                 Advanced
               </Text>
             </Flex>
@@ -72,7 +83,7 @@ export default function Settings({ settings }: SettingsProps) {
         <Flex className="w-4/6 h-full px-3 py-3">
           <Switch value={view.get()}>
             {{
-              advance: () => <Advance />,
+              advanced: () => <Advanced />,
               transfers: () => <Transfers />,
             }}
           </Switch>
@@ -82,7 +93,7 @@ export default function Settings({ settings }: SettingsProps) {
   );
 }
 
-function Advance() {
+function Advanced() {
   return <>advanced</>;
 }
 
@@ -91,13 +102,12 @@ function Transfers() {
     <Flex direction="column" align="start" gap="5" className="w-full h-full">
       <Flex className="w-full" align="center" justify="between">
         <Flex direction="column" align="start">
-          <Text className="font-bold text-[12px]">Transfer History</Text>
+          <Text className="font-bold text-[12px]">Transfer history</Text>
           <Text className="text-zinc-400 text-[11.5px]">
             View transfers both incoming and outgoing to this device
           </Text>
         </Flex>
         <SwitchButton
-          color="iris"
           onClick={() =>
             globalState$.transferHistory.set(
               !globalState$.transferHistory.get(),
@@ -108,21 +118,56 @@ function Transfers() {
       </Flex>
       <Flex className="w-full" align="center" justify="between">
         <Flex direction="column" align="start">
-          <Text className="font-bold text-[12px]">Keep Transfer History</Text>
+          <Text className="font-bold text-[12px]">Save transfer history</Text>
           <Text className="text-zinc-400 text-[11.5px]">
             How long should transfer history be available
           </Text>
         </Flex>
         <Select.Root size="1">
-          <Select.Trigger className="bg-light-1 dark:bg-dark-8">
-            Duration
-          </Select.Trigger>
+          <Select.Trigger
+            radius="large"
+            disabled={!globalState$.transferHistory.get()}
+            className="bg-light-1 dark:bg-dark-8 cursor-pointer"
+          />
           <Select.Content
             variant="soft"
+            defaultValue="4D"
             className="flex flex-col items-start bg-light-1 dark:bg-dark-8"
           >
-            <Select.Item value="3D">
+            <Select.Item
+              disabled={!globalState$.transferHistory.get()}
+              className="cursor-pointer"
+              value="none"
+            >
+              <Text>None</Text>
+            </Select.Item>
+            <Select.Item
+              disabled={!globalState$.transferHistory.get()}
+              className="cursor-pointer"
+              value="1D"
+            >
+              <Text>1 Days</Text>
+            </Select.Item>
+            <Select.Item
+              disabled={!globalState$.transferHistory.get()}
+              className="cursor-pointer"
+              value="2D"
+            >
+              <Text>2 Days</Text>
+            </Select.Item>
+            <Select.Item
+              disabled={!globalState$.transferHistory.get()}
+              className="cursor-pointer"
+              value="3D"
+            >
               <Text>3 Days</Text>
+            </Select.Item>
+            <Select.Item
+              disabled={!globalState$.transferHistory.get()}
+              className="cursor-pointer"
+              value="4D"
+            >
+              <Text>4 Days</Text>
             </Select.Item>
           </Select.Content>
         </Select.Root>

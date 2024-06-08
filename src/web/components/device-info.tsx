@@ -43,6 +43,7 @@ export default function DeviceInfo({ node }: Props) {
           asChild
           src="https://source.boringavatars.com/"
           variant="soft"
+          color="gray"
           fallback={<UserRound size={15} />}
           style={{
             left: `${left}px`,

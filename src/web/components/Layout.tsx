@@ -63,6 +63,7 @@ export default function Layout({ children }: LayoutProps) {
         <Flex align="center" gap="5">
           <Button
             variant="ghost"
+            color="gray"
             asChild
             className="w-2.5 h-4.5 rounded-full cursor-pointer"
             onClick={() => settings.set(true)}
