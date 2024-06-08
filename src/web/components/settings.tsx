@@ -144,9 +144,9 @@ export default function Settings({ settings }: SettingsProps) {
                     <Flex align="start" direction="column">
                       <Text size="2" color="gray">
                         For more information, visit us{" "}
-                        <span className="text-indigo-700 cursor-pointer">
+                        <Text size="2" color="iris" className="cursor-pointer">
                           @apollo.share
-                        </span>
+                        </Text>
                       </Text>
                     </Flex>
                   </Flex>
