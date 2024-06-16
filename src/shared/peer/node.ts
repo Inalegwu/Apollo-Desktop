@@ -18,15 +18,6 @@ const DEVICE_TYPE = peerState$.deviceType.get();
 const alreadySentMessages = peerState$.alreadySent.get();
 const alreadySeenMessages = new Set();
 
-// console.log({
-//   NODE_ID,
-//   NODE_NAME,
-//   DEVICE_TYPE,
-//   alreadySentMessages,
-//   connections,
-//   neighbors,
-// });
-
 const p2pSend = (packet: P2PMessage) => {
   if (packet.ttl < 1) {
     return;

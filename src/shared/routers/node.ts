@@ -40,5 +40,9 @@ export const nodeRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       console.log(input);
+      const files=input.filePaths.map((v)=>parseFilePath(v));
+
+      console.log(files);
+
     }),
 });

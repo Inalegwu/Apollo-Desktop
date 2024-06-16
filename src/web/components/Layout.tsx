@@ -20,7 +20,7 @@ export default function Layout({ children }: LayoutProps) {
   const settings = useObservable(false);
 
   const isDarkMode = computed(() => globalState$.colorMode.get() === "dark");
-
+  
   useObserveEffect(() => {
     if (globalState$.colorMode.get() === "dark") {
       document.body.classList.add("dark");

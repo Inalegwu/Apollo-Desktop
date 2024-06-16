@@ -31,19 +31,19 @@ export default function ThisDeviceInfo() {
           </Flex>
           <Flex direction="column" align="start" className="space-y-1">
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[12px] font-medium">
+              <Text className="text-[11px] font-medium">
                 {fileTransferState$.files.get().length} selected files
               </Text>
               <Folder size={10} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[12px] font-medium">
+              <Text className="text-[11px] font-medium">
                 {deviceID?.slice(0, deviceID.length)}
               </Text>
               <Key size={10} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[12px] font-medium">
+              <Text className="text-[11px] font-medium">
                 You are{" "}
                 <span
                   className={`${

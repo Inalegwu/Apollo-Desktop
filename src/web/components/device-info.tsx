@@ -111,7 +111,7 @@ export default function DeviceInfo({ node }: Props) {
               className="cursor-pointer"
               size="2"
             >
-              <Flex align="center" justify="center" gap="5">
+              <Flex align="center" justify="start" gap="5">
                 <Text className="text-[11px] font-medium">Send</Text>
               </Flex>
             </Button>

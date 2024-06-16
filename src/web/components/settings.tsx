@@ -1,6 +1,7 @@
-import type {
-  ObservablePrimitiveBaseFns,
-  ObservablePrimitiveBooleanFns,
+import {
+  computed,
+  type ObservablePrimitiveBaseFns,
+  type ObservablePrimitiveBooleanFns,
 } from "@legendapp/state";
 import { Switch, useObservable } from "@legendapp/state/react";
 import {
@@ -11,9 +12,11 @@ import {
   Text,
   TextField,
 } from "@radix-ui/themes";
+import t from "@src/shared/config";
 import { globalState$, peerState$ } from "@src/shared/state";
 import { motion } from "framer-motion";
 import { Folder, Laptop, Phone, X } from "lucide-react";
+import { useCallback } from "react";
 import About from "./about";
 
 type SettingsProps = {
@@ -58,8 +61,7 @@ export default function Settings({ settings }: SettingsProps) {
                 className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
               >
                 <Text
-                  color={view.get() === "transfers" ? "iris" : "gray"}
-                  weight={view.get() === "transfers" ? "bold" : "regular"}
+                  color={view.get() === "transfers" ? "blue" : "gray"}
                   className="text-[12.5px]"
                 >
                   Transfers
@@ -70,8 +72,7 @@ export default function Settings({ settings }: SettingsProps) {
                 className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
               >
                 <Text
-                  color={view.get() === "files" ? "iris" : "gray"}
-                  weight={view.get() === "files" ? "bold" : "regular"}
+                  color={view.get() === "files" ? "blue" : "gray"}
                   className="text-[12.5px]"
                 >
                   Files & Folders
@@ -83,8 +84,7 @@ export default function Settings({ settings }: SettingsProps) {
                 className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
               >
                 <Text
-                  weight={view.get() === "advanced" ? "bold" : "regular"}
-                  color={view.get() === "advanced" ? "iris" : "gray"}
+                  color={view.get() === "advanced" ? "blue" : "gray"}
                   size="2"
                   className="text-[12.5px]"
                 >
@@ -122,6 +122,14 @@ export default function Settings({ settings }: SettingsProps) {
 }
 
 function Files() {
+
+  const {mutate:changeFolder}=t.files.changeDestination.useMutation({
+    onSuccess:(d)=>{
+      if(d.cancelled || d.path===null) return;
+      globalState$.destinationPath.set(d.path)
+    }
+  })
+
   return (
     <Flex className="w-full h-full" direction="column" gap="5" align="start">
       <Flex className="w-full" direction="column" gap="2">
@@ -137,6 +145,7 @@ function Files() {
             color="gray"
             size="1"
             className="cursor-pointer"
+            onClick={()=>changeFolder()}
           >
             <Flex align="center" justify="start" gap="1">
               <Folder size={10} />
@@ -144,7 +153,7 @@ function Files() {
             </Flex>
           </Button>
         </Flex>
-        <Text size="1" color="gray">
+        <Text className="text-[10px] text-zinc-500">
           Current Directory: {globalState$.destinationPath.get()}
         </Text>
       </Flex>
@@ -153,13 +162,23 @@ function Files() {
 }
 
 function Advanced() {
+
+  const newPort=useObservable<string|null>(null);
+
+  const changedPort=computed(()=>newPort.get()===null);
+
+  const saveNewPort=useCallback(()=>{
+    if(newPort.get()===null) return;
+    globalState$.port.set(+newPort.get()!);
+  },[])
+
   return (
     <Flex className="w-full h-full" direction="column" align="start" gap="5">
       <Flex align="center" className="w-full" justify="between">
         <Flex direction="column" align="start">
           <Text className="text-[12px] font-bold">Server Port</Text>
           <Text className="text-[11px] text-zinc-400">
-            Port for apollo server.Make sure destination device port is the
+            Port for apollo server. Make sure destination device port is the
             same.
           </Text>
         </Flex>
@@ -174,7 +193,7 @@ function Advanced() {
           <TextField.Input
             size="1"
             defaultValue={globalState$.port.get()}
-            onChange={(e) => console.log(e.currentTarget.value)}
+            onChange={(e) => newPort.set(e.currentTarget.value)}
           />
         </TextField.Root>
       </Flex>
@@ -189,7 +208,7 @@ function Transfers() {
         <Flex direction="column" align="start">
           <Text className="font-bold text-[12px]">Transfer history</Text>
           <Text className="text-zinc-400 text-[11.5px]">
-            View transfers both incoming and outgoing to this device
+            View transfers incoming and outgoing on this device
           </Text>
         </Flex>
         <SwitchButton
@@ -206,7 +225,7 @@ function Transfers() {
         <Flex direction="column" align="start">
           <Text className="font-bold text-[12px]">Save transfer history</Text>
           <Text className="text-zinc-400 text-[11.5px]">
-            How long should transfer history be available
+            Transfer history save duration
           </Text>
         </Flex>
         <Select.Root size="1" defaultValue="3D">

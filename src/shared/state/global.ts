@@ -23,7 +23,7 @@ export const globalState$ = observable<GlobalState>({
   favouriteDevices: new Set<Node>(),
   transfers: new Set<Transfer>(),
   transferHistory: false,
-  destinationPath: "",
+  destinationPath: null,
   port: 42069,
 });
 

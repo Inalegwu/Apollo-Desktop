@@ -39,7 +39,7 @@ export type GlobalState = {
   favouriteDevices: Set<Node>;
   transfers: Set<Transfer>;
   transferHistory: boolean;
-  destinationPath: string;
+  destinationPath: string|null;
   port: number;
 };
 
@@ -59,19 +59,8 @@ export type FileTransferState = {
 export type EventTypes = {
   connect: string;
   disconnect: string;
-  "node-connect": {
-    ip: string;
-    port: string;
-  };
-  "node-disconnect": {
-    nodeId: string;
-  };
   message: {
     connectionId: string;
-    packet: Message;
-  };
-  "node-message": {
-    nodeId: string;
     packet: Message;
   };
   broadcast: {
@@ -80,6 +69,17 @@ export type EventTypes = {
   };
   dm: {
     origin: string;
+    packet: Message;
+  };
+  "node-connect": {
+    ip: string;
+    port: string;
+  };
+  "node-disconnect": {
+    nodeId: string;
+  };
+  "node-message": {
+    nodeId: string;
     packet: Message;
   };
 };
