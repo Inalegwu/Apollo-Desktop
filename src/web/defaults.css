@@ -1,26 +1,27 @@
 @font-face {
-  font-family: Nunito;
-  src: url("../assets/fonts/Nunito-VariableFont_wght.ttf");
+  font-family: Font;
+  src: url("../assets/fonts/inter.ttf");
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Nunito;
+  font-family: Font;
   text-decoration: none;
 }
 
 .radix-themes {
-  --default-font-family:Nunito;
-  --heading-font-family:Nunito;
-  --code-font-family:   Nunito;
-  --strong-font-family: Nunito;
-  --em-font-family:     Nunito;
-  --quote-font-family:  Nunito;
+  --default-font-family: Font;
+  --heading-font-family: Font;
+  --code-font-family: Font;
+  --strong-font-family: Font;
+  --em-font-family: Font;
+  --quote-font-family: Font;
 }
+
 body {
-   -webkit-user-select: none;
+  -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
   overflow: hidden;
@@ -39,7 +40,7 @@ body {
 }
 
 #workspace {
-  background-image: 
+  background-image:
     radial-gradient(rgb(235, 235, 235) 10%, transparent 10%),
     radial-gradient(rgb(235, 235, 235) 10%, transparent 10%);
   background-position: 0px 0px, 8px 8px;
@@ -48,7 +49,7 @@ body {
 }
 
 #workspace_dark {
-  background-image: 
+  background-image:
     radial-gradient(rgb(31, 28, 28) 10%, transparent 10%),
     radial-gradient(rgb(31, 28, 28) 10%, transparent 10%);
   background-position: 0px 0px, 8px 8px;

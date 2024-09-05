@@ -25,6 +25,7 @@ export const globalState$ = observable<GlobalState>({
   transferHistory: false,
   destinationPath: null,
   port: 42069,
+  advancedMode: false,
 });
 
 export const peerState$ = observable<PeerState>({

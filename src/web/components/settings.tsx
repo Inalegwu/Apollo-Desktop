@@ -7,16 +7,18 @@ import { Switch, useObservable } from "@legendapp/state/react";
 import {
   Button,
   Flex,
+  Heading,
   Select,
   Switch as SwitchButton,
   Text,
   TextField,
+  Tooltip,
 } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import { globalState$, peerState$ } from "@src/shared/state";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Folder, Laptop, Phone, X } from "lucide-react";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import About from "./about";
 
 type SettingsProps = {
@@ -26,7 +28,7 @@ type SettingsProps = {
 
 export default function Settings({ settings }: SettingsProps) {
   const view = useObservable<"advanced" | "files" | "transfers">("transfers");
-  const isAdvancedMode = useObservable(false);
+  const isAdvancedMode = globalState$.advancedMode.get();
 
   return (
     <motion.div
@@ -79,18 +81,9 @@ export default function Settings({ settings }: SettingsProps) {
                 </Text>
               </Flex>
               {/* TODO show and hide with advanced mode status */}
-              <Flex
-                onClick={() => view.set("advanced")}
-                className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
-              >
-                <Text
-                  color={view.get() === "advanced" ? "blue" : "gray"}
-                  size="2"
-                  className="text-[12.5px]"
-                >
-                  Advanced
-                </Text>
-              </Flex>
+              <AnimatePresence>
+                {isAdvancedMode && <AdvancedModeBtn view={view} />}
+              </AnimatePresence>
             </Flex>
           </Flex>
           <Flex className="px-3 py-2 w-full" align="center" justify="between">
@@ -101,8 +94,12 @@ export default function Settings({ settings }: SettingsProps) {
               </Text>
               <SwitchButton
                 size="1"
-                onClick={() => isAdvancedMode.set(!isAdvancedMode.get())}
-                checked={isAdvancedMode.get()}
+                onClick={() =>
+                  globalState$.advancedMode.set(
+                    !globalState$.advancedMode.get(),
+                  )
+                }
+                checked={isAdvancedMode}
               />
             </Flex>
           </Flex>
@@ -122,13 +119,12 @@ export default function Settings({ settings }: SettingsProps) {
 }
 
 function Files() {
-
-  const {mutate:changeFolder}=t.files.changeDestination.useMutation({
-    onSuccess:(d)=>{
-      if(d.cancelled || d.path===null) return;
-      globalState$.destinationPath.set(d.path)
-    }
-  })
+  const { mutate: changeFolder } = t.files.changeDestination.useMutation({
+    onSuccess: (d) => {
+      if (d.cancelled || d.path === null) return;
+      globalState$.destinationPath.set(d.path);
+    },
+  });
 
   return (
     <Flex className="w-full h-full" direction="column" gap="5" align="start">
@@ -145,7 +141,7 @@ function Files() {
             color="gray"
             size="1"
             className="cursor-pointer"
-            onClick={()=>changeFolder()}
+            onClick={() => changeFolder()}
           >
             <Flex align="center" justify="start" gap="1">
               <Folder size={10} />
@@ -162,40 +158,51 @@ function Files() {
 }
 
 function Advanced() {
+  const newPort = useObservable<string | null>(null);
 
-  const newPort=useObservable<string|null>(null);
+  const changedPort = computed(() => newPort.get() === null);
 
-  const changedPort=computed(()=>newPort.get()===null);
-
-  const saveNewPort=useCallback(()=>{
-    if(newPort.get()===null) return;
+  const saveNewPort = useCallback(() => {
+    if (newPort.get() === null) return;
     globalState$.port.set(+newPort.get()!);
-  },[])
+  }, [newPort]);
 
   return (
-    <Flex className="w-full h-full" direction="column" align="start" gap="5">
-      <Flex align="center" className="w-full" justify="between">
-        <Flex direction="column" align="start">
-          <Text className="text-[12px] font-bold">Server Port</Text>
-          <Text className="text-[11px] text-zinc-400">
-            Port for apollo server. Make sure destination device port is the
-            same.
-          </Text>
+    <Flex
+      className="w-full h-full"
+      direction="column"
+      justify="between"
+      gap="5"
+    >
+      <Flex direction="column" align="start" gap="5">
+        <Flex align="center" className="w-full" justify="between">
+          <Flex direction="column" align="start">
+            <Text className="text-[12px] font-bold">Server Port</Text>
+            <Text className="text-[11px] text-zinc-400">
+              Port for apollo server. Make sure destination device port is the
+              same.
+            </Text>
+          </Flex>
+          <TextField.Root className="max-w-[4.5rem]">
+            <TextField.Slot>
+              {peerState$.deviceType.get() === "desktop" ? (
+                <Laptop size={9} />
+              ) : (
+                <Phone />
+              )}
+            </TextField.Slot>
+            <TextField.Input
+              size="1"
+              defaultValue={globalState$.port.get()}
+              onChange={(e) => newPort.set(e.currentTarget.value)}
+            />
+          </TextField.Root>
         </Flex>
-        <TextField.Root className="max-w-[4.5rem]">
-          <TextField.Slot>
-            {peerState$.deviceType.get() === "desktop" ? (
-              <Laptop size={9} />
-            ) : (
-              <Phone />
-            )}
-          </TextField.Slot>
-          <TextField.Input
-            size="1"
-            defaultValue={globalState$.port.get()}
-            onChange={(e) => newPort.set(e.currentTarget.value)}
-          />
-        </TextField.Root>
+      </Flex>
+      <Flex justify="end" gap="1" align="end">
+        <Text weight="bold" className="text-zinc-600 text-[9px]">
+          These changes affect the Apollo protocol directly, please be careful
+        </Text>
       </Flex>
     </Flex>
   );
@@ -280,3 +287,26 @@ function Transfers() {
     </Flex>
   );
 }
+
+const AdvancedModeBtn = memo(
+  ({
+    view,
+  }: {
+    view: ObservablePrimitiveBaseFns<"advanced" | "files" | "transfers">;
+  }) => {
+    return (
+      <Flex
+        onClick={() => view.set("advanced")}
+        className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
+      >
+        <Text
+          color={view.get() === "advanced" ? "blue" : "gray"}
+          size="2"
+          className="text-[12.5px]"
+        >
+          Advanced
+        </Text>
+      </Flex>
+    );
+  },
+);

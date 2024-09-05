@@ -12,21 +12,10 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { mutate: startServer } = t.node.startNode.useMutation({
+  const { mutate: defineDestination } = t.files.defineDestination.useMutation({
     onSuccess: (d) => {
-      peerState$.applicationId.set(d.id);
-      peerState$.deviceName.set(d.name);
-    },
-  });
-
-  const {mutate:defineDestination}=t.files.defineDestination.useMutation({
-    onSuccess:(d)=>{
       globalState$.destinationPath.set(d.path);
-    }
-  })
-
-  receiveDirectMessage.on(() => {
-    console.log("direct message recieved");
+    },
   });
 
   const neighbors = Array.from(peerState$.neighbors.get().values());
@@ -35,12 +24,9 @@ function Index() {
   );
 
   useMountOnce(() => {
-    startServer();
-
-    if(globalState$.destinationPath.get()===null){
-      defineDestination()
+    if (globalState$.destinationPath.get() === null) {
+      defineDestination();
     }
-
   });
 
   return (
@@ -57,11 +43,13 @@ function Index() {
       {favouriteDevices.map((v) => (
         <DeviceInfo key={v.connectionId} node={v} />
       ))}
-      <DeviceInfo node={{
-        connectionId:v4(),
-        nodeName:generateRandomName(),
-        deviceType:"desktop"
-      }}/>
+      <DeviceInfo
+        node={{
+          connectionId: v4(),
+          nodeName: generateRandomName(),
+          deviceType: "desktop",
+        }}
+      />
       <ThisDeviceInfo />
     </Flex>
   );

@@ -3,19 +3,21 @@ import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import t, { queryClient, trpcClient } from "@shared/config";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { RouterProvider, createRouter, createHashHistory } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "react-toastify/dist/ReactToastify.css";
 import "virtual:uno.css";
-import "./App.css";
+import "./defaults.css";
 import { routeTree } from "./routeTree.gen";
 
 enableReactTracking({
   auto: true,
 });
 
-const router = createRouter({ routeTree });
+const history = createHashHistory();
+
+const router = createRouter({ routeTree, history });
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -26,7 +28,7 @@ declare module "@tanstack/react-router" {
 const rootElement = document.getElementById("root");
 
 if (!rootElement?.innerHTML) {
-  // biome-ignore lint/style/noNonNullAssertion: no real way to verify this
+  // biome-ignore lint/style/noNonNullAssertion: the root element is being constructed
   const root = ReactDOM.createRoot(rootElement!);
 
   root.render(

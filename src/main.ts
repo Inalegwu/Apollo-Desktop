@@ -1,6 +1,6 @@
 import { createContext } from "@src/shared/context";
 import { appRouter } from "@src/shared/routers/_app";
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, globalShortcut } from "electron";
 import { createIPCHandler } from "electron-trpc/main";
 import { join } from "node:path";
 
@@ -27,6 +27,10 @@ const createWindow = () => {
 
   mainWindow.webContents.on("dom-ready", () => {
     mainWindow.show();
+  });
+
+  globalShortcut.register("Super+]", () => {
+    mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
   });
 
   if (import.meta.env.DEV) {

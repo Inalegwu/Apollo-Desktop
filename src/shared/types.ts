@@ -39,8 +39,9 @@ export type GlobalState = {
   favouriteDevices: Set<Node>;
   transfers: Set<Transfer>;
   transferHistory: boolean;
-  destinationPath: string|null;
+  destinationPath: string | null;
   port: number;
+  advancedMode: boolean;
 };
 
 export type PeerState = {

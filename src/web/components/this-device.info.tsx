@@ -24,10 +24,10 @@ export default function ThisDeviceInfo() {
       <Popover.Content size="1">
         <Flex direction="column" align="start" className="space-y-1">
           <Flex align="start" direction="column" width="100%">
-            <Text className="text-[10px] font-light text-zinc-400">
+            <Text className="text-[9px] font-light text-zinc-400">
               This Device
             </Text>
-            <Text className="text-[12.5px] font-bold">{deviceName}</Text>
+            <Text className="text-[12px] font-bold">{deviceName}</Text>
           </Flex>
           <Flex direction="column" align="start" className="space-y-1">
             <Flex width="100%" align="center" justify="between" gap="2">
@@ -37,16 +37,16 @@ export default function ThisDeviceInfo() {
               <Folder size={10} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[11px] font-medium">
+              <Text className="text-[10px] font-medium">
                 {deviceID?.slice(0, deviceID.length)}
               </Text>
               <Key size={10} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">
-              <Text className="text-[11px] font-medium">
+              <Text className="text-[10px] font-medium">
                 You are{" "}
                 <span
-                  className={`${
+                  className={`text-[10px] ${
                     onlineStatus.get() ? "text-green-500" : "text-red-500"
                   }`}
                 >
