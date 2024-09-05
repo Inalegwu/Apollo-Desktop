@@ -13,6 +13,8 @@ import type {
   Transfer,
 } from "@shared/types";
 import type { Socket } from "node:net";
+import { generateRandomName } from "../utils";
+import { v4 } from "uuid";
 
 configureObservablePersistence({
   pluginLocal: ObservablePersistLocalStorage,
@@ -20,21 +22,12 @@ configureObservablePersistence({
 
 export const globalState$ = observable<GlobalState>({
   colorMode: "light",
-  favouriteDevices: new Set<Node>(),
-  transfers: new Set<Transfer>(),
-  transferHistory: false,
+  deviceType: null,
   destinationPath: null,
+  deviceName: null,
+  applicationId: null,
   port: 42069,
   advancedMode: false,
-});
-
-export const peerState$ = observable<PeerState>({
-  applicationId: null,
-  deviceName: null,
-  deviceType: "desktop",
-  neighbors: new Map<string, Node>(),
-  connections: new Map<string, Socket>(),
-  alreadySent: new Set<Message>(),
 });
 
 export const fileTransferState$ = observable<FileTransferState>({

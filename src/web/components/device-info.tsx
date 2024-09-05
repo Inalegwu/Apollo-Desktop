@@ -1,40 +1,33 @@
 import { computed } from "@legendapp/state";
 import { Avatar, Button, Flex, Popover, Text } from "@radix-ui/themes";
 import t from "@src/shared/config";
-import type { Node } from "@src/shared/types";
 import { randomNumber } from "@src/shared/utils";
 import { Heart, Key, UserRound, Wifi, WifiOff } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { fileTransferState$, globalState$ } from "../../shared/state";
 
 type Props = {
-  node: Node;
+  node: any;
 };
 
 export default function DeviceInfo({ node }: Props) {
-  const { mutate: sendFiles } = t.node.sendFile.useMutation();
-  const favDevices = globalState$.favouriteDevices.get();
+  // const { mutate: sendFiles } = t.node.sendFile.useMutation();
+
+  const sendFiles = () => {};
 
   const top = useMemo(() => randomNumber(), []);
   const left = useMemo(() => randomNumber(), []);
 
-  const isSaved = globalState$.favouriteDevices.has(node);
+  const isSaved = false;
   const isOnline = computed(() => navigator.onLine);
 
   const send = useCallback(() => {
-    sendFiles({
-      destination: node.connectionId,
-      filePaths: fileTransferState$.files.get(),
-    });
-  }, [sendFiles, node]);
+    sendFiles();
+  }, []);
 
   const addToFavourites = useCallback(() => {
-    if (isSaved) {
-      favDevices.delete(node);
-    } else {
-      favDevices.add(node);
-    }
-  }, [node, isSaved, favDevices]);
+    console.log("TODO");
+  }, []);
 
   return (
     <Popover.Root>

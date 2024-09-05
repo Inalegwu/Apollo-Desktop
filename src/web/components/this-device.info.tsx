@@ -1,12 +1,12 @@
 import { computed } from "@legendapp/state";
 import { Box, Flex, Popover, Text } from "@radix-ui/themes";
-import { fileTransferState$, peerState$ } from "@shared/state";
+import { fileTransferState$, globalState$ } from "@shared/state";
 import defaultImage from "@src/assets/images/user_default.jpg";
 import { Folder, Key, Wifi, WifiOff } from "lucide-react";
 
 export default function ThisDeviceInfo() {
-  const deviceName = peerState$.deviceName.get();
-  const deviceID = peerState$.applicationId.get();
+  const deviceName = globalState$.deviceName.get();
+  const deviceID = globalState$.applicationId.get();
 
   const onlineStatus = computed(() => navigator.onLine);
 

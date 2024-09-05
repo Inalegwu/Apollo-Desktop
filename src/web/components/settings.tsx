@@ -15,7 +15,7 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import t from "@src/shared/config";
-import { globalState$, peerState$ } from "@src/shared/state";
+import { globalState$ } from "@src/shared/state";
 import { AnimatePresence, motion } from "framer-motion";
 import { Folder, Laptop, Phone, X } from "lucide-react";
 import { memo, useCallback } from "react";
@@ -185,7 +185,7 @@ function Advanced() {
           </Flex>
           <TextField.Root className="max-w-[4.5rem]">
             <TextField.Slot>
-              {peerState$.deviceType.get() === "desktop" ? (
+              {globalState$.deviceType.get() === "desktop" ? (
                 <Laptop size={9} />
               ) : (
                 <Phone />
