@@ -1,69 +1,69 @@
-// TODO: create a simple http server where the files will
-// uploaded to when a connection is established
 import { globalState$ } from "@shared/state";
 import { Hono } from "hono";
-import { validator } from "hono/validator";
-import { z } from "zod";
 import { v4 } from "uuid";
 import { sign, decode } from "hono/jwt";
 import { sessions } from "@shared/storage";
+import { headerValidator, bodyValidator } from "./ftp-validators";
 
-const bodySchema = z.object({
-  nodeName: z.string(),
-  nodeKeyChainId: z.string(),
-});
+const EXP_TIME = Math.floor(Date.now() * 1000) * 60 * 60;
+
+type JwtPayload = {
+  sessionId: string;
+  nodeName: string;
+  nodeKeyChainId: string;
+  exp: number;
+};
 
 const nodeName = globalState$.deviceName.get();
 const keychainId = globalState$.applicationId.get();
 
 const app = new Hono();
 
-app.post(
-  "/createSession/",
-  validator("form", (value, c) => {
-    const parsed = bodySchema.safeParse(value);
+// handle create a session for the incoming
+// node
+app.post("/createSession/", bodyValidator, async (ctx) => {
+  const body = ctx.req.valid("form");
 
-    if (!parsed.success) {
-      return c.json({
-        message: "invalid body recieved",
-        error: parsed.error.flatten(),
-      });
-    }
-    return parsed.data;
-  }),
-  async (ctx) => {
-    const body = ctx.req.valid("form");
+  // a unique identifier for a session
+  // this ensures sessions and files don't class when being handled
+  const sessionId = v4();
 
-    const sessionId = v4();
-    const token = await sign(
-      {
-        sessionId,
-        ...body,
-        exp: Math.floor(Date.now() / 1000) * 60 * 60,
-      },
-      keychainId,
-    );
+  // the data being encoded into the jwt
+  const payload = {
+    sessionId,
+    ...body,
+    exp: EXP_TIME,
+  } satisfies JwtPayload;
 
-    sessions.setRow("sessions",sessionId,{
-        sessionId,
-        nodeName:body.nodeName,
-        nodeKeychainId:body.nodeKeyChainId
-    });
+  //  JWT, used to ensure only authorized nodes can
+  // upload to this server, so url leaking won't matter
+  const token = await sign(payload, keychainId);
 
+  // persist session to store so we can access and
+  // verify it anywhere
+  sessions.setRow("sessions", sessionId, {
+    sessionId,
+    nodeName: body.nodeName,
+    nodeKeychainId: body.nodeKeyChainId,
+  });
+
+  return ctx.json({
+    token,
+    sessionId,
+    status: "SUCCESS",
+  });
+});
+
+app.post("/upload/", headerValidator, async (ctx) => {
+  const { Authorization: tkn } = ctx.req.valid("form");
+
+  const token = decode(tkn).payload as JwtPayload;
+
+  const session = sessions.getRow("sessions", token.sessionId);
+  if (!session) {
     return ctx.json({
-      token,
-      sessionId,
-      status: "SUCCESS",
+      message: "Invalid Session ID",
+      error: "invalid session id",
     });
-  },
-);
-
-app.post("/upload/:sessionId", async (ctx) => {
-    const session=sessions.getRow("sessions",ctx.req.param("sessionId"))
-    if(!session){
-        return ctx.json({
-            message:"Invalid Session ID",
-            error:"invalid session id"
-        })
-    }
+  }
 });
