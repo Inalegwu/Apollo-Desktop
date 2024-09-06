@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@electron/rebuild": "^3.4.1",
+    "@hono/node-server": "^1.12.2",
     "@legendapp/state": "^2.1.4",
     "@libp2p/tcp": "^9.0.26",
     "@radix-ui/themes": "^2.0.3",

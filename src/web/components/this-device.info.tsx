@@ -1,6 +1,6 @@
 import { computed } from "@legendapp/state";
 import { Box, Flex, Popover, Text } from "@radix-ui/themes";
-import { fileTransferState$, globalState$ } from "@shared/state";
+import { globalState$ } from "@shared/state";
 import defaultImage from "@src/assets/images/user_default.jpg";
 import { generateRandomName } from "@src/shared/utils";
 import { Folder, Key, Wifi, WifiOff } from "lucide-react";
@@ -24,7 +24,14 @@ export default function ThisDeviceInfo() {
     }
 
     if (globalState$.deviceType.get() === null) {
-      const type:DeviceType=process.platform==="linux"||process.platform==="win32"||process.platform==="darwin"?""
+      const type: DeviceType =
+        process.platform === "linux" ||
+        process.platform === "win32" ||
+        process.platform === "darwin"
+          ? "desktop"
+          : "mobile";
+
+      globalState$.deviceType.set(type);
     }
   }, []);
 
@@ -50,7 +57,7 @@ export default function ThisDeviceInfo() {
           <Flex direction="column" align="start" className="space-y-1">
             <Flex width="100%" align="center" justify="between" gap="2">
               <Text className="text-[11px] font-medium">
-                {fileTransferState$.files.get().length} selected files
+                {[].length} selected files
               </Text>
               <Folder size={10} className="text-zinc-400" />
             </Flex>

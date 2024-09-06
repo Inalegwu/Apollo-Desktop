@@ -4,6 +4,7 @@ import { v4 } from "uuid";
 import { sign, decode } from "hono/jwt";
 import { sessions } from "@shared/storage";
 import { headerValidator, bodyValidator } from "./ftp-validators";
+import { serve } from "@hono/node-server";
 
 const EXP_TIME = Math.floor(Date.now() * 1000) * 60 * 60;
 
@@ -67,3 +68,10 @@ app.post("/upload/", headerValidator, async (ctx) => {
     });
   }
 });
+
+export default function startFileServer(port: number) {
+  serve({
+    fetch: app.fetch,
+    port: port,
+  });
+}
