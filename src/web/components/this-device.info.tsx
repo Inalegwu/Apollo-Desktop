@@ -2,13 +2,31 @@ import { computed } from "@legendapp/state";
 import { Box, Flex, Popover, Text } from "@radix-ui/themes";
 import { fileTransferState$, globalState$ } from "@shared/state";
 import defaultImage from "@src/assets/images/user_default.jpg";
+import { generateRandomName } from "@src/shared/utils";
 import { Folder, Key, Wifi, WifiOff } from "lucide-react";
+import { useEffect } from "react";
+import { v4 } from "uuid";
+import type { DeviceType } from "@shared/types";
 
 export default function ThisDeviceInfo() {
   const deviceName = globalState$.deviceName.get();
   const deviceID = globalState$.applicationId.get();
 
   const onlineStatus = computed(() => navigator.onLine);
+
+  useEffect(() => {
+    if (globalState$.applicationId.get() === null) {
+      globalState$.applicationId.set(v4());
+    }
+
+    if (globalState$.deviceName.get() === null) {
+      globalState$.applicationId.set(generateRandomName());
+    }
+
+    if (globalState$.deviceType.get() === null) {
+      const type:DeviceType=process.platform==="linux"||process.platform==="win32"||process.platform==="darwin"?""
+    }
+  }, []);
 
   return (
     <Popover.Root>

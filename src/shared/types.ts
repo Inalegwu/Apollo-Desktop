@@ -1,4 +1,4 @@
-type DeviceType = "desktop" | "mobile";
+export type DeviceType = "desktop" | "mobile";
 
 export type GlobalState = {
   deviceType: DeviceType | null;

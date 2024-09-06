@@ -1,5 +1,5 @@
-import { createStore } from "tinybase/cjs";
-import { createIndexedDbPersister } from "tinybase/cjs/persisters/persister-indexed-db";
+import { createStore } from "tinybase/cjs/with-schemas";
+import { createIndexedDbPersister } from "tinybase/cjs/with-schemas/persisters/persister-indexed-db";
 
 export const store = createStore().setTablesSchema({
   sent: {
@@ -15,7 +15,21 @@ export const store = createStore().setTablesSchema({
     sender: {
       type: "string",
     },
-    reciever: {
+    receiver: {
+      type: "string",
+    },
+  },
+});
+
+export const sessions = createStore().setTablesSchema({
+  sessions: {
+    sessionId: {
+      type: "string",
+    },
+    nodeName: {
+      type: "string",
+    },
+    nodeKeychainId: {
       type: "string",
     },
   },

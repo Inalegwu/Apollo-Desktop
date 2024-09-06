@@ -41,6 +41,9 @@ importers:
       framer-motion:
         specifier: ^11.2.10
         version: 11.2.10(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      hono:
+        specifier: ^4.5.11
+        version: 4.5.11
       lucide-react:
         specifier: ^0.379.0
         version: 0.379.0(react@18.2.0)
@@ -2373,6 +2376,10 @@ packages:
   hasown@2.0.0:
     resolution: {integrity: sha512-vUptKVTpIJhcczKBbgnS+RtcuYMB8+oNzPK2/Hp3hanz8JmpATdmmgLgSaadVREkDm+e2giHwY3ZRkyjSIDDFA==}
     engines: {node: '>= 0.4'}
+
+  hono@4.5.11:
+    resolution: {integrity: sha512-62FcjLPtjAFwISVBUshryl+vbHOjg8rE4uIK/dxyR8GpLztunZpwFmfEvmJCUI7xoGh/Sr3CGCDPCmYxVw7wUQ==}
+    engines: {node: '>=16.0.0'}
 
   hosted-git-info@4.1.0:
     resolution: {integrity: sha512-kyCuEOWjJqZuDbRHzL8V93NzQhwIB71oFWSyzVo+KPZI+pnQPPxucdkrOZvkLRnrf5URsQM+IJ09Dw29cRALIA==}
@@ -6064,6 +6071,8 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
     optional: true
+
+  hono@4.5.11: {}
 
   hosted-git-info@4.1.0:
     dependencies:
