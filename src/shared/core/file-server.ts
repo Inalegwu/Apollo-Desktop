@@ -70,7 +70,7 @@ app.post("/upload/", headerValidator, async (ctx) => {
 });
 
 export default function startFileServer(port: number) {
-  serve({
+  return serve({
     fetch: app.fetch,
     port: port,
   });
