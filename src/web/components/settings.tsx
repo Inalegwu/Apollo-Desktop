@@ -131,7 +131,7 @@ function Files() {
       <Flex className="w-full" direction="column" gap="2">
         <Flex className="w-full" align="center" justify="between">
           <Flex direction="column" align="start">
-            <Text className="font-bold text-[12px]">Destination directory</Text>
+            <Text className="text-[12px]">Destination directory</Text>
             <Text className="text-zinc-400 text-[11.5px]">
               Change what folder recieved files are saved to
             </Text>
@@ -177,7 +177,7 @@ function Advanced() {
       <Flex direction="column" align="start" gap="5">
         <Flex align="center" className="w-full" justify="between">
           <Flex direction="column" align="start">
-            <Text className="text-[12px] font-bold">Server Port</Text>
+            <Text className="text-[12px]">Server Port</Text>
             <Text className="text-[11px] text-zinc-400">
               Port for apollo server. Make sure destination device port is the
               same.
@@ -188,7 +188,7 @@ function Advanced() {
               {globalState$.deviceType.get() === "desktop" ? (
                 <Laptop size={9} />
               ) : (
-                <Phone />
+                <Phone size={9}/>
               )}
             </TextField.Slot>
             <TextField.Input
@@ -213,7 +213,7 @@ function Transfers() {
     <Flex direction="column" align="start" gap="5" className="w-full h-full">
       <Flex className="w-full" align="center" justify="between">
         <Flex direction="column" align="start">
-          <Text className="font-bold text-[12px]">Transfer history</Text>
+          <Text className="text-[12px]">Transfer history</Text>
           <Text className="text-zinc-400 text-[11.5px]">
             View transfers incoming and outgoing on this device
           </Text>
@@ -221,16 +221,14 @@ function Transfers() {
         <SwitchButton
           size="1"
           onClick={() =>
-            globalState$.transferHistory.set(
-              !globalState$.transferHistory.get(),
-            )
+           console.log("todo")
           }
-          checked={globalState$.transferHistory.get()}
+          checked={false}
         />
       </Flex>
       <Flex className="w-full" align="center" justify="between">
         <Flex direction="column" align="start">
-          <Text className="font-bold text-[12px]">Save transfer history</Text>
+          <Text className="text-[12px]">Save transfer history</Text>
           <Text className="text-zinc-400 text-[11.5px]">
             Transfer history save duration
           </Text>
@@ -238,7 +236,7 @@ function Transfers() {
         <Select.Root size="1" defaultValue="3D">
           <Select.Trigger
             radius="large"
-            disabled={!globalState$.transferHistory.get()}
+            disabled={false}
             className="bg-light-1 dark:bg-dark-8 cursor-pointer"
           />
           <Select.Content
@@ -247,35 +245,35 @@ function Transfers() {
             className="flex flex-col items-start bg-light-1 dark:bg-dark-8"
           >
             <Select.Item
-              disabled={!globalState$.transferHistory.get()}
+              disabled={false}
               className="cursor-pointer"
               value="none"
             >
               <Text>None</Text>
             </Select.Item>
             <Select.Item
-              disabled={!globalState$.transferHistory.get()}
+              disabled={false}
               className="cursor-pointer"
               value="1D"
             >
               <Text>1 Days</Text>
             </Select.Item>
             <Select.Item
-              disabled={!globalState$.transferHistory.get()}
+              disabled={false}
               className="cursor-pointer"
               value="2D"
             >
               <Text>2 Days</Text>
             </Select.Item>
             <Select.Item
-              disabled={!globalState$.transferHistory.get()}
+              disabled={false}
               className="cursor-pointer"
               value="3D"
             >
               <Text>3 Days</Text>
             </Select.Item>
             <Select.Item
-              disabled={!globalState$.transferHistory.get()}
+              disabled={false}
               className="cursor-pointer"
               value="4D"
             >

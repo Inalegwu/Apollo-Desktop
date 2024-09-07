@@ -4,7 +4,7 @@ import t from "@src/shared/config";
 import { randomNumber } from "@src/shared/utils";
 import { Heart, Key, UserRound, Wifi, WifiOff } from "lucide-react";
 import { useCallback, useMemo } from "react";
-import { fileTransferState$, globalState$ } from "../../shared/state";
+import { globalState$ } from "../../shared/state";
 
 type Props = {
   node: any;
@@ -97,7 +97,7 @@ export default function DeviceInfo({ node }: Props) {
               )}
             </Flex>
           </Flex>
-          {fileTransferState$.files.get().length > 0 && (
+          {[].length > 0 && (
             <Button
               onClick={send}
               variant="soft"

@@ -3,16 +3,28 @@ import { Box, Flex, Popover, Text } from "@radix-ui/themes";
 import { globalState$ } from "@shared/state";
 import defaultImage from "@src/assets/images/user_default.jpg";
 import { generateRandomName } from "@src/shared/utils";
-import { Folder, Key, Wifi, WifiOff } from "lucide-react";
+import { Folder, Key, Laptop, Phone, Wifi, WifiOff } from "lucide-react";
 import { useEffect } from "react";
 import { v4 } from "uuid";
-import type { DeviceType } from "@shared/types";
+import t from "@shared/config";
 
 export default function ThisDeviceInfo() {
   const deviceName = globalState$.deviceName.get();
   const deviceID = globalState$.applicationId.get();
 
+  console.log({ deviceName, deviceID });
+
   const onlineStatus = computed(() => navigator.onLine);
+  const { data: deviceType } = t.platform.useQuery();
+  const type =
+    deviceType === "linux" || deviceType === "win32" || deviceType === "darwin"
+      ? "desktop"
+      : "mobile";
+  const isDesktop = computed(
+    () => globalState$.deviceType.get() === "desktop",
+  ).get();
+
+  console.log({ deviceType, type });
 
   useEffect(() => {
     if (globalState$.applicationId.get() === null) {
@@ -20,20 +32,13 @@ export default function ThisDeviceInfo() {
     }
 
     if (globalState$.deviceName.get() === null) {
-      globalState$.applicationId.set(generateRandomName());
+      globalState$.deviceName.set(generateRandomName());
     }
 
     if (globalState$.deviceType.get() === null) {
-      const type: DeviceType =
-        process.platform === "linux" ||
-        process.platform === "win32" ||
-        process.platform === "darwin"
-          ? "desktop"
-          : "mobile";
-
       globalState$.deviceType.set(type);
     }
-  }, []);
+  }, [type]);
 
   return (
     <Popover.Root>
@@ -52,7 +57,20 @@ export default function ThisDeviceInfo() {
             <Text className="text-[9px] font-light text-zinc-400">
               This Device
             </Text>
-            <Text className="text-[12px] font-bold">{deviceName}</Text>
+            <Flex align="center" justify="between" width="100%">
+              <Text className="text-[12px] font-bold">{deviceName}</Text>
+              <span className="text-zinc-400">
+                {isDesktop ? (
+                  <>
+                    <Laptop size={9} />
+                  </>
+                ) : (
+                  <>
+                    <Phone size={9} />
+                  </>
+                )}
+              </span>
+            </Flex>
           </Flex>
           <Flex direction="column" align="start" className="space-y-1">
             <Flex width="100%" align="center" justify="between" gap="2">

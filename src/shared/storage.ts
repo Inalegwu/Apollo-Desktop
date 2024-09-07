@@ -1,5 +1,5 @@
 import { createStore } from "tinybase/cjs/with-schemas";
-import { createIndexedDbPersister } from "tinybase/cjs/with-schemas/persisters/persister-indexed-db";
+import { createIndexedDbPersister } from "tinybase/cjs/persisters/persister-indexed-db";
 
 export const store = createStore().setTablesSchema({
   sent: {
