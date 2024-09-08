@@ -7,6 +7,8 @@ import { headerValidator, bodyValidator } from "./ftp-validators";
 import { serve } from "@hono/node-server";
 import CORE from "@shared/core/core-message";
 
+const neighbors = new Map<string, { name: string; keychain: string }>();
+
 const EXP_TIME = Math.floor(Date.now() * 1000) * 60 * 60;
 
 type JwtPayload = {
@@ -72,15 +74,25 @@ app.post("/upload/", headerValidator, async (ctx) => {
   }
 });
 
-CORE.on("connect",({nodeName,nodeKeychainID,type})=>{
-  if(type==="CONNECTION_REQUEST"){
-    const server=serve({
-      fetch:app.fetch
-    })
+CORE.on("connect", ({ nodeName, nodeKeychainID, type, mode }) => {
+  if (type === "CONNECTION_REQUEST" && mode === "RECEIVER") {
+    const server = serve({
+      fetch: app.fetch,
+    });
 
-    CORE.emit("server-start",{serverAddr:server.address.toString()})
+    neighbors.set(nodeKeychainID, {
+      name: nodeName,
+      keychain: nodeKeychainID,
+    });
+
+    CORE.emit("server-start", { serverAddr: server.address.toString() });
   }
-  if(type==="CONNECTION_RESPONSE"){
-    CORE.emit()
+
+  if (type === "CONNECTION_REQUEST" && mode === "RECEIVER") {
+    CORE.emit("receiver-mode-enable", { nodeName, nodeKeychainID });
   }
-})
+
+  if (type === "CONNECTION_RESPONSE") {
+    // CORE.emit()
+  }
+});
