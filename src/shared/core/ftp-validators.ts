@@ -14,7 +14,7 @@ export const headerSchema = z.object({
 
 // validate with any form of zod schema
 // used below to define validators in one line
-export const validateWithSchema = <T extends z.ZodRawShape>(
+export const validateFormWithSchema = <T extends z.ZodRawShape>(
   schema: z.ZodObject<T>,
 ) =>
   validator("form", (value, c) => {
@@ -29,6 +29,21 @@ export const validateWithSchema = <T extends z.ZodRawShape>(
     return parsed.data;
   });
 
+export const validateQueryWithSchema = <T extends z.ZodRawShape>(
+  schema: z.ZodObject<T>,
+) =>
+  validator("query", (value, c) => {
+    const parsed = schema.safeParse(value);
+
+    if (!parsed.success) {
+      return c.json({
+        message: "invalid query params recieved",
+        error: parsed.error.flatten(),
+      });
+    }
+    return parsed.data;
+  });
+
 // validators based on schemas
-export const bodyValidator = validateWithSchema(bodySchema);
-export const headerValidator = validateWithSchema(headerSchema);
+export const bodyValidator = validateFormWithSchema(bodySchema);
+export const headerValidator = validateFormWithSchema(headerSchema);

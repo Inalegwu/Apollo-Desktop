@@ -5,6 +5,7 @@ import { sign, decode } from "hono/jwt";
 import { sessions } from "@shared/storage";
 import { headerValidator, bodyValidator } from "./ftp-validators";
 import { serve } from "@hono/node-server";
+import CORE from "@shared/core/core-message";
 
 const EXP_TIME = Math.floor(Date.now() * 1000) * 60 * 60;
 
@@ -34,7 +35,7 @@ app.post("/createSession/", bodyValidator, async (ctx) => {
     sessionId,
     ...body,
     exp: EXP_TIME,
-  } satisfies JwtPayload;
+  } as const satisfies JwtPayload;
 
   //  JWT, used to ensure only authorized nodes can
   // upload to this server, so url leaking won't matter
@@ -60,6 +61,8 @@ app.post("/upload/", headerValidator, async (ctx) => {
 
   const token = decode(tkn).payload as JwtPayload;
 
+  console.log({ message: "found token", token });
+
   const session = sessions.getRow("sessions", token.sessionId);
   if (!session) {
     return ctx.json({
@@ -69,10 +72,15 @@ app.post("/upload/", headerValidator, async (ctx) => {
   }
 });
 
-export default function startFileServer(port: number) {
-  console.log({ message: `Starting file server on ${port}` });
-  return serve({
-    fetch: app.fetch,
-    port: port,
-  });
-}
+CORE.on("connect",({nodeName,nodeKeychainID,type})=>{
+  if(type==="CONNECTION_REQUEST"){
+    const server=serve({
+      fetch:app.fetch
+    })
+
+    CORE.emit("server-start",{serverAddr:server.address.toString()})
+  }
+  if(type==="CONNECTION_RESPONSE"){
+    CORE.emit()
+  }
+})
