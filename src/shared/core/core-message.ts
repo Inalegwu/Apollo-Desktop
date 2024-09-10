@@ -4,9 +4,11 @@
 // be sent and received on this emitter channel
 import { TypedEventEmitter } from "@shared/emitter";
 
-type CoreMessageTypes = Readonly<{
+type ConnectionMode = "CONNECTION_REQUEST" | "CONNECTION_RESPONSE";
+
+export type CoreMessageTypes = Readonly<{
   connect: {
-    type: "CONNECTION_REQUEST" | "CONNECTION_RESPONSE";
+    type: ConnectionMode;
     nodeName: string;
     nodeKeychainID: string;
     mode: "RECEIVER" | "SENDER";
@@ -17,8 +19,15 @@ type CoreMessageTypes = Readonly<{
   "receiver-mode-enable": {
     nodeName: string;
     nodeKeychainID: string;
+    type: ConnectionMode;
   };
 }>;
+
+export type ServerStartResponse = CoreMessageTypes["server-start"];
+
+export type ConnectionMessage = CoreMessageTypes["connect"];
+
+export type ReceiverModemessage = CoreMessageTypes["receiver-mode-enable"];
 
 const CORE = new TypedEventEmitter<CoreMessageTypes>();
 

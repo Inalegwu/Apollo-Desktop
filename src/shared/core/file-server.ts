@@ -18,7 +18,6 @@ type JwtPayload = {
   exp: number;
 };
 
-const nodeName = globalState$.deviceName.get();
 const keychainId = globalState$.applicationId.get();
 
 const app = new Hono();
@@ -85,11 +84,17 @@ CORE.on("connect", ({ nodeName, nodeKeychainID, type, mode }) => {
       keychain: nodeKeychainID,
     });
 
+    console.info({ serverAddr: server.address() });
+
     CORE.emit("server-start", { serverAddr: server.address.toString() });
   }
 
-  if (type === "CONNECTION_REQUEST" && mode === "RECEIVER") {
-    CORE.emit("receiver-mode-enable", { nodeName, nodeKeychainID });
+  if (type === "CONNECTION_REQUEST" && mode === "SENDER") {
+    CORE.emit("receiver-mode-enable", {
+      nodeName,
+      nodeKeychainID,
+      type: "CONNECTION_REQUEST",
+    });
   }
 
   if (type === "CONNECTION_RESPONSE") {

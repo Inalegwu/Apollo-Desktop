@@ -19,7 +19,6 @@ export const globalState$ = observable<GlobalState>({
   deviceName: null,
   applicationId: null,
   port: 42069,
-  advancedMode: false,
 });
 
 persistObservable(globalState$, {

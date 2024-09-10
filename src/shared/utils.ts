@@ -42,3 +42,26 @@ export const matchFileType = (ext: string) => {
 
   return null;
 };
+
+export function generateGradientColors() {
+  // Generate random RGB values for each color
+  const color1 = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(
+    Math.random() * 256,
+  )}, ${Math.floor(Math.random() * 256)})`;
+  const color2 = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(
+    Math.random() * 256,
+  )}, ${Math.floor(Math.random() * 256)})`;
+
+  // Convert RGB colors to HEX format
+  const rgbTohex = (rgb: string): string =>
+    `#${
+      rgb
+        .match(/\d+/g)
+        ?.map((x) => Number.parseInt(x).toString(16).padStart(2, "0"))
+        .join("") ?? ""
+    }`;
+  const hexColor1 = rgbTohex(color1);
+  const hexColor2 = rgbTohex(color2);
+
+  return [hexColor1, hexColor2];
+}

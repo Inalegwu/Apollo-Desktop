@@ -7,7 +7,6 @@ export type GlobalState = {
   port: number;
   deviceName: string | null;
   applicationId: string | null;
-  advancedMode: boolean;
 };
 
 export enum FileTypes {

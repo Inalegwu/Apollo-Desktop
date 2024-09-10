@@ -1,7 +1,7 @@
 import { computed } from "@legendapp/state";
 import { Avatar, Button, Flex, Popover, Text } from "@radix-ui/themes";
 import t from "@src/shared/config";
-import { randomNumber } from "@src/shared/utils";
+import { generateGradientColors, randomNumber } from "@src/shared/utils";
 import { Heart, Key, UserRound, Wifi, WifiOff } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { globalState$ } from "../../shared/state";
@@ -17,6 +17,7 @@ export default function DeviceInfo({ node }: Props) {
 
   const top = useMemo(() => randomNumber(), []);
   const left = useMemo(() => randomNumber(), []);
+  const [color1, color2] = useMemo(() => generateGradientColors(), []);
 
   const isSaved = false;
   const isOnline = computed(() => navigator.onLine);
@@ -32,17 +33,19 @@ export default function DeviceInfo({ node }: Props) {
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <Avatar
+        {/*<Avatar
           asChild
           src="https://source.boringavatars.com/"
           variant="soft"
           color="gray"
           fallback={<UserRound size={15} />}
+         />*/}
+        <div
           style={{
             left: `${left}px`,
             top: `${top}px`,
           }}
-          className="absolute shadow-xl w-11 h-11 rounded-full cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800"
+          className={`bg-${color1} absolute shadow-xl w-11 h-11 rounded-full cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800`}
         />
       </Popover.Trigger>
       <Popover.Content size="1">

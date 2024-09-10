@@ -5,7 +5,7 @@ import { globalState$ } from "@shared/state";
 import t from "@src/shared/config";
 import { AnimatePresence } from "framer-motion";
 import { Minus, Moon, Plus, Settings, Sun, X } from "lucide-react";
-import React, {useEffect} from "react";
+import type React from "react";
 import { useCallback } from "react";
 import { Settings as SettingsView } from "../components";
 
@@ -16,7 +16,6 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   const { mutate: minimizeWindow } = t.window.minimize.useMutation();
   const { mutate: closeWindow } = t.window.closeWindow.useMutation();
-  const {mutate:startFileServer,data}=t.node.startServer.useMutation();
 
   const settings = useObservable(false);
 
@@ -29,10 +28,6 @@ export default function Layout({ children }: LayoutProps) {
       document.body.classList.remove("dark");
     }
   });
-
-  useEffect(()=>{
-    startFileServer();
-  },[startFileServer])
 
   const toggleColorMode = useCallback(() => {
     if (globalState$.colorMode.get() === "light") {

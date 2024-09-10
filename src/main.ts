@@ -3,6 +3,7 @@ import { appRouter } from "@src/shared/routers/_app";
 import { BrowserWindow, app, globalShortcut } from "electron";
 import { createIPCHandler } from "electron-trpc/main";
 import { join } from "node:path";
+import discovery from "@shared/core/tcp?nodeWorker";
 
 app.setName("Apollo");
 
@@ -38,6 +39,10 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
+
+  discovery({ name: "discovery-worker" }).on("message", console.log).postMessage({
+    message: "start"
+  });
 
   // mainWindow.webContents.openDevTools({ mode: "detach" });
 };

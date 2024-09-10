@@ -1,24 +1,19 @@
-import {
-  computed,
-  type ObservablePrimitiveBaseFns,
-  type ObservablePrimitiveBooleanFns,
+import type {
+  ObservablePrimitiveBaseFns,
+  ObservablePrimitiveBooleanFns,
 } from "@legendapp/state";
 import { Switch, useObservable } from "@legendapp/state/react";
 import {
   Button,
   Flex,
-  Heading,
   Select,
   Switch as SwitchButton,
   Text,
-  TextField,
-  Tooltip,
 } from "@radix-ui/themes";
 import t from "@src/shared/config";
 import { globalState$ } from "@src/shared/state";
-import { AnimatePresence, motion } from "framer-motion";
-import { Folder, Laptop, Phone, X } from "lucide-react";
-import { memo, useCallback } from "react";
+import { motion } from "framer-motion";
+import { Folder, X } from "lucide-react";
 import About from "./about";
 
 type SettingsProps = {
@@ -27,8 +22,7 @@ type SettingsProps = {
 };
 
 export default function Settings({ settings }: SettingsProps) {
-  const view = useObservable<"advanced" | "files" | "transfers">("transfers");
-  const isAdvancedMode = globalState$.advancedMode.get();
+  const view = useObservable<"files" | "transfers">("transfers");
 
   return (
     <motion.div
@@ -80,34 +74,15 @@ export default function Settings({ settings }: SettingsProps) {
                   Files & Folders
                 </Text>
               </Flex>
-              {/* TODO show and hide with advanced mode status */}
-              <AnimatePresence>
-                {isAdvancedMode && <AdvancedModeBtn view={view} />}
-              </AnimatePresence>
             </Flex>
           </Flex>
           <Flex className="px-3 py-2 w-full" align="center" justify="between">
             <About />
-            <Flex align="end" gap="2">
-              <Text className="text-[10px] font-medium" color="gray">
-                Advanced Mode
-              </Text>
-              <SwitchButton
-                size="1"
-                onClick={() =>
-                  globalState$.advancedMode.set(
-                    !globalState$.advancedMode.get(),
-                  )
-                }
-                checked={isAdvancedMode}
-              />
-            </Flex>
           </Flex>
         </Flex>
         <Flex className="w-4/6 h-full px-3 py-3">
           <Switch value={view.get()}>
             {{
-              advanced: () => <Advanced />,
               transfers: () => <Transfers />,
               files: () => <Files />,
             }}
@@ -157,57 +132,6 @@ function Files() {
   );
 }
 
-function Advanced() {
-  const newPort = useObservable<string | null>(null);
-
-  const changedPort = computed(() => newPort.get() === null);
-
-  const saveNewPort = useCallback(() => {
-    if (newPort.get() === null) return;
-    globalState$.port.set(+newPort.get()!);
-  }, [newPort]);
-
-  return (
-    <Flex
-      className="w-full h-full"
-      direction="column"
-      justify="between"
-      gap="5"
-    >
-      <Flex direction="column" align="start" gap="5">
-        <Flex align="center" className="w-full" justify="between">
-          <Flex direction="column" align="start">
-            <Text className="text-[12px]">Server Port</Text>
-            <Text className="text-[11px] text-zinc-400">
-              Port for apollo server. Make sure destination device port is the
-              same.
-            </Text>
-          </Flex>
-          <TextField.Root className="max-w-[4.5rem]">
-            <TextField.Slot>
-              {globalState$.deviceType.get() === "desktop" ? (
-                <Laptop size={9} />
-              ) : (
-                <Phone size={9}/>
-              )}
-            </TextField.Slot>
-            <TextField.Input
-              size="1"
-              defaultValue={globalState$.port.get()}
-              onChange={(e) => newPort.set(e.currentTarget.value)}
-            />
-          </TextField.Root>
-        </Flex>
-      </Flex>
-      <Flex justify="end" gap="1" align="end">
-        <Text weight="bold" className="text-zinc-600 text-[9px]">
-          These changes affect the Apollo protocol directly, please be careful
-        </Text>
-      </Flex>
-    </Flex>
-  );
-}
-
 function Transfers() {
   return (
     <Flex direction="column" align="start" gap="5" className="w-full h-full">
@@ -220,9 +144,7 @@ function Transfers() {
         </Flex>
         <SwitchButton
           size="1"
-          onClick={() =>
-           console.log("todo")
-          }
+          onClick={() => console.log("todo")}
           checked={false}
         />
       </Flex>
@@ -251,32 +173,16 @@ function Transfers() {
             >
               <Text>None</Text>
             </Select.Item>
-            <Select.Item
-              disabled={false}
-              className="cursor-pointer"
-              value="1D"
-            >
+            <Select.Item disabled={false} className="cursor-pointer" value="1D">
               <Text>1 Days</Text>
             </Select.Item>
-            <Select.Item
-              disabled={false}
-              className="cursor-pointer"
-              value="2D"
-            >
+            <Select.Item disabled={false} className="cursor-pointer" value="2D">
               <Text>2 Days</Text>
             </Select.Item>
-            <Select.Item
-              disabled={false}
-              className="cursor-pointer"
-              value="3D"
-            >
+            <Select.Item disabled={false} className="cursor-pointer" value="3D">
               <Text>3 Days</Text>
             </Select.Item>
-            <Select.Item
-              disabled={false}
-              className="cursor-pointer"
-              value="4D"
-            >
+            <Select.Item disabled={false} className="cursor-pointer" value="4D">
               <Text>4 Days</Text>
             </Select.Item>
           </Select.Content>
@@ -285,26 +191,3 @@ function Transfers() {
     </Flex>
   );
 }
-
-const AdvancedModeBtn = memo(
-  ({
-    view,
-  }: {
-    view: ObservablePrimitiveBaseFns<"advanced" | "files" | "transfers">;
-  }) => {
-    return (
-      <Flex
-        onClick={() => view.set("advanced")}
-        className="w-full px-2 py-2 cursor-pointer hover:bg-zinc-100/40 dark:hover:bg-zinc-800/40"
-      >
-        <Text
-          color={view.get() === "advanced" ? "blue" : "gray"}
-          size="2"
-          className="text-[12.5px]"
-        >
-          Advanced
-        </Text>
-      </Flex>
-    );
-  },
-);
