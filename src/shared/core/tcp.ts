@@ -1,10 +1,15 @@
 import { createServer, type Socket } from "node:net";
+import dns from "node:dns";
 import CORE, {
   type CoreMessageTypes,
   type ServerStartResponse,
   type ConnectionMessage,
 } from "@shared/core/core-message";
 import { parentPort } from "node:worker_threads";
+import { globalState$ } from "@shared/state";
+
+const keychainId = globalState$.applicationId.get();
+const nodeName = globalState$.deviceName.get();
 
 const port = parentPort;
 
@@ -44,6 +49,22 @@ const handleSocket = (socket: Socket) => {
       console.error(e);
     }
   });
+
+  setInterval(() => {
+    console.log("Attempting to connect");
+
+    const payload = {
+      // switch this to use application mode
+      mode: "SENDER",
+      nodeKeychainID: keychainId,
+      nodeName,
+      type: "CONNECTION_REQUEST",
+    } as const satisfies ConnectionMessage;
+
+    console.log(payload);
+
+    socket.write(JSON.stringify(payload));
+  }, 3500);
 };
 
 const server = createServer(handleSocket);
@@ -52,6 +73,22 @@ const server = createServer(handleSocket);
 
 port.on("message", (msg) => {
   console.log("Starting discovery worker");
-  server.listen(53317);
-  console.log({ addr: server.address() });
+  dns.lookup("myip.openwrt.com", (err, addr) => {
+    if (err) {
+      console.error("Error getting public IP", err);
+      return;
+    }
+    console.log(addr);
+    // const publicIP = addr[0];
+    // console.log("Public IP", publicIP);
+    server.listen(53317, addr, () => {
+      console.log("Server listening on port 53317");
+    });
+  });
 });
+
+port.on("close", () =>
+  server.close((err) => {
+    console.error({ err });
+  }),
+);
