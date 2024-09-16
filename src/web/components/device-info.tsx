@@ -1,13 +1,13 @@
 import { computed } from "@legendapp/state";
-import { Avatar, Button, Flex, Popover, Text } from "@radix-ui/themes";
-import t from "@src/shared/config";
+import { Button, Flex, Popover, Text } from "@radix-ui/themes";
+import { peerState } from "@src/shared/state";
 import { generateGradientColors, randomNumber } from "@src/shared/utils";
-import { Heart, Key, UserRound, Wifi, WifiOff } from "lucide-react";
+import { Heart, Key, Wifi, WifiOff } from "lucide-react";
 import { useCallback, useMemo } from "react";
-import { globalState$ } from "../../shared/state";
+import type { Node } from "@shared/types";
 
 type Props = {
-  node: any;
+  node: Node;
 };
 
 export default function DeviceInfo({ node }: Props) {
@@ -19,7 +19,8 @@ export default function DeviceInfo({ node }: Props) {
   const left = useMemo(() => randomNumber(), []);
   const [color1, color2] = useMemo(() => generateGradientColors(), []);
 
-  const isSaved = false;
+  const isSaved = peerState.favourites.has(node.keychainId);
+
   const isOnline = computed(() => navigator.onLine);
 
   const send = useCallback(() => {
@@ -27,25 +28,23 @@ export default function DeviceInfo({ node }: Props) {
   }, []);
 
   const addToFavourites = useCallback(() => {
-    console.log("TODO");
-  }, []);
+    if (isSaved) {
+      peerState.favourites.delete(node.keychainId);
+      return;
+    }
+    peerState.favourites.get().set(node.keychainId, node);
+  }, [node, isSaved]);
 
   return (
     <Popover.Root>
       <Popover.Trigger>
-        {/*<Avatar
-          asChild
-          src="https://source.boringavatars.com/"
-          variant="soft"
-          color="gray"
-          fallback={<UserRound size={15} />}
-         />*/}
         <div
           style={{
             left: `${left}px`,
             top: `${top}px`,
+            background: `linear-gradient(45deg,${color1},${color2})`,
           }}
-          className={`bg-${color1} absolute shadow-xl w-11 h-11 rounded-full cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800`}
+          className="absolute shadow-xl w-11 h-11 rounded-full cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800 dark:shadow-zinc-300/3"
         />
       </Popover.Trigger>
       <Popover.Content size="1">
@@ -57,10 +56,8 @@ export default function DeviceInfo({ node }: Props) {
               width="100%"
               justify="between"
             >
-              <Text className="text-[11.5px] text-zinc-400 tracking-wide">
-                Device Name
-              </Text>
-              <Text className="text-[12px] font-bold">{node.nodeName}</Text>
+              <Text className="text-[11px] text-zinc-400">Device Name</Text>
+              <Text className="text-[12px] font-bold">{node.deviceName}</Text>
             </Flex>
             <Flex align="center" justify="end" gap="3">
               <Button
@@ -77,9 +74,7 @@ export default function DeviceInfo({ node }: Props) {
           </Flex>
           <Flex className="space-y-1" direction="column" align="start">
             <Flex width="100%" align="center" justify="between" gap="3">
-              <Text className="text-[11px] font-medium">
-                {node.connectionId}
-              </Text>
+              <Text className="text-[10px] font-medium">{node.keychainId}</Text>
               <Key size={9} className="text-zinc-400" />
             </Flex>
             <Flex width="100%" align="center" justify="between" gap="2">

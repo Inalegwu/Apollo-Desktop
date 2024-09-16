@@ -11,9 +11,9 @@ export const appRouter = router({
   }),
   node: nodeRouter,
   files: filesRouter,
-  platform:publicProcedure.query(()=>{
-    return process.platform
-  })
+  platform: publicProcedure.query(() => {
+    return process.platform;
+  }),
 });
 
 export type AppRouter = typeof appRouter;

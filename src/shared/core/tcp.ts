@@ -1,9 +1,8 @@
 import { createServer, type Socket } from "node:net";
-import dns from "node:dns";
 import CORE, {
+  type ConnectionMessage,
   type CoreMessageTypes,
   type ServerStartResponse,
-  type ConnectionMessage,
 } from "@shared/core/core-message";
 import { parentPort } from "node:worker_threads";
 import { globalState$ } from "@shared/state";
@@ -69,21 +68,10 @@ const handleSocket = (socket: Socket) => {
 
 const server = createServer(handleSocket);
 
-// server.listen(53317);
-
-port.on("message", (msg) => {
+port.on("message", () => {
   console.log("Starting discovery worker");
-  dns.lookup("myip.openwrt.com", (err, addr) => {
-    if (err) {
-      console.error("Error getting public IP", err);
-      return;
-    }
-    console.log(addr);
-    // const publicIP = addr[0];
-    // console.log("Public IP", publicIP);
-    server.listen(53317, addr, () => {
-      console.log("Server listening on port 53317");
-    });
+  server.listen(53317, "0.0.0.0", () => {
+    console.log("server listening on port 53317");
   });
 });
 

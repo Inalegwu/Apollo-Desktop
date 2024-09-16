@@ -2,9 +2,9 @@ import { computed } from "@legendapp/state";
 import { Box, Flex, Popover, Text } from "@radix-ui/themes";
 import { globalState$ } from "@shared/state";
 import defaultImage from "@src/assets/images/user_default.jpg";
-import { generateRandomName } from "@src/shared/utils";
+import { generateGradientColors, generateRandomName } from "@src/shared/utils";
 import { Folder, Key, Laptop, Phone, Wifi, WifiOff } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { v4 } from "uuid";
 import t from "@shared/config";
 
@@ -12,19 +12,33 @@ export default function ThisDeviceInfo() {
   const deviceName = globalState$.deviceName.get();
   const deviceID = globalState$.applicationId.get();
 
-  console.log({ deviceName, deviceID });
+  const [color1, color2] = useMemo(() => generateGradientColors(), []);
 
   const onlineStatus = computed(() => navigator.onLine);
-  const { data: deviceType } = t.platform.useQuery();
-  const type =
-    deviceType === "linux" || deviceType === "win32" || deviceType === "darwin"
-      ? "desktop"
-      : "mobile";
+  t.platform.useQuery(undefined, {
+    onSuccess: (data) => {
+      if (data === "android") {
+        globalState$.deviceType.set("mobile");
+        return;
+      }
+      if (data === "darwin") {
+        globalState$.deviceType.set("desktop");
+        return;
+      }
+      if (data === "linux") {
+        globalState$.deviceType.set("desktop");
+        return;
+      }
+      if (data === "win32") {
+        globalState$.deviceType.set("desktop");
+        return;
+      }
+    },
+  });
+
   const isDesktop = computed(
     () => globalState$.deviceType.get() === "desktop",
   ).get();
-
-  console.log({ deviceType, type });
 
   useEffect(() => {
     if (globalState$.applicationId.get() === null) {
@@ -34,29 +48,22 @@ export default function ThisDeviceInfo() {
     if (globalState$.deviceName.get() === null) {
       globalState$.deviceName.set(generateRandomName());
     }
-
-    if (globalState$.deviceType.get() === null) {
-      globalState$.deviceType.set(type);
-    }
-  }, [type]);
+  }, []);
 
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <Box className="w-11 h-11 rounded-full overflow-hidden shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800">
-          <img
-            src={defaultImage}
-            alt="default_image"
-            className="object-cover w-full h-full"
-          />
-        </Box>
+        <Box
+          style={{
+            background: `linear-gradient(45deg,${color1},${color2})`,
+          }}
+          className="w-11 h-11 rounded-full overflow-hidden shadow-xl cursor-pointer border-1 border-solid border-zinc-200 dark:border-zinc-800"
+        />
       </Popover.Trigger>
       <Popover.Content size="1">
         <Flex direction="column" align="start" className="space-y-1">
           <Flex align="start" direction="column" width="100%">
-            <Text className="text-[9px] font-light text-zinc-400">
-              This Device
-            </Text>
+            <Text className="text-[11px] text-zinc-400">This Device</Text>
             <Flex align="center" justify="between" width="100%">
               <Text className="text-[12px] font-bold">{deviceName}</Text>
               <span className="text-zinc-400">

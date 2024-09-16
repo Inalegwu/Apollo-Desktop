@@ -1,41 +1,13 @@
-import { createStore } from "tinybase/cjs/with-schemas";
-import { createIndexedDbPersister } from "tinybase/cjs/persisters/persister-indexed-db";
+import { Collection } from "signaldb"
+import {
+  createLocalStorageAdapter
+} from "signaldb/persistence"
+import type { Transfer } from "./types";
 
-export const store = createStore().setTablesSchema({
-  sent: {
-    fileName: {
-      type: "string",
-    },
-    time: {
-      type: "string",
-    },
-    size: {
-      type: "string",
-    },
-    sender: {
-      type: "string",
-    },
-    receiver: {
-      type: "string",
-    },
-  },
+const store = new Collection<Transfer>({
+  persistence: createLocalStorageAdapter("transfer-history"),
 });
 
-export const sessions = createStore().setTablesSchema({
-  sessions: {
-    sessionId: {
-      type: "string",
-    },
-    nodeName: {
-      type: "string",
-    },
-    nodeKeychainId: {
-      type: "string",
-    },
-  },
-});
 
-const persister = createIndexedDbPersister(store, "apollo_db", 5);
+export default store
 
-persister.save();
-persister.startAutoSave();

@@ -6,6 +6,8 @@ import {
 import { ObservablePersistLocalStorage } from "@legendapp/state/persist-plugins/local-storage";
 import type {
   GlobalState,
+  PeerState,
+  Node
 } from "@shared/types";
 
 configureObservablePersistence({
@@ -21,6 +23,15 @@ export const globalState$ = observable<GlobalState>({
   port: 42069,
 });
 
+export const peerState = observable<PeerState>({
+  neighbors: new Map<string, Node>,
+  favourites: new Map<string, Node>
+})
+
 persistObservable(globalState$, {
   local: "global_state",
 });
+
+persistObservable(peerState, {
+  local: "peerState"
+})

@@ -59,15 +59,12 @@ importers:
       react-error-boundary:
         specifier: ^4.0.12
         version: 4.0.12(react@18.2.0)
-      react-toastify:
-        specifier: ^10.0.5
-        version: 10.0.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      signaldb:
+        specifier: ^0.20.0
+        version: 0.20.0
       sort-by:
         specifier: ^1.2.0
         version: 1.2.0
-      tinybase:
-        specifier: ^4.8.8
-        version: 4.8.8(prettier@3.2.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       unique-names-generator:
         specifier: ^4.7.1
         version: 4.7.1
@@ -2220,6 +2217,9 @@ packages:
   fast-json-stable-stringify@2.1.0:
     resolution: {integrity: sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==}
 
+  fast-sort@3.4.1:
+    resolution: {integrity: sha512-76uvGPsF6So53sZAqenP9UVT3p5l7cyTHkLWVCMinh41Y8NDrK1IYXJgaBMfc1gk7nJiSRZp676kddFG2Aa5+A==}
+
   fastq@1.15.0:
     resolution: {integrity: sha512-wBrocU2LCXXa+lWBt8RoIRD89Fi8OdABODa/kEnyeyjS5aZO5/GNvI5sEINADqP/h8M29UHTHUb53sUu5Ihqdw==}
 
@@ -2660,6 +2660,9 @@ packages:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
     engines: {node: '>=10'}
 
+  mingo@6.4.15:
+    resolution: {integrity: sha512-fKUCGr7fUxrb7YBK6whm5O5VouXfKAVtxnb+6g3Xuwsj9Jt9u8hhMOgiUoKO4kp3DmuiN0qgpYX2H/nP3zD1Hw==}
+
   minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
 
@@ -2967,12 +2970,6 @@ packages:
       '@types/react':
         optional: true
 
-  react-toastify@10.0.5:
-    resolution: {integrity: sha512-mNKt2jBXJg4O7pSdbNUfDdTsK9FIdikfsIE/yUCxbAEXl4HMyJaivrVFcn3Elvt5xvCQYhUZm+hqTIu1UXM3Pw==}
-    peerDependencies:
-      react: '>=18'
-      react-dom: '>=18'
-
   react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
@@ -3082,6 +3079,9 @@ packages:
   signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
 
+  signaldb@0.20.0:
+    resolution: {integrity: sha512-IFLZbbSKoQPejNz23dKueUCNZ8cwflr21DvOnZp4Rf69w4V00srEbxXO9+64Drjw0UMnSaCDTiNPqO+fZ2xLXQ==}
+
   simple-update-notifier@2.0.0:
     resolution: {integrity: sha512-a2B9Y0KlNXl9u/vsW6sTIu9vGEpfKu2wRV6l1H3XEas/0gUIzGzBoP/IouTcUQbm9JWZLH3COxyn03TYlFax6w==}
     engines: {node: '>=10'}
@@ -3178,54 +3178,6 @@ packages:
 
   tiny-warning@1.0.3:
     resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
-
-  tinybase@4.8.8:
-    resolution: {integrity: sha512-PMAKjcpWfOBhrJrKn7SWGJlTz9B0Etg+Xku3ir5P0y6QOUZuSQYeRnXcdQBUEJoYXEermjfRkiNl0iQnjlzgFw==}
-    hasBin: true
-    peerDependencies:
-      '@automerge/automerge-repo': ^1.1.12
-      '@journeyapps/powersync-sdk-common': ^1.6.0
-      '@libsql/client': ^0.5.6
-      '@sqlite.org/sqlite-wasm': ^3.45.3-build2
-      '@vlcn.io/crsqlite-wasm': ^0.16.0
-      electric-sql: ^0.11.3
-      expo-sqlite: ^13.2.1
-      partykit: ^0.0.104
-      partysocket: ^1.0.1
-      prettier: ^3.2.5
-      react: ^18.3.1
-      react-dom: ^18.3.1
-      sqlite3: ^5.1.7
-      yjs: ^13.6.15
-    peerDependenciesMeta:
-      '@automerge/automerge-repo':
-        optional: true
-      '@journeyapps/powersync-sdk-common':
-        optional: true
-      '@libsql/client':
-        optional: true
-      '@sqlite.org/sqlite-wasm':
-        optional: true
-      '@vlcn.io/crsqlite-wasm':
-        optional: true
-      electric-sql:
-        optional: true
-      expo-sqlite:
-        optional: true
-      partykit:
-        optional: true
-      partysocket:
-        optional: true
-      prettier:
-        optional: true
-      react:
-        optional: true
-      react-dom:
-        optional: true
-      sqlite3:
-        optional: true
-      yjs:
-        optional: true
 
   tmp-promise@3.0.3:
     resolution: {integrity: sha512-RwM7MoPojPxsOBYnyd2hy0bxtIlVrihNs9pj5SUvY8Zz1sQcQG2tG1hSr8PDxfgEB8RNKDhqbIlroIarSNDNsQ==}
@@ -5892,6 +5844,8 @@ snapshots:
 
   fast-json-stable-stringify@2.1.0: {}
 
+  fast-sort@3.4.1: {}
+
   fastq@1.15.0:
     dependencies:
       reusify: 1.0.4
@@ -6332,6 +6286,8 @@ snapshots:
 
   mimic-response@3.1.0: {}
 
+  mingo@6.4.15: {}
+
   minimatch@3.1.2:
     dependencies:
       brace-expansion: 1.1.11
@@ -6620,12 +6576,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.2.42
 
-  react-toastify@10.0.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      clsx: 2.1.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   react@18.2.0:
     dependencies:
       loose-envify: 1.4.0
@@ -6751,6 +6701,11 @@ snapshots:
 
   signal-exit@3.0.7: {}
 
+  signaldb@0.20.0:
+    dependencies:
+      fast-sort: 3.4.1
+      mingo: 6.4.15
+
   simple-update-notifier@2.0.0:
     dependencies:
       semver: 7.5.4
@@ -6864,12 +6819,6 @@ snapshots:
   tiny-invariant@1.3.1: {}
 
   tiny-warning@1.0.3: {}
-
-  tinybase@4.8.8(prettier@3.2.4)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    optionalDependencies:
-      prettier: 3.2.4
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
 
   tmp-promise@3.0.3:
     dependencies:

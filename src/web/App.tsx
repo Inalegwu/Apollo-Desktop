@@ -3,7 +3,11 @@ import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import t, { queryClient, trpcClient } from "@shared/config";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider, createRouter, createHashHistory } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createRouter,
+  createHashHistory,
+} from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import "react-toastify/dist/ReactToastify.css";
@@ -35,7 +39,7 @@ if (!rootElement?.innerHTML) {
     <StrictMode>
       <t.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Theme radius="medium" accentColor="blue" grayColor="gray">
+          <Theme radius="medium" accentColor="gray" grayColor="gray">
             <RouterProvider router={router} />
           </Theme>
         </QueryClientProvider>
