@@ -44,6 +44,22 @@ export const validateQueryWithSchema = <T extends z.ZodRawShape>(
     return parsed.data;
   });
 
+export const validateParamWithSchema = <T extends z.ZodRawShape>(
+  schema: z.ZodObject<T>,
+) =>
+  validator("param", (value, c) => {
+    const parsed = schema.safeParse(value);
+
+    if (!parsed.success) {
+      return c.json({
+        message: "invalid body recieved",
+        error: parsed.error.flatten(),
+      });
+    }
+
+    return parsed.data;
+  });
+
 // validators based on schemas
 export const bodyValidator = validateFormWithSchema(bodySchema);
 export const headerValidator = validateFormWithSchema(headerSchema);

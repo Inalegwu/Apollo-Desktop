@@ -12,17 +12,17 @@ export type CoreMessageTypes = Readonly<{
     nodeName: string;
     nodeKeychainID: string;
     mode: "RECEIVER" | "SENDER";
-    _tag:"connect";
+    _tag: "connect";
   };
   "server-start": {
     serverAddr: string;
-    _tag:"server-start";
+    _tag: "server-start";
   };
   "receiver-mode-enable": {
     nodeName: string;
     nodeKeychainID: string;
     type: ConnectionMode;
-    _tag:"receiver-mode-enable"
+    _tag: "receiver-mode-enable";
   };
 }>;
 
@@ -30,7 +30,11 @@ export type ServerStartResponse = CoreMessageTypes["server-start"];
 
 export type ConnectionMessage = CoreMessageTypes["connect"];
 
-export type ReceiverModemessage = CoreMessageTypes["receiver-mode-enable"];
+export type ReceiverModeMessage = CoreMessageTypes["receiver-mode-enable"];
+
+export type CoreResponse = {
+  _tag: "receiver-mode-enable" | "server-start" | "connect";
+} & Record<string, unknown>;
 
 const CORE = new TypedEventEmitter<CoreMessageTypes>();
 

@@ -81,6 +81,7 @@ app.post("/upload/", headerValidator, async (ctx) => {
 });
 
 CORE.on("connect", ({ nodeName, nodeKeychainID, type, mode }) => {
+  console.log("connect message recieved");
   if (type === "CONNECTION_REQUEST" && mode === "RECEIVER") {
     const server = serve({
       fetch: app.fetch,

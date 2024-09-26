@@ -1,5 +1,7 @@
 import CORE, {
   type ConnectionMessage,
+  type CoreResponse,
+  type ReceiverModeMessage,
   type ServerStartResponse,
 } from "@shared/core/core-message";
 import { globalState$ } from "@shared/state";
@@ -14,9 +16,12 @@ const port = parentPort;
 if (!port) throw new Error("Invalid state: No Parent port");
 
 const handleSocket = (socket: Socket) => {
-  socket.setKeepAlive(true, 120_000);
+  socket.setKeepAlive(true);
+
+  let awaitingConnection = true;
 
   CORE.on("server-start", ({ serverAddr }) => {
+    console.log("server-start emitted");
     console.log(`erver start event sent with address ${serverAddr}`);
     socket.write(
       JSON.stringify({
@@ -41,31 +46,53 @@ const handleSocket = (socket: Socket) => {
   });
 
   socket.on("data", (data) => {
-    // TODO: this section shouldbe agnostic
-    // onthe message being sent
     try {
-      const result = JSON.parse(data.toString());
+      const result = JSON.parse(data.toString()) as CoreResponse;
 
-      console.log(result);
+      switch (result._tag) {
+        case "connect": {
+          const message = result as ConnectionMessage;
+          awaitingConnection = false;
+          console.log("tag===connect", { message });
+          CORE.emit("connect", message);
+          break;
+        }
+        case "receiver-mode-enable": {
+          const message = result as ReceiverModeMessage;
+          console.log("tag===reciever-mode-enable", { message });
+          break;
+        }
+        case "server-start": {
+          const message = result as ServerStartResponse;
+          console.log("tag===server-start", { message });
+          break;
+        }
+        default: {
+          console.log("unknown _tag value");
+          break;
+        }
+      }
     } catch (e) {
       console.error(e);
     }
   });
 
   setInterval(() => {
-    const payload = {
-      // switch this o use application mode
-      mode: "SENDER",
-      nodeKeychainID: keychainId,
-      nodeName,
-      _tag: "connect",
-      type: "CONNECTION_REQUEST",
-    } as const satisfies ConnectionMessage;
+    if (awaitingConnection) {
+      const payload = {
+        // switch this o use application mode
+        mode: "SENDER",
+        nodeKeychainID: keychainId,
+        nodeName,
+        _tag: "connect",
+        type: "CONNECTION_REQUEST",
+      } as const satisfies ConnectionMessage;
 
-    console.log(payload);
+      console.log("Sending payload", payload);
 
-    socket.write(JSON.stringify(payload));
-  }, 4000);
+      socket.write(JSON.stringify(payload));
+    }
+  }, 3000);
 };
 
 const server = createServer(handleSocket);

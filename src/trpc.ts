@@ -8,18 +8,18 @@ const t = initTRPC.context<Context>().create({
 export const middleware = t.middleware;
 export const router = t.router;
 
-const loggerMiddleWare = middleware(async (opts) => {
-  const start = Date.now();
+// const loggerMiddleWare = middleware(async (opts) => {
+//   const start = Date.now();
 
-  const result = await opts.next();
+//   const result = await opts.next();
 
-  const durationMS = Date.now() - start;
+//   const durationMS = Date.now() - start;
 
-  const meta = { path: opts.path, type: opts.type, durationMS };
+//   const meta = { path: opts.path, type: opts.type, durationMS };
 
-  result.ok ? console.log({ meta }) : console.error({ meta });
+//   result.ok ? console.log({ meta }) : console.error({ meta });
 
-  return result;
-});
+//   return result;
+// });
 
-export const publicProcedure = t.procedure.use(loggerMiddleWare);
+export const publicProcedure = t.procedure;
