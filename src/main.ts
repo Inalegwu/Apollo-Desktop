@@ -1,9 +1,10 @@
+import file from "@shared/core/file-server?nodeWorker";
+import discovery from "@shared/core/tcp?nodeWorker";
 import { createContext } from "@src/shared/context";
 import { appRouter } from "@src/shared/routers/_app";
 import { BrowserWindow, app, globalShortcut } from "electron";
 import { createIPCHandler } from "electron-trpc/main";
 import { join } from "node:path";
-import discovery from "@shared/core/tcp?nodeWorker";
 
 app.setName("Apollo");
 
@@ -40,8 +41,13 @@ const createWindow = () => {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
-  discovery({ name: "discovery-worker" }).on("message", console.log).postMessage({
-    message: "start"
+  discovery({ name: "discovery-worker" })
+    .on("message", console.log)
+    .postMessage({
+      message: "start",
+    });
+  file({ name: "file-server-worker" }).on("message", console.log).postMessage({
+    message: "start",
   });
 
   // mainWindow.webContents.openDevTools({ mode: "detach" });

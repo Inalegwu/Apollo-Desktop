@@ -1,11 +1,15 @@
 import { serve } from "@hono/node-server";
-import CORE from "@shared/core/core-message";
+import type { ChannelTypes } from "@shared/core/core-message";
 import { globalState$, peerState } from "@shared/state";
 import { sessions } from "@shared/storage";
 import { Hono } from "hono";
 import { decode, sign } from "hono/jwt";
+import { parentPort } from "node:worker_threads";
 import { v4 } from "uuid";
+import { TypedBroadCastChannel } from "./broadcast-channel";
 import { bodyValidator, headerValidator } from "./ftp-validators";
+
+const channel = new TypedBroadCastChannel<ChannelTypes>("core-channel");
 
 const neighbors = peerState.neighbors.get();
 
@@ -80,37 +84,31 @@ app.post("/upload/", headerValidator, async (ctx) => {
   console.log({ session });
 });
 
-CORE.on("connect", ({ nodeName, nodeKeychainID, type, mode }) => {
-  console.log("connect message recieved");
-  if (type === "CONNECTION_REQUEST" && mode === "RECEIVER") {
-    const server = serve({
-      fetch: app.fetch,
-    });
+const port = parentPort;
 
-    neighbors.set(nodeKeychainID, {
-      deviceName: nodeName,
-      keychainId: nodeKeychainID,
-      deviceType: globalState$.deviceType.get(),
-    });
+if (!port) throw new Error("Invalid state: No Parent port");
 
-    console.info({ serverAddr: server.address() });
+channel.onmessage = (msg) => {
+  const message = msg as MessageEvent<ChannelTypes>;
+  const data = message.data;
+  switch (data.action) {
+    case "start-server": {
+      const server = serve({
+        fetch: app.fetch,
+      }).listen(42069, "0.0.0.0", undefined, () => {
+        console.log("server listening");
+      });
 
-    CORE.emit("server-start", {
-      serverAddr: server.address.toString(),
-      _tag: "server-start",
-    });
+      console.log("addr: ", server.address());
+
+      break;
+    }
+    case "stop-server": {
+      break;
+    }
   }
+};
 
-  if (type === "CONNECTION_REQUEST" && mode === "SENDER") {
-    CORE.emit("receiver-mode-enable", {
-      nodeName,
-      nodeKeychainID,
-      type: "CONNECTION_REQUEST",
-      _tag: "receiver-mode-enable",
-    });
-  }
-
-  if (type === "CONNECTION_RESPONSE") {
-    // CORE.emit()
-  }
+port.on("message", () => {
+  console.log("Starting file-server worker");
 });

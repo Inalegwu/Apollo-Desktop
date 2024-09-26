@@ -1,12 +1,34 @@
-import CORE, {
-  type ConnectionMessage,
-  type CoreResponse,
-  type ReceiverModeMessage,
-  type ServerStartResponse,
+import type {
+  ChannelTypes,
+  ConnectionMessage,
+  CoreResponse,
+  ReceiverModeMessage,
+  ServerStartResponse,
 } from "@shared/core/core-message";
 import { globalState$ } from "@shared/state";
 import { type Socket, createServer } from "node:net";
 import { parentPort } from "node:worker_threads";
+import { TypedBroadCastChannel } from "./broadcast-channel";
+
+const channel = new TypedBroadCastChannel<ChannelTypes>("core-channel");
+
+channel.onmessage = (msg) => {
+  const message = msg as MessageEvent<ChannelTypes>;
+  const data = message.data;
+  console.log({ data, module: "tcp-server" });
+
+  switch (data.action) {
+    case "start-server": {
+      break;
+    }
+    case "stop-server": {
+      break;
+    }
+    default: {
+      console.log("unknown event");
+    }
+  }
+};
 
 const keychainId = globalState$.applicationId.get();
 const nodeName = globalState$.deviceName.get();
@@ -20,31 +42,6 @@ const handleSocket = (socket: Socket) => {
 
   let awaitingConnection = true;
 
-  CORE.on("server-start", ({ serverAddr }) => {
-    console.log("server-start emitted");
-    console.log(`erver start event sent with address ${serverAddr}`);
-    socket.write(
-      JSON.stringify({
-        _tag: "server-start",
-        serverAddr,
-      } as const satisfies ServerStartResponse),
-    );
-  });
-
-  // when receiver mode is enabled we send the required data
-  // to receive the server-address
-  CORE.on("receiver-mode-enable", ({ nodeName, nodeKeychainID, type }) => {
-    socket.write(
-      JSON.stringify({
-        _tag: "connect",
-        nodeName,
-        nodeKeychainID,
-        type,
-        mode: "RECEIVER",
-      } as const satisfies ConnectionMessage),
-    );
-  });
-
   socket.on("data", (data) => {
     try {
       const result = JSON.parse(data.toString()) as CoreResponse;
@@ -54,7 +51,7 @@ const handleSocket = (socket: Socket) => {
           const message = result as ConnectionMessage;
           awaitingConnection = false;
           console.log("tag===connect", { message });
-          CORE.emit("connect", message);
+          channel.postMessage({ action: "start-server" });
           break;
         }
         case "receiver-mode-enable": {
@@ -101,6 +98,7 @@ port.on("message", () => {
   console.log("Starting discovery worker");
   server.listen(53317, "0.0.0.0", () => {
     console.log("server listening on port 53317");
+    console.log(channel);
   });
 });
 

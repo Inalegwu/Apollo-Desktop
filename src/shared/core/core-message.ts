@@ -2,7 +2,6 @@
 // and tcp node discovery
 // CoreMessageTypes are the events that can possibly
 // be sent and received on this emitter channel
-import { TypedEventEmitter } from "@shared/emitter";
 
 type ConnectionMode = "CONNECTION_REQUEST" | "CONNECTION_RESPONSE";
 
@@ -32,10 +31,10 @@ export type ConnectionMessage = CoreMessageTypes["connect"];
 
 export type ReceiverModeMessage = CoreMessageTypes["receiver-mode-enable"];
 
+export type ChannelTypes = {
+  action: "start-server" | "stop-server";
+};
+
 export type CoreResponse = {
   _tag: "receiver-mode-enable" | "server-start" | "connect";
 } & Record<string, unknown>;
-
-const CORE = new TypedEventEmitter<CoreMessageTypes>();
-
-export default CORE;
