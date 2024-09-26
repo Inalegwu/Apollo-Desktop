@@ -2,7 +2,7 @@ name : Check Linting and Code Quality
 
 on:
     pull_request:
-        branches: [master,dev]
+        branches: [main,dev]
 
 jobs:
     lint:

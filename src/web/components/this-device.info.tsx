@@ -1,12 +1,11 @@
 import { computed } from "@legendapp/state";
 import { Box, Flex, Popover, Text } from "@radix-ui/themes";
+import t from "@shared/config";
 import { globalState$ } from "@shared/state";
-import defaultImage from "@src/assets/images/user_default.jpg";
 import { generateGradientColors, generateRandomName } from "@src/shared/utils";
 import { Folder, Key, Laptop, Phone, Wifi, WifiOff } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { v4 } from "uuid";
-import t from "@shared/config";
 
 export default function ThisDeviceInfo() {
   const deviceName = globalState$.deviceName.get();
@@ -104,9 +103,9 @@ export default function ThisDeviceInfo() {
                 </span>
               </Text>
               {onlineStatus.get() ? (
-                <Wifi size={9} className="text-zinc-400" />
+                <Wifi size={9} className="text-green-500" />
               ) : (
-                <WifiOff size={9} className="text-zinc-400" />
+                <WifiOff size={9} className="text-red-500" />
               )}
             </Flex>
           </Flex>
