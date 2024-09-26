@@ -8,6 +8,7 @@ import { History, Minus, Moon, Plus, Settings, Sun, X } from "lucide-react";
 import type React from "react";
 import { useCallback } from "react";
 import { Settings as SettingsView } from "../components";
+import Spinner from "./spinner";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -40,11 +41,12 @@ export default function Layout({ children }: LayoutProps) {
     }
   }, []);
 
-  const { mutate: selectFiles } = t.files.selectFiles.useMutation({
-    onSuccess: (data) => {
-      if (data.cancelled) return;
-    },
-  });
+  const { mutate: selectFiles, isLoading: selecting } =
+    t.files.selectFiles.useMutation({
+      onSuccess: (data) => {
+        if (data.cancelled) return;
+      },
+    });
 
   return (
     <Flex
@@ -113,9 +115,9 @@ export default function Layout({ children }: LayoutProps) {
           variant="soft"
           onClick={() => selectFiles()}
           radius="full"
-          className="w-9 h-9 cursor-pointer"
+          className="w-9 h-9 cursor-pointer outline-none"
         >
-          <Plus size={13} />
+          {selecting ? <Spinner /> : <Plus size={13} />}
         </Button>
       </Flex>
       <AnimatePresence>
