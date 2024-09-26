@@ -12,14 +12,17 @@ export type CoreMessageTypes = Readonly<{
     nodeName: string;
     nodeKeychainID: string;
     mode: "RECEIVER" | "SENDER";
+    _tag:"connect";
   };
   "server-start": {
     serverAddr: string;
+    _tag:"server-start";
   };
   "receiver-mode-enable": {
     nodeName: string;
     nodeKeychainID: string;
     type: ConnectionMode;
+    _tag:"receiver-mode-enable"
   };
 }>;
 

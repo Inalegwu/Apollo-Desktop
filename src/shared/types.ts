@@ -7,6 +7,7 @@ export type GlobalState = {
   port: number;
   deviceName: string | null;
   applicationId: string | null;
+  saveTransferHistory: boolean;
 };
 
 export enum FileTypes {
@@ -19,16 +20,22 @@ export type Node = {
   deviceName: string;
   keychainId: string;
   deviceType: DeviceType;
-}
+};
 
 export type PeerState = {
-  neighbors: Map<string, Node>
-  favourites: Map<string, Node>
-}
+  neighbors: Map<string, Node>;
+  favourites: Map<string, Node>;
+};
 
 export type Transfer = Readonly<{
   id: string;
   fileName: string;
   destinationDeviceName: string;
   destinationDeviceId: string;
-}>
+}>;
+
+export type Session = Readonly<{
+  id: string;
+  nodeName: string;
+  nodeKeychainID: string;
+}>;

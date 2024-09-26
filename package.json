@@ -17,7 +17,7 @@
     "prebuild": "electron-vite build",
     "build": "pnpm tsx build.ts",
     "postinstall": "electron-rebuild",
-    "biome:lint": "bunx @biomejs/biome lint ./src --apply"
+    "biome:lint": "pnpx @biomejs/biome lint ./src --apply"
   },
   "dependencies": {
     "@electron/rebuild": "^3.4.1",

@@ -10,7 +10,6 @@ import {
 } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import "react-toastify/dist/ReactToastify.css";
 import "virtual:uno.css";
 import "./defaults.css";
 import { routeTree } from "./routeTree.gen";

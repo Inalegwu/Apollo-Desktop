@@ -4,7 +4,7 @@ import { Button, Flex } from "@radix-ui/themes";
 import { globalState$ } from "@shared/state";
 import t from "@src/shared/config";
 import { AnimatePresence } from "framer-motion";
-import { Minus, Moon, Plus, Settings, Sun, X } from "lucide-react";
+import { History, Minus, Moon, Plus, Settings, Sun, X } from "lucide-react";
 import type React from "react";
 import { useCallback } from "react";
 import { Settings as SettingsView } from "../components";
@@ -19,8 +19,9 @@ export default function Layout({ children }: LayoutProps) {
 
   const settings = useObservable(false);
 
+  const canSaveHistory = globalState$.saveTransferHistory.get();
   const isDarkMode = computed(() => globalState$.colorMode.get() === "dark");
-  
+
   useObserveEffect(() => {
     if (globalState$.colorMode.get() === "dark") {
       document.body.classList.add("dark");
@@ -75,6 +76,15 @@ export default function Layout({ children }: LayoutProps) {
             className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
           >
             {isDarkMode.get() ? <Sun /> : <Moon />}
+          </Button>
+          <Button
+            variant="ghost"
+            color="gray"
+            disabled={!canSaveHistory}
+            onClick={() => console.log("TODO")}
+            className="w-2.5 h-4.5 rounded-full cursor-pointer outline-none"
+          >
+            <History />
           </Button>
         </Flex>
         <Flex grow="1" id="drag-region" className="p-2" />

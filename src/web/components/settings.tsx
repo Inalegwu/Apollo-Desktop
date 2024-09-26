@@ -120,7 +120,7 @@ function Files() {
           >
             <Flex align="center" justify="start" gap="1">
               <Folder size={10} />
-              <Text size="1">Select Folder</Text>
+              <Text className="text-[10px]">Select Folder</Text>
             </Flex>
           </Button>
         </Flex>
@@ -133,6 +133,10 @@ function Files() {
 }
 
 function Transfers() {
+  const canSaveTransfer = globalState$.saveTransferHistory.get();
+
+  console.log({ saveTransferHistory: globalState$.saveTransferHistory.get() });
+
   return (
     <Flex direction="column" align="start" gap="5" className="w-full h-full">
       <Flex className="w-full" align="center" justify="between">
@@ -144,8 +148,8 @@ function Transfers() {
         </Flex>
         <SwitchButton
           size="1"
-          onClick={() => console.log("todo")}
-          checked={false}
+          onClick={() => globalState$.saveTransferHistory.set(!canSaveTransfer)}
+          checked={canSaveTransfer}
         />
       </Flex>
       <Flex className="w-full" align="center" justify="between">
@@ -155,7 +159,15 @@ function Transfers() {
             Transfer history save duration
           </Text>
         </Flex>
-        <Select.Root size="1" defaultValue="3D">
+        <Select.Root
+          size="1"
+          defaultValue="3D"
+          onValueChange={(v) =>
+            v === "none"
+              ? globalState$.saveTransferHistory.set(false)
+              : globalState$.saveTransferHistory.set(true)
+          }
+        >
           <Select.Trigger
             radius="large"
             disabled={false}
@@ -164,7 +176,7 @@ function Transfers() {
           <Select.Content
             variant="soft"
             defaultValue="4D"
-            className="flex flex-col items-start bg-light-1 dark:bg-dark-8"
+            className="flex flex-col items-start bg-light-1 dark:bg-dark-8 text-[11px]"
           >
             <Select.Item
               disabled={false}
