@@ -3,6 +3,8 @@
 // CoreMessageTypes are the events that can possibly
 // be sent and received on this emitter channel
 
+import type { DeviceType } from "../types";
+
 type ConnectionMode = "CONNECTION_REQUEST" | "CONNECTION_RESPONSE";
 
 export type CoreMessageTypes = Readonly<{
@@ -10,6 +12,7 @@ export type CoreMessageTypes = Readonly<{
     type: ConnectionMode;
     nodeName: string;
     nodeKeychainID: string;
+    deviceType: DeviceType;
     mode: "RECEIVER" | "SENDER";
     _tag: "connect";
   };
@@ -30,10 +33,6 @@ export type ServerStartResponse = CoreMessageTypes["server-start"];
 export type ConnectionMessage = CoreMessageTypes["connect"];
 
 export type ReceiverModeMessage = CoreMessageTypes["receiver-mode-enable"];
-
-export type ChannelTypes = {
-  action: "start-server" | "stop-server";
-};
 
 export type CoreResponse = {
   _tag: "receiver-mode-enable" | "server-start" | "connect";

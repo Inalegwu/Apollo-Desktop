@@ -1,5 +1,4 @@
 import type {
-  ChannelTypes,
   ConnectionMessage,
   CoreResponse,
   ReceiverModeMessage,
@@ -7,28 +6,10 @@ import type {
 } from "@shared/core/core-message";
 import { globalState$ } from "@shared/state";
 import { type Socket, createServer } from "node:net";
-import { parentPort } from "node:worker_threads";
+import { parentPort, threadId } from "node:worker_threads";
 import { TypedBroadCastChannel } from "./broadcast-channel";
 
-const channel = new TypedBroadCastChannel<ChannelTypes>("core-channel");
-
-channel.onmessage = (msg) => {
-  const message = msg as MessageEvent<ChannelTypes>;
-  const data = message.data;
-  console.log({ data, module: "tcp-server" });
-
-  switch (data.action) {
-    case "start-server": {
-      break;
-    }
-    case "stop-server": {
-      break;
-    }
-    default: {
-      console.log("unknown event");
-    }
-  }
-};
+const channel = new TypedBroadCastChannel<CoreResponse>("core-channel");
 
 const keychainId = globalState$.applicationId.get();
 const nodeName = globalState$.deviceName.get();
@@ -42,6 +23,7 @@ const handleSocket = (socket: Socket) => {
 
   let awaitingConnection = true;
 
+  // handle socket data
   socket.on("data", (data) => {
     try {
       const result = JSON.parse(data.toString()) as CoreResponse;
@@ -50,18 +32,19 @@ const handleSocket = (socket: Socket) => {
         case "connect": {
           const message = result as ConnectionMessage;
           awaitingConnection = false;
-          console.log("tag===connect", { message });
-          channel.postMessage({ action: "start-server" });
+          channel.postMessage(message);
           break;
         }
         case "receiver-mode-enable": {
           const message = result as ReceiverModeMessage;
           console.log("tag===reciever-mode-enable", { message });
+          channel.postMessage(message);
           break;
         }
         case "server-start": {
           const message = result as ServerStartResponse;
           console.log("tag===server-start", { message });
+          channel.postMessage(message);
           break;
         }
         default: {
@@ -74,6 +57,32 @@ const handleSocket = (socket: Socket) => {
     }
   });
 
+  // handle channel messages
+  channel.onmessage = (msg) => {
+    const message = msg as MessageEvent<CoreResponse>;
+    const data = message.data;
+    console.log({ data, module: "tcp-server" });
+
+    switch (data._tag) {
+      case "connect": {
+        const info = data as ConnectionMessage;
+        break;
+      }
+      case "receiver-mode-enable": {
+        const info = data as ReceiverModeMessage;
+        break;
+      }
+      case "server-start": {
+        const info = data as ServerStartResponse;
+        socket.write(JSON.stringify(info satisfies ServerStartResponse));
+        break;
+      }
+      default: {
+        console.log("unknown event");
+      }
+    }
+  };
+
   setInterval(() => {
     if (awaitingConnection) {
       const payload = {
@@ -81,6 +90,7 @@ const handleSocket = (socket: Socket) => {
         mode: "SENDER",
         nodeKeychainID: keychainId,
         nodeName,
+        deviceType: globalState$.deviceType.get(),
         _tag: "connect",
         type: "CONNECTION_REQUEST",
       } as const satisfies ConnectionMessage;
@@ -95,9 +105,8 @@ const handleSocket = (socket: Socket) => {
 const server = createServer(handleSocket);
 
 port.on("message", () => {
-  console.log("Starting discovery worker");
   server.listen(53317, "0.0.0.0", () => {
-    console.log("server listening on port 53317");
+    console.log({ message: "discovery worker started", worker: threadId });
     console.log(channel);
   });
 });

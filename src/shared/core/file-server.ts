@@ -1,17 +1,21 @@
-import { serve } from "@hono/node-server";
-import type { ChannelTypes } from "@shared/core/core-message";
-import { globalState$, peerState } from "@shared/state";
+import type {
+  ConnectionMessage,
+  CoreResponse,
+  ReceiverModeMessage,
+  ServerStartResponse,
+} from "@shared/core/core-message";
+import { globalState$ } from "@shared/state";
 import { sessions } from "@shared/storage";
 import { Hono } from "hono";
 import { decode, sign } from "hono/jwt";
-import { parentPort } from "node:worker_threads";
+import { parentPort, threadId } from "node:worker_threads";
 import { v4 } from "uuid";
 import { TypedBroadCastChannel } from "./broadcast-channel";
 import { bodyValidator, headerValidator } from "./ftp-validators";
 
-const channel = new TypedBroadCastChannel<ChannelTypes>("core-channel");
+const channel = new TypedBroadCastChannel<CoreResponse>("core-channel");
 
-const neighbors = peerState.neighbors.get();
+// const neighbors = peerState.neighbors.get();
 
 const EXP_TIME = Math.floor(Date.now() * 1000) * 60 * 60;
 
@@ -89,26 +93,35 @@ const port = parentPort;
 if (!port) throw new Error("Invalid state: No Parent port");
 
 channel.onmessage = (msg) => {
-  const message = msg as MessageEvent<ChannelTypes>;
+  const message = msg as MessageEvent<CoreResponse>;
   const data = message.data;
-  switch (data.action) {
-    case "start-server": {
-      const server = serve({
-        fetch: app.fetch,
-      }).listen(42069, "0.0.0.0", undefined, () => {
-        console.log("server listening");
-      });
+  switch (data._tag) {
+    case "server-start": {
+      // the file-server shouldn't handle this response
+      // since it will never get this response
+      break;
+    }
+    case "connect": {
+      const info = data as ConnectionMessage;
 
-      console.log("addr: ", server.address());
+      console.log("attempting to add new neighbor");
+
+      console.log({ info });
+
+      channel.postMessage({
+        _tag: "server-start",
+        serverAddr: "0",
+      } satisfies ServerStartResponse);
 
       break;
     }
-    case "stop-server": {
+    case "receiver-mode-enable": {
+      const info = data as ReceiverModeMessage;
       break;
     }
   }
 };
 
 port.on("message", () => {
-  console.log("Starting file-server worker");
+  console.log({ message: "file server worker started", worker: threadId });
 });

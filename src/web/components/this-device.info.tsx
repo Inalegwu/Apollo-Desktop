@@ -78,7 +78,12 @@ export default function ThisDeviceInfo() {
               </span>
             </Flex>
           </Flex>
-          <Flex direction="column" align="start" className="space-y-1">
+          <Flex
+            direction="column"
+            width="100%"
+            align="start"
+            className="space-y-1"
+          >
             <Flex width="100%" align="center" justify="between" gap="2">
               <Text className="text-[11px] font-medium">
                 {[].length} selected files

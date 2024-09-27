@@ -4,9 +4,9 @@ import { globalState$ } from "@shared/state";
 import t from "@src/shared/config";
 import { generateRandomName } from "@src/shared/utils";
 import { createFileRoute } from "@tanstack/react-router";
-import { v4 } from "uuid";
-import { DeviceInfo, ThisDeviceInfo } from "../components";
 import { Lock, RefreshCw } from "lucide-react";
+import { v4 } from "uuid";
+import { ThisDeviceInfo } from "../components";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -36,13 +36,13 @@ function Index() {
             : "workspace"
         }
       >
-        <DeviceInfo
+        {/* <DeviceInfo
           node={{
             keychainId: v4(),
             deviceName: generateRandomName(),
             deviceType: "desktop",
           }}
-        />
+        /> */}
         <ThisDeviceInfo />
       </Flex>
     </ContextWrapper>
